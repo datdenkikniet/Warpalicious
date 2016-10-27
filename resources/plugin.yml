@@ -1,0 +1,26 @@
+name: Warpalicious
+main: nl.datdenkikniet.warpalicious.MyWarpsPlugin
+authors: [datdenkikniet, TastyBlueberry]
+version: 1.2.1
+commands:
+    delwarp:
+        description: delete a warp
+        usage: /<command> <warp>
+    setwarp:
+        description: set a warp
+        usage: /<command> <name> <flags>
+    editwarp:
+        description: edit a warp
+        usage: /<command> <name> <flag> <true|false>
+    warp:
+        description: warp to a location
+        usage: /<command> <name>
+    warplist:
+        description: warp list!
+        usage: /<command>
+    warpalicious:
+        description: main command
+        usage: /<command> [reloadmessages]
+    warpinfo:
+        description: see info on a warp
+        usage: /<command> <name>
