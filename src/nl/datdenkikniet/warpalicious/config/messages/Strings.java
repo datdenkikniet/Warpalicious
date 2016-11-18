@@ -41,6 +41,7 @@ public class Strings {
     public String delOtherWarpPerm = permission + "delete.other";
     public String warpInfoOthersPerm = permission + "warpinfo.other";
     public String warpInfoPerm = permission + ".warpinfo";
+    public String warpTopPerm = permission + ".top";
 
     /*
     Messages
@@ -71,6 +72,11 @@ public class Strings {
     public String warpInfoTotalMain;
     public String warpInfoTotalAmount;
     public String warpInfoTotalWarped;
+    public String noValidNumber;
+    public String noValidPage;
+    public String warpTopHeader;
+    public String warpTopSub;
+    public String warpTopSubPrivate;
 
     /*
     String functions
@@ -89,7 +95,7 @@ public class Strings {
         }
         try {
             prefix = messages.getMessage("prefix");
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         noperm = s("no-permission");
@@ -117,11 +123,19 @@ public class Strings {
         warpInfoTotalMain = s("warp-info-total-header");
         warpInfoTotalAmount = s("warp-info-total-amount");
         warpInfoTotalWarped = s("warp-info-total-warped");
+
+        //TODO
+        noValidNumber = s("no-valid-number");
+        noValidPage = s("no-valid-page");
+        warpTopHeader = s("warptop-header");
+        warpTopSub = s("warptop-sub");
+        warpTopSubPrivate = s("warptop-sub-private");
     }
-    public String s(String s){
+
+    public String s(String s) {
         try {
             return r(messages.getMessage(s));
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return "";

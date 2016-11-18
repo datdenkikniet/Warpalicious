@@ -33,14 +33,14 @@ public class WarpinfoCommand implements CommandExecutor {
             if (sender.hasPermission(str.warpInfoPerm)){
                 int amount = handler.getWarps().size();
                 int timesWarped = 0;
-                int amountPrivate = 0;
+                double amountPrivate = 0;
                 for (Warp warp : handler.getWarps()){
                     timesWarped += warp.getTimesWarpedTo();
                     if (warp.isPrivate()){
                         amountPrivate++;
                     }
                 }
-                double percentage = (Double.valueOf(amountPrivate)/Double.valueOf(amount))*100D;
+                double percentage = (amountPrivate/amount)*100D;
                 DecimalFormat numberFormat = new DecimalFormat("##.##");
                 sender.sendMessage(str.warpInfoTotalMain);
                 if (amountPrivate != 0) {
@@ -55,24 +55,72 @@ public class WarpinfoCommand implements CommandExecutor {
                 return true;
             }
         } else if (args.length == 1) {
-            Warp warp = handler.getWarp(args[0], false);
-            if (warp != null) {
-                if (hasPermToViewWarp(player, warp)) {
-                    sender.sendMessage(str.warpInfoMain.replace("%WARPNAME%", warp.getName()));
-                    Location loc = warp.getLocation();
-                    sender.sendMessage(str.warpInfoBy.replace("%PLAYERNAME%", Bukkit.getOfflinePlayer(warp.getOwner()).getName()));
-                    sender.sendMessage(str.warpInfoLocation.replace("%X%", String.valueOf(Math.round(loc.getX()))).replace("%Y%", String.valueOf(Math.round(loc.getY()))).replace("%Z%", String.valueOf(Math.round(loc.getZ()))).replace("%WORLD%", loc.getWorld().getName()));
-                    sender.sendMessage(str.warpInfoAmount.replace("%AMOUNT%", String.valueOf(warp.getTimesWarpedTo())));
+            if (args[0].equalsIgnoreCase("-top")){
+                ((Player) sender).performCommand(label + " -top 1");
+                return true;
+            } else {
+                Warp warp = handler.getWarp(args[0], false);
+                if (warp != null) {
+                    if (hasPermToViewWarp(player, warp)) {
+                        sender.sendMessage(str.warpInfoMain.replace("%WARPNAME%", warp.getName()));
+                        Location loc = warp.getLocation();
+                        sender.sendMessage(str.warpInfoBy.replace("%PLAYERNAME%", Bukkit.getOfflinePlayer(warp.getOwner()).getName()));
+                        sender.sendMessage(str.warpInfoLocation.replace("%X%", String.valueOf(Math.round(loc.getX()))).replace("%Y%", String.valueOf(Math.round(loc.getY()))).replace("%Z%", String.valueOf(Math.round(loc.getZ()))).replace("%WORLD%", loc.getWorld().getName()));
+                        sender.sendMessage(str.warpInfoAmount.replace("%AMOUNT%", String.valueOf(warp.getTimesWarpedTo())));
+                        return true;
+                    } else {
+                        sender.sendMessage(str.noperm);
+                        return true;
+                    }
+                } else {
+                    sender.sendMessage(str.warpNotExists);
                     return true;
+                }
+            }
+        } else if (args.length == 2){
+            if (args[0].equalsIgnoreCase("-top")){
+                if (sender.hasPermission(str.warpTopPerm)){
+                    try {
+                        int page = Integer.parseInt(args[1]);
+                        sender.sendMessage(handler.sortPage(sender, page, false));
+                        return true;
+                    } catch (NumberFormatException ex){
+                        if (args[1].equalsIgnoreCase("-noprivate")){
+                            ((Player) sender).performCommand(label + " -top 1 -noprivate");
+                            return true;
+                        } else {
+                            sender.sendMessage(str.noValidNumber);
+                            return true;
+                        }
+                    }
                 } else {
                     sender.sendMessage(str.noperm);
                     return true;
                 }
             } else {
-                sender.sendMessage(str.warpNotExists);
+                sender.sendMessage(str.getUsage(cmd, label));
                 return true;
             }
-        } else {
+        } else if (args.length == 3){
+            if (args[0].equalsIgnoreCase("-top") && args[2].equalsIgnoreCase("-noprivate")){
+                if (sender.hasPermission(str.warpTopPerm)){
+                    try {
+                        int page = Integer.parseInt(args[1]);
+                        sender.sendMessage(handler.sortPage(sender, page, true));
+                        return true;
+                    } catch (NumberFormatException ex){
+                        sender.sendMessage(str.noValidNumber);
+                        return true;
+                    }
+                } else {
+                    sender.sendMessage(str.noperm);
+                    return true;
+                }
+            } else {
+                sender.sendMessage(str.getUsage(cmd, label));
+                return true;
+            }
+        }  else {
             sender.sendMessage(str.getUsage(cmd, label));
             return true;
         }
