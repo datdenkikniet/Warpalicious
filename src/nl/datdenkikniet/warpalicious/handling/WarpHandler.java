@@ -7,9 +7,9 @@ import nl.datdenkikniet.warpalicious.config.CustomConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.Permissible;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,6 +75,11 @@ public class WarpHandler {
 
     public void delWarp(Warp warp) {
         warps.remove(warp);
+        if (cfg.getCustomConfig(config).isSet("total")) {
+            cfg.getCustomConfig(config).set("total", cfg.getCustomConfig(config).getInt("total") + warp.getTimesWarpedTo());
+        } else {
+            cfg.getCustomConfig(config).set("total", warp.getTimesWarpedTo());
+        }
         cfg.getCustomConfig(config).set(warp.getName(), null);
         cfg.saveCustomConfig(config);
     }
@@ -279,7 +284,7 @@ public class WarpHandler {
         return false;
     }
 
-    public String sortPage(Permissible player, int page, boolean noPrivate) {
+    public String sortPage(CommandSender player, int page, boolean noPrivate) {
         String toRet;
         int actualPage = page - 1;
         int availablePages = 0;
@@ -294,15 +299,15 @@ public class WarpHandler {
             availablePages = availablePages / 7;
         }
         if (actualPage > availablePages || actualPage < 0) {
-            toRet = plugin.getStrings().noValidPage.replace("%PAGES%", String.valueOf(availablePages + 1));
+            return plugin.getStrings().noValidPage.replace("%PAGES%", String.valueOf(availablePages + 1));
         } else {
             toRet = plugin.getStrings().warpTopHeader.replace("%PAGE%", String.valueOf(page)).replace("%MAXPAGE%", String.valueOf(availablePages + 1));
             @SuppressWarnings("unchecked")
             ArrayList<Warp> tempWarps = (ArrayList<Warp>) getWarps().clone();
             if (noPrivate) {
                 ArrayList<Warp> toRemove = new ArrayList<>();
-                for (Warp warp : tempWarps){
-                    if (warp.isPrivate()){
+                for (Warp warp : tempWarps) {
+                    if (warp.isPrivate()) {
                         toRemove.add(warp);
                     }
                 }
@@ -337,7 +342,14 @@ public class WarpHandler {
                     }
                 }
             }
+            return toRet;
         }
-        return toRet;
+    }
+    public int getDeletedWarpsAmount(){
+        if (cfg.getCustomConfig(config).isSet("total")) {
+            return cfg.getCustomConfig(config).getInt("total");
+        } else {
+            return 0;
+        }
     }
 }

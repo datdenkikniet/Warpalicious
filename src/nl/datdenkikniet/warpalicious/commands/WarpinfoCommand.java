@@ -29,33 +29,34 @@ public class WarpinfoCommand implements CommandExecutor {
             return true;
         }
         Player player = (Player) sender;
-        if (args.length == 0){
-            if (sender.hasPermission(str.warpInfoPerm)){
+        if (args.length == 0) {
+            if (sender.hasPermission(str.warpInfoPerm)) {
                 int amount = handler.getWarps().size();
                 int timesWarped = 0;
                 double amountPrivate = 0;
-                for (Warp warp : handler.getWarps()){
+                for (Warp warp : handler.getWarps()) {
                     timesWarped += warp.getTimesWarpedTo();
-                    if (warp.isPrivate()){
+                    if (warp.isPrivate()) {
                         amountPrivate++;
                     }
                 }
-                double percentage = (amountPrivate/amount)*100D;
+                double percentage = (amountPrivate / amount) * 100D;
                 DecimalFormat numberFormat = new DecimalFormat("##.##");
+                timesWarped += handler.getDeletedWarpsAmount();
                 sender.sendMessage(str.warpInfoTotalMain);
                 if (amountPrivate != 0) {
                     sender.sendMessage(str.warpInfoTotalAmount.replace("%AMOUNT%", String.valueOf(amount)).replace("%AMOUNTPRIVATE%", String.valueOf(amountPrivate)).replace("%PERCENTAGE%", numberFormat.format(percentage)));
                 } else {
                     sender.sendMessage(str.warpInfoTotalAmount.replace("%AMOUNT%", String.valueOf(amount)).replace("%AMOUNTPRIVATE%", String.valueOf(amountPrivate)).replace("%PERCENTAGE%", String.valueOf(0)));
                 }
-                    sender.sendMessage(str.warpInfoTotalWarped.replace("%TIMESWARPED%", String.valueOf(timesWarped)));
+                sender.sendMessage(str.warpInfoTotalWarped.replace("%TIMESWARPED%", String.valueOf(timesWarped)));
                 return true;
             } else {
                 sender.sendMessage(str.getUsage(cmd, label));
                 return true;
             }
         } else if (args.length == 1) {
-            if (args[0].equalsIgnoreCase("-top")){
+            if (args[0].equalsIgnoreCase("-top")) {
                 ((Player) sender).performCommand(label + " -top 1");
                 return true;
             } else {
@@ -77,15 +78,15 @@ public class WarpinfoCommand implements CommandExecutor {
                     return true;
                 }
             }
-        } else if (args.length == 2){
-            if (args[0].equalsIgnoreCase("-top")){
-                if (sender.hasPermission(str.warpTopPerm)){
+        } else if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("-top")) {
+                if (sender.hasPermission(str.warpTopPerm)) {
                     try {
                         int page = Integer.parseInt(args[1]);
                         sender.sendMessage(handler.sortPage(sender, page, false));
                         return true;
-                    } catch (NumberFormatException ex){
-                        if (args[1].equalsIgnoreCase("-noprivate")){
+                    } catch (NumberFormatException ex) {
+                        if (args[1].equalsIgnoreCase("-noprivate")) {
                             ((Player) sender).performCommand(label + " -top 1 -noprivate");
                             return true;
                         } else {
@@ -101,14 +102,14 @@ public class WarpinfoCommand implements CommandExecutor {
                 sender.sendMessage(str.getUsage(cmd, label));
                 return true;
             }
-        } else if (args.length == 3){
-            if (args[0].equalsIgnoreCase("-top") && args[2].equalsIgnoreCase("-noprivate")){
-                if (sender.hasPermission(str.warpTopPerm)){
+        } else if (args.length == 3) {
+            if (args[0].equalsIgnoreCase("-top") && args[2].equalsIgnoreCase("-noprivate")) {
+                if (sender.hasPermission(str.warpTopPerm)) {
                     try {
                         int page = Integer.parseInt(args[1]);
                         sender.sendMessage(handler.sortPage(sender, page, true));
                         return true;
-                    } catch (NumberFormatException ex){
+                    } catch (NumberFormatException ex) {
                         sender.sendMessage(str.noValidNumber);
                         return true;
                     }
@@ -120,7 +121,7 @@ public class WarpinfoCommand implements CommandExecutor {
                 sender.sendMessage(str.getUsage(cmd, label));
                 return true;
             }
-        }  else {
+        } else {
             sender.sendMessage(str.getUsage(cmd, label));
             return true;
         }
