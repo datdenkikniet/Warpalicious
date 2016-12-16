@@ -1,7 +1,7 @@
 name: Warpalicious
 main: nl.datdenkikniet.warpalicious.MyWarpsPlugin
 authors: [datdenkikniet, TastyBlueberry]
-version: 1.3.0
+version: 1.3.2
 commands:
     delwarp:
         description: delete a warp

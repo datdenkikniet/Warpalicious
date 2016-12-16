@@ -29,4 +29,5 @@ no-valid-page: "%PREFIX% &cThat is no valid page! Available pages: %PAGES%"
 warptop-header: "%PREFIX% Warptop page %PAGE% out of %MAXPAGE%:"
 warptop-sub: "\n%POSITION%. %WARPNAME% by %OWNERNAME%, %WARPAMOUNT%"
 warptop-sub-private: "\n%POSITION%. %WARPNAME% by %OWNERNAME%, %WARPAMOUNT% (&cPrivate&e)"
+no-dots-in-names: "%PREFIX% &cWarp names are not allowed to have dots in them!"
 

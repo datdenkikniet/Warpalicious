@@ -77,6 +77,7 @@ public class Strings {
     public String warpTopHeader;
     public String warpTopSub;
     public String warpTopSubPrivate;
+    public String noDots;
 
     /*
     String functions
@@ -123,13 +124,12 @@ public class Strings {
         warpInfoTotalMain = s("warp-info-total-header");
         warpInfoTotalAmount = s("warp-info-total-amount");
         warpInfoTotalWarped = s("warp-info-total-warped");
-
-        //TODO
         noValidNumber = s("no-valid-number");
         noValidPage = s("no-valid-page");
         warpTopHeader = s("warptop-header");
         warpTopSub = s("warptop-sub");
         warpTopSubPrivate = s("warptop-sub-private");
+        noDots = s("no-dots-in-names");
     }
 
     public String s(String s) {

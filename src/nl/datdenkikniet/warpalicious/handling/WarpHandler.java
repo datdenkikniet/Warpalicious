@@ -50,17 +50,23 @@ public class WarpHandler {
     private void loadWarps() {
         FileConfiguration c = cfg.getCustomConfig(config);
         for (String key : c.getKeys(false)) {
-            if (!c.isSet(key + ".timeswarpedto")) {
-                c.set(key + ".timeswarpedto", 0);
+            try {
+                if (!key.equalsIgnoreCase("total")) {
+                    if (!c.isSet(key + ".timeswarpedto")) {
+                        c.set(key + ".timeswarpedto", 0);
+                    }
+                    HashMap<String, Boolean> flags = new HashMap<>();
+                    for (String k2 : c.getConfigurationSection(key + ".flags").getKeys(false)) {
+                        flags.put(k2, c.getBoolean(key + ".flags." + k2));
+                    }
+                    UUID owner = UUID.fromString(c.getString(key + ".owner"));
+                    Location loc = plugin.stringToLoc(c.getString(key + ".location"));
+                    int times = c.getInt(key + ".timeswarpedto");
+                    new Warp(owner, loc, key, flags, this, times);
+                }
+            } catch (Exception ex) {
+                System.out.println("Error while loading flag " + key);
             }
-            HashMap<String, Boolean> flags = new HashMap<>();
-            for (String k2 : c.getConfigurationSection(key + ".flags").getKeys(false)) {
-                flags.put(k2, c.getBoolean(key + ".flags." + k2));
-            }
-            UUID owner = UUID.fromString(c.getString(key + ".owner"));
-            Location loc = plugin.stringToLoc(c.getString(key + ".location"));
-            int times = c.getInt(key + ".timeswarpedto");
-            new Warp(owner, loc, key, flags, this, times);
         }
     }
 
@@ -345,7 +351,8 @@ public class WarpHandler {
             return toRet;
         }
     }
-    public int getDeletedWarpsAmount(){
+
+    public int getDeletedWarpsAmount() {
         if (cfg.getCustomConfig(config).isSet("total")) {
             return cfg.getCustomConfig(config).getInt("total");
         } else {

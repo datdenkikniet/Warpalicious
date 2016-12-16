@@ -41,6 +41,10 @@ public class SetWarpCommand implements CommandExecutor {
                 }
             }
             if (player.hasPermission(str.setWarpPerm) || (hasPerm && hasEnoughWarps)) {
+                if (args[0].contains(".")){
+                    sender.sendMessage(str.noDots);
+                    return true;
+                }
                 Warp warp = handler.getWarp(args[0], false);
                 if (warp == null) {
                     new Warp(player.getUniqueId(), player.getLocation(), args[0], handler.getDefaultFlags(), handler, 0);
