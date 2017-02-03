@@ -54,4 +54,7 @@ public class MyWarpsPlugin extends JavaPlugin {
     {
         return String.format("%s,%s,%s,%s,%s,%s", loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
     }
+    public WarpHandler getWarpHandler(){
+        return handler;
+    }
 }

@@ -1,4 +1,4 @@
-prefix: "&k|&r&6WA&r&k|&e:"
+prefix: "&eWarpalicious &8|&r"
 warp-doesnt-exist: "%PREFIX% &cThat warp does not exists!"
 not-owner-of-warp: "%PREFIX% &cYou are not the owner of that warp!"
 warp-was-deleted: "%PREFIX% &cThe warp %WARPNAME% was deleted!"
@@ -30,4 +30,7 @@ warptop-header: "%PREFIX% Warptop page %PAGE% out of %MAXPAGE%:"
 warptop-sub: "\n%POSITION%. %WARPNAME% by %OWNERNAME%, %WARPAMOUNT%"
 warptop-sub-private: "\n%POSITION%. %WARPNAME% by %OWNERNAME%, %WARPAMOUNT% (&cPrivate&e)"
 no-dots-in-names: "%PREFIX% &cWarp names are not allowed to have dots in them!"
+warp-search-header: "%PREFIX% Warp search page %PAGE% out of %MAXPAGE%:"
+no-warps-found-with-name: "%PREFIX% No warps could be found for string \"%QUERY%\"."
+
 

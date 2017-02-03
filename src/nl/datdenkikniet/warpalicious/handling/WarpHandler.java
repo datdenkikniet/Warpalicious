@@ -77,6 +77,7 @@ public class WarpHandler {
         plugin.getCommand("warplist").setExecutor(new WarplistCommand(plugin.getStrings(), this));
         plugin.getCommand("editwarp").setExecutor(new EditWarpCommand(plugin.getStrings(), this));
         plugin.getCommand("warpinfo").setExecutor(new WarpinfoCommand(plugin.getStrings(), this));
+        plugin.getCommand("findwarp").setExecutor(new FindWarpCommand(plugin));
     }
 
     public void delWarp(Warp warp) {
@@ -115,11 +116,7 @@ public class WarpHandler {
 
     public ArrayList<Warp> getWarps(UUID player) {
         ArrayList<Warp> toRet = new ArrayList<>();
-        for (Warp warp : warps) {
-            if (warp.getOwner().equals(player)) {
-                toRet.add(warp);
-            }
-        }
+        warps.stream().filter(w -> w.getOwner().equals(player)).forEach(toRet::add);
         return toRet;
     }
 
@@ -192,27 +189,13 @@ public class WarpHandler {
             int max = (page * 9) + 9;
             if (player.hasPermission(plugin.getStrings().warpListPrivatePerm) || player.hasPermission(plugin.getStrings().universalPerm)) {
                 for (int i = min; i < (max > warps.size() ? warps.size() : max); i++) {
-                    Warp warp = warps.get(i);
-                    if (warp != null) {
-                        if (!warp.isPrivate()) {
-                            toRet = toRet + "\n" + plugin.getStrings().warpListSub.replace("%NAME%", warp.getName()).replace("%OWNER%", Bukkit.getOfflinePlayer(warp.getOwner()).getName()).replace("%COUNT%", String.valueOf(i + 1));
-                        } else {
-                            toRet = toRet + "\n" + plugin.getStrings().warpListSubPrivate.replace("%NAME%", warp.getName()).replace("%OWNER%", Bukkit.getOfflinePlayer(warp.getOwner()).getName()).replace("%COUNT%", String.valueOf(i + 1));
-                        }
-                    }
+                    toRet += getWarpListString(warps.get(i), i);
                 }
             } else {
                 ArrayList<Warp> warps2 = new ArrayList<>();
-                for (Warp warp : warps) {
-                    if (!warp.isPrivate() || warp.getOwner().equals(player.getUniqueId())) {
-                        warps2.add(warp);
-                    }
-                }
+                warps.stream().filter(warp -> !warp.isPrivate() || warp.getOwner().equals(player.getUniqueId())).forEach(warps2::add);
                 for (int i = min; i < (max > warps2.size() ? warps2.size() : max); i++) {
-                    Warp warp = warps2.get(i);
-                    if (warp != null) {
-                        toRet = toRet + "\n" + plugin.getStrings().warpListSub.replace("%NAME%", warp.getName()).replace("%OWNER%", Bukkit.getOfflinePlayer(warp.getOwner()).getName()).replace("%COUNT%", String.valueOf(i + 1));
-                    }
+                    toRet += getWarpListString(warps2.get(i), i);
                 }
             }
             return toRet;
@@ -227,19 +210,10 @@ public class WarpHandler {
             int min = page * 9;
             int max = (page * 9) + 9;
             ArrayList<Warp> warps2 = new ArrayList<>();
-            for (Warp warp : warps) {
-                if (warp.getOwner().equals(player.getUniqueId())) {
-                    warps2.add(warp);
-                }
-            }
+            warps.stream().filter(warp -> warp.getOwner().equals(player.getUniqueId())).forEach(warps2::add);
             String toRet = plugin.getStrings().warpsOwnList.replace("%PAGE%", String.valueOf(page + 1)).replace("%MAXPAGE%", String.valueOf(getWarplistPagesSelfAmt(player)));
             for (int i = min; i < (max > warps2.size() ? warps2.size() : max); i++) {
-                Warp warp = warps2.get(i);
-                if (!warp.isPrivate()) {
-                    toRet = toRet + "\n" + plugin.getStrings().warpListSub.replace("%NAME%", warp.getName()).replace("%OWNER%", Bukkit.getOfflinePlayer(warp.getOwner()).getName()).replace("%COUNT%", String.valueOf(i + 1));
-                } else {
-                    toRet = toRet + "\n" + plugin.getStrings().warpListSubPrivate.replace("%NAME%", warp.getName()).replace("%OWNER%", Bukkit.getOfflinePlayer(warp.getOwner()).getName()).replace("%COUNT%", String.valueOf(i + 1));
-                }
+                toRet += getWarpListString(warps2.get(i), i);
             }
             return toRet;
         }
@@ -253,19 +227,12 @@ public class WarpHandler {
             int min = page * 9;
             int max = (page * 9) + 9;
             ArrayList<Warp> warps2 = new ArrayList<>();
-            for (Warp warp : warps) {
-                if ((!warp.isPrivate() || player.hasPermission(plugin.getStrings().warpListPrivatePerm)) && warp.getOwner().equals(pl.getUniqueId())) {
-                    warps2.add(warp);
-                }
-            }
+            System.out.println(warps.size());
+            warps.stream().filter(warp -> (!warp.isPrivate() || player.hasPermission(plugin.getStrings().warpListPrivatePerm)) || warp.getOwner().equals(pl.getUniqueId())).forEach(warps2::add);
+            System.out.println(warps2.size());
             String toRet = plugin.getStrings().warpOthersList.replace("%PAGE%", String.valueOf(page + 1)).replace("%MAXPAGE%", String.valueOf(getWarpListPagesAmtOther(player, pl))).replace("%PLAYERNAME%", pl.getName());
             for (int i = min; i < (max > warps2.size() ? warps2.size() : max); i++) {
-                Warp warp = warps2.get(i);
-                if (!warp.isPrivate()) {
-                    toRet = toRet + "\n" + plugin.getStrings().warpListSub.replace("%NAME%", warp.getName()).replace("%OWNER%", Bukkit.getOfflinePlayer(warp.getOwner()).getName()).replace("%COUNT%", String.valueOf(i + 1));
-                } else {
-                    toRet = toRet + "\n" + plugin.getStrings().warpListSubPrivate.replace("%NAME%", warp.getName()).replace("%OWNER%", Bukkit.getOfflinePlayer(warp.getOwner()).getName()).replace("%COUNT%", String.valueOf(i + 1));
-                }
+                toRet += getWarpListString(warps2.get(i), i);
             }
             return toRet;
         }
@@ -312,11 +279,7 @@ public class WarpHandler {
             ArrayList<Warp> tempWarps = (ArrayList<Warp>) getWarps().clone();
             if (noPrivate) {
                 ArrayList<Warp> toRemove = new ArrayList<>();
-                for (Warp warp : tempWarps) {
-                    if (warp.isPrivate()) {
-                        toRemove.add(warp);
-                    }
-                }
+                tempWarps.stream().filter(Warp::isPrivate).forEach(toRemove::add);
                 tempWarps.removeAll(toRemove);
             }
             Warp currWarp = null;
@@ -358,5 +321,54 @@ public class WarpHandler {
         } else {
             return 0;
         }
+    }
+
+    private ArrayList<Warp> searchWarps(String toFind) {
+        toFind = toFind.toLowerCase();
+        ArrayList<Warp> warps = new ArrayList<>();
+        for (Warp warp : getWarps()) {
+            if (warp.getName().toLowerCase().contains(toFind)) {
+                warps.add(warp);
+            }
+        }
+        return warps;
+    }
+
+    public String formatWarps(String toSearch, int page) {
+        ArrayList<Warp> foundWarps = searchWarps(toSearch);
+        int total = (int) Math.ceil(((double) foundWarps.size()) / 9);
+        String toRet = plugin.getStrings().warpSearchHeader.replace("%PAGE%", String.valueOf(page)).replace("%MAXPAGE%", String.valueOf(total));
+        page = page - 1;
+        if (page > foundWarps.size() / 9 || page < 0) {
+            return plugin.getStrings().noValidPage.replace("%MAXPAGE%", String.valueOf(total));
+        } else if (foundWarps.size() == 0) {
+            return plugin.getStrings().noWarpsFoundForQuery.replace("%QUERY%", toSearch);
+        } else {
+            int min = page * 9;
+            int max = min + 9 < foundWarps.size() ? min + 9 : foundWarps.size();
+            for (int i = min; i < max; i++) {
+                toRet += getWarpListString(foundWarps.get(i), i);
+            }
+            return toRet;
+        }
+    }
+
+    private String getWarpListString(Warp warp, int i) {
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(warp.getOwner());
+        String toRet;
+        if (offlinePlayer != null && offlinePlayer.getName() != null) {
+            if (warp.isPrivate()) {
+                toRet = "\n" + plugin.getStrings().warpListSub.replace("%NAME%", warp.getName()).replace("%OWNER%", offlinePlayer.getName()).replace("%COUNT%", String.valueOf(i + 1));
+            } else {
+                toRet = "\n" + plugin.getStrings().warpListSubPrivate.replace("%NAME%", warp.getName()).replace("%OWNER%", offlinePlayer.getName()).replace("%COUNT%", String.valueOf(i + 1));
+            }
+        } else {
+            if (!warp.isPrivate()) {
+                toRet = "\n" + plugin.getStrings().warpListSub.replace("%NAME%", warp.getName()).replace("%OWNER%", "unknown owner").replace("%COUNT%", String.valueOf(i + 1));
+            } else {
+                toRet = "\n" + plugin.getStrings().warpListSubPrivate.replace("%NAME%", warp.getName()).replace("%OWNER%", "unknown owner").replace("%COUNT%", String.valueOf(i + 1));
+            }
+        }
+        return toRet;
     }
 }

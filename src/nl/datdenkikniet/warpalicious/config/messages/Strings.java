@@ -5,9 +5,6 @@ import nl.datdenkikniet.warpalicious.config.Config;
 import nl.datdenkikniet.warpalicious.config.CustomConfig;
 import org.bukkit.command.Command;
 
-/**
- * Created by Jona on 21/10/2016.
- */
 public class Strings {
 
     private boolean isInit = false;
@@ -42,6 +39,7 @@ public class Strings {
     public String warpInfoOthersPerm = permission + "warpinfo.other";
     public String warpInfoPerm = permission + ".warpinfo";
     public String warpTopPerm = permission + ".top";
+    public String searchWarpPerm = permission + ".searchwarps";
 
     /*
     Messages
@@ -78,11 +76,13 @@ public class Strings {
     public String warpTopSub;
     public String warpTopSubPrivate;
     public String noDots;
+    public String warpSearchHeader;
+    public String noWarpsFoundForQuery;
 
     /*
     String functions
      */
-    public String r(String str) {
+    private String r(String str) {
         return str.replace("%PREFIX%", prefix);
     }
 
@@ -130,9 +130,11 @@ public class Strings {
         warpTopSub = s("warptop-sub");
         warpTopSubPrivate = s("warptop-sub-private");
         noDots = s("no-dots-in-names");
+        warpSearchHeader = s("warp-search-header");
+        noWarpsFoundForQuery = s("no-warps-found-with-name");
     }
 
-    public String s(String s) {
+    private String s(String s) {
         try {
             return r(messages.getMessage(s));
         } catch (Exception ex) {
