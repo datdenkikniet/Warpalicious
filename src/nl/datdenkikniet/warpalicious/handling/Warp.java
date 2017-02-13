@@ -21,6 +21,7 @@ public class Warp {
         this.flags = flags;
         handler.addWarp(this);
         timesWarpedTo = time;
+        System.out.println(isPrivate());
     }
 
     public boolean isPrivate() {
@@ -28,7 +29,6 @@ public class Warp {
     }
 
     public void setFlag(String name, boolean bool) {
-        flags.remove(name);
         flags.put(name, bool);
     }
 
@@ -54,14 +54,6 @@ public class Warp {
 
     public void setName(String n) {
         name = n;
-    }
-
-    public void setLocation(Location l) {
-        loc = l;
-    }
-
-    public void setOwner(UUID o) {
-        owner = o;
     }
 
     HashMap<String, Boolean> getFlags() {

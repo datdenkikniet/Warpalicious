@@ -351,7 +351,7 @@ public class WarpHandler {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(warp.getOwner());
         String toRet;
         if (offlinePlayer != null && offlinePlayer.getName() != null) {
-            if (warp.isPrivate()) {
+            if (!warp.isPrivate()) {
                 toRet = "\n" + plugin.getStrings().warpListSub.replace("%NAME%", warp.getName()).replace("%OWNER%", offlinePlayer.getName()).replace("%COUNT%", String.valueOf(i + 1));
             } else {
                 toRet = "\n" + plugin.getStrings().warpListSubPrivate.replace("%NAME%", warp.getName()).replace("%OWNER%", offlinePlayer.getName()).replace("%COUNT%", String.valueOf(i + 1));

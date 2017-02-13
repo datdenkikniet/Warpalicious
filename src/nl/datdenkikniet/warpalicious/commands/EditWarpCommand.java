@@ -60,6 +60,7 @@ public class EditWarpCommand implements CommandExecutor {
                             boolean value = handler.parseBoolean(args[2]);
                             warp.setFlag(args[1], value);
                             sender.sendMessage(str.warpSetFlag.replace("%WARPNAME%", warp.getName()).replace("%FLAG%", args[1]).replace("%VALUE%", String.valueOf(value)));
+                            System.out.println(warp.isPrivate());
                             return true;
                         } else {
                             sender.sendMessage(str.warpNotOwned);
