@@ -21,7 +21,6 @@ public class Warp {
         this.flags = flags;
         handler.addWarp(this);
         timesWarpedTo = time;
-        System.out.println(isPrivate());
     }
 
     public boolean isPrivate() {
