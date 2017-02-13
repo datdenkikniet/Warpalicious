@@ -91,16 +91,10 @@ public class WarpHandler {
         cfg.saveCustomConfig(config);
     }
 
-    /*public boolean warpPlayer(UUID player, String warpName){
-        return warpPlayer(player, getWarp(warpName));
-    }
-    private boolean warpPlayer(UUID player, Warp warp){
-        return ((!warp.isPrivate() || warp.getOwner().equals(player)) || Bukkit.getPlayer(player).hasPermission(plugin.getStrings().warpPrivatePerm));
-    }*/
-    public Warp getWarp(String name, boolean isWarp) {
+    public Warp getWarp(String name, boolean isTeleportation) {
         for (Warp warp : warps) {
             if (warp.getName().equalsIgnoreCase(name)) {
-                if (isWarp) {
+                if (isTeleportation) {
                     warp.addWarpedTo();
                 }
                 return warp;

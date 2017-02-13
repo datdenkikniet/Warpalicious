@@ -6,6 +6,7 @@ warp-set-flag: "%PREFIX% Succesfully set flag %FLAG% for %WARPNAME% to %VALUE%."
 string-not-valid-flag: "%PREFIX% &cThat is not a valid flag! Available flags: %FLAGS%."
 warp-limit-reached: "%PREFIX% &cYou have reached your warp limit! You can only set %AMOUNT% warp(s)."
 warp-set: "%PREFIX% Succesfully set warp %NAME%."
+private-warp-set: "%PREFIX% Succesfully set private warp %NAME%."
 warp-already-exists: "%PREFIX% &cA warp with that name already exists!"
 warp-to-warp: "%PREFIX% Warping you to %NAME%."
 warp-is-private: "%PREFIX% &cThat warp is private!"
@@ -32,5 +33,6 @@ warptop-sub-private: "\n%POSITION%. %WARPNAME% by %OWNERNAME%, %WARPAMOUNT% (&cP
 no-dots-in-names: "%PREFIX% &cWarp names are not allowed to have dots in them!"
 warp-search-header: "%PREFIX% Warp search page %PAGE% out of %MAXPAGE%:"
 no-warps-found-with-name: "%PREFIX% No warps could be found for string \"%QUERY%\"."
-
+made-warp-public: "%PREFIX% Made warp %WARPNAME% public."
+made-warp-private: "%PREFIX% Made warp %WARPNAME% private."
 

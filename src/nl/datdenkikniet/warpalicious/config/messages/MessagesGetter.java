@@ -10,8 +10,8 @@ import nl.datdenkikniet.warpalicious.config.CustomConfig;
 
 import java.util.ArrayList;
 
-public class MessagesGetter {
-    private ArrayList<Message> messages = new ArrayList<Message>();
+class MessagesGetter {
+    private ArrayList<Message> messages = new ArrayList<>();
     private MyWarpsPlugin plugin;
     MessagesGetter(CustomConfig handler, Config cfg, MyWarpsPlugin instance) {
         plugin = instance;
@@ -20,9 +20,7 @@ public class MessagesGetter {
         }
         handler.reloadCustomConfig(cfg);
         System.out.println("loading messages....");
-        for (String key : handler.getCustomConfig(cfg).getKeys(false)) {
-            messages.add(new Message(key, handler.getCustomConfig(cfg).getString(key)));
-        }
+        handler.getCustomConfig(cfg).getKeys(false).stream().forEach(key -> messages.add(new Message(key, handler.getCustomConfig(cfg).getString(key))));
     }
 
     String getMessage(String name) throws MessageNotFoundException{

@@ -2,14 +2,11 @@ package nl.datdenkikniet.warpalicious.config.messages;
 
 import nl.datdenkikniet.warpalicious.MyWarpsPlugin;
 
-/**
- * Created by Jona on 23/10/2016.
- */
-public class MessageNotFoundException extends Exception {
+class MessageNotFoundException extends Exception {
     private String messageName;
     private MyWarpsPlugin plugin;
 
-    public MessageNotFoundException(String name, MyWarpsPlugin instance) {
+    MessageNotFoundException(String name, MyWarpsPlugin instance) {
         messageName = name;
         plugin = instance;
     }
@@ -17,8 +14,8 @@ public class MessageNotFoundException extends Exception {
     @Override
     public void printStackTrace() {
         plugin.getLogger().severe("Could not find message " + messageName + ".");
-        plugin.getLogger().severe("Please regenerate your messages.yml");
+        plugin.getLogger().severe("Please regenerate your messages.yml or find the missing messages at https://goo.gl/UqXISh");
         plugin.getLogger().severe("The plugin will continue to function.");
-        plugin.getLogger().severe("Some features have no proper messages");
+        plugin.getLogger().severe("Some features will have no proper messages");
     }
 }

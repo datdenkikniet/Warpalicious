@@ -37,9 +37,10 @@ public class Strings {
     public String warpListSelfPerm = permission + "list.self";
     public String delOtherWarpPerm = permission + "delete.other";
     public String warpInfoOthersPerm = permission + "warpinfo.other";
-    public String warpInfoPerm = permission + ".warpinfo";
-    public String warpTopPerm = permission + ".top";
-    public String searchWarpPerm = permission + ".searchwarps";
+    public String warpInfoPerm = permission + "warpinfo";
+    public String warpTopPerm = permission + "top";
+    public String searchWarpPerm = permission + "searchwarps";
+    public String setPrivateWarpPerm = permission + "set.private";
 
     /*
     Messages
@@ -78,6 +79,9 @@ public class Strings {
     public String noDots;
     public String warpSearchHeader;
     public String noWarpsFoundForQuery;
+    public String madeWarpPrivate;
+    public String madeWarpPublic;
+    public String privateWarpSet;
 
     /*
     String functions
@@ -132,6 +136,9 @@ public class Strings {
         noDots = s("no-dots-in-names");
         warpSearchHeader = s("warp-search-header");
         noWarpsFoundForQuery = s("no-warps-found-with-name");
+        madeWarpPrivate = s("made-warp-private");
+        madeWarpPublic = s("made-warp-public");
+        privateWarpSet = s("set-private-warp");
     }
 
     private String s(String s) {
