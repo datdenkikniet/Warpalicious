@@ -372,4 +372,7 @@ public class WarpHandler {
         }
         return toRet;
     }
+    public MyWarpsPlugin getPlugin(){
+        return plugin;
+    }
 }

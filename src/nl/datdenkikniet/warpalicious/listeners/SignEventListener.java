@@ -52,16 +52,17 @@ public class SignEventListener implements Listener {
         if (e.getAction() == Action.RIGHT_CLICK_BLOCK && b != null && (b.getType() == Material.SIGN || b.getType() == Material.SIGN_POST || b.getType() == Material.WALL_SIGN)) {
             Sign sign = (Sign) b.getState();
             Warp warp = handler.getWarp(sign.getLine(1));
-            if (str.checkPermission(p, str.useWarpSignPerm)) {
-                boolean warpPrivate = !warp.isPrivate() || str.checkPermission(e.getPlayer(), str.warpToPrivatePerm) || warp.getOwner().equals(e.getPlayer().getUniqueId());
-                boolean signPrivate = warp.getFlag(Flag.SIGNPRIVATE);
-                if ((warpPrivate && !signPrivate) || (!warpPrivate && !signPrivate)) {
-                    if (sign.getLine(0).equalsIgnoreCase(str.warpSignHeader)) {
-                        e.getPlayer().teleport(warp.getLocation(true));
-                        e.getPlayer().sendMessage(str.warpToWarp.replace("%NAME%", sign.getLine(1)));
+            if (warp != null) {
+                if (str.checkPermission(p, str.useWarpSignPerm)) {
+                    boolean signPrivate = warp.getFlag(Flag.SIGNPRIVATE) & !str.checkPermission(e.getPlayer(), str.warpToPrivatePerm) && !warp.getOwner().equals(e.getPlayer().getUniqueId());
+                    if (!signPrivate) {
+                        if (sign.getLine(0).equalsIgnoreCase(str.warpSignHeader)) {
+                            e.getPlayer().teleport(warp.getLocation(true));
+                            e.getPlayer().sendMessage(str.warpToWarp.replace("%NAME%", sign.getLine(1)));
+                        }
+                    } else {
+                        e.getPlayer().sendMessage(str.warpIsPrivate);
                     }
-                } else {
-                    e.getPlayer().sendMessage(str.warpIsPrivate);
                 }
             }
         }
