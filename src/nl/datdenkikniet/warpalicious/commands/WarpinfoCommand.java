@@ -1,9 +1,11 @@
 package nl.datdenkikniet.warpalicious.commands;
 
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
+import nl.datdenkikniet.warpalicious.handling.Flag;
 import nl.datdenkikniet.warpalicious.handling.Warp;
 import nl.datdenkikniet.warpalicious.handling.WarpHandler;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,9 +14,6 @@ import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
 
-/**
- * Created by Jona on 23/10/2016.
- */
 public class WarpinfoCommand implements CommandExecutor {
     private Strings str;
     private WarpHandler handler;
@@ -61,14 +60,19 @@ public class WarpinfoCommand implements CommandExecutor {
                 ((Player) sender).performCommand(label + " -top 1");
                 return true;
             } else {
-                Warp warp = handler.getWarp(args[0], false);
+                Warp warp = handler.getWarp(args[0]);
                 if (warp != null) {
                     if (hasPermToViewWarp(player, warp)) {
                         sender.sendMessage(str.warpInfoMain.replace("%WARPNAME%", warp.getName()));
-                        Location loc = warp.getLocation();
+                        Location loc = warp.getLocation(false);
                         sender.sendMessage(str.warpInfoBy.replace("%PLAYERNAME%", Bukkit.getOfflinePlayer(warp.getOwner()).getName()));
                         sender.sendMessage(str.warpInfoLocation.replace("%X%", String.valueOf(Math.round(loc.getX()))).replace("%Y%", String.valueOf(Math.round(loc.getY()))).replace("%Z%", String.valueOf(Math.round(loc.getZ()))).replace("%WORLD%", loc.getWorld().getName()));
                         sender.sendMessage(str.warpInfoAmount.replace("%AMOUNT%", String.valueOf(warp.getTimesWarpedTo())));
+                        String fin = ChatColor.YELLOW + "Flags:\n";
+                        for (Flag flag : Flag.values()){
+                           fin += ChatColor.YELLOW + flag.name() + ": " + warp.getFlag(flag) + "\n";
+                        }
+                        sender.sendMessage(fin);
                         return true;
                     } else {
                         sender.sendMessage(str.noperm);

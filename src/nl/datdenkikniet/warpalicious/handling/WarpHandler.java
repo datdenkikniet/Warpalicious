@@ -22,15 +22,13 @@ public class WarpHandler {
     private Config config;
     private CustomConfig cfg;
     private ArrayList<Warp> warps = new ArrayList<>();
-    private ArrayList<String> flags = new ArrayList<>();
-    Strings str;
+    private Strings str;
 
 
     public WarpHandler(MyWarpsPlugin instance, Config config) {
         plugin = instance;
         this.config = config;
         cfg = plugin.cfgHandler;
-        flags.add("private");
         str = plugin.getStrings();
     }
 
@@ -42,11 +40,10 @@ public class WarpHandler {
         warps.add(warp);
     }
 
-    public HashMap<String, Boolean> getDefaultFlags() {
-        HashMap<String, Boolean> toRet = new HashMap<>();
-        for (String flag : flags) {
-            toRet.put(flag, false);
-        }
+    public HashMap<Flag, Boolean> getDefaultFlags() {
+        HashMap<Flag, Boolean> toRet = new HashMap<>();
+        toRet.put(Flag.PRIVATE, false);
+        toRet.put(Flag.SIGNPRIVATE, true);
         return toRet;
     }
 
@@ -58,9 +55,9 @@ public class WarpHandler {
                     if (!c.isSet(key + ".timeswarpedto")) {
                         c.set(key + ".timeswarpedto", 0);
                     }
-                    HashMap<String, Boolean> flags = new HashMap<>();
+                    HashMap<Flag, Boolean> flags = new HashMap<>();
                     for (String k2 : c.getConfigurationSection(key + ".flags").getKeys(false)) {
-                        flags.put(k2, c.getBoolean(key + ".flags." + k2));
+                        flags.put(Flag.valueOf(k2), c.getBoolean(key + ".flags." + k2));
                     }
                     UUID owner = UUID.fromString(c.getString(key + ".owner"));
                     Location loc = plugin.stringToLoc(c.getString(key + ".location"));
@@ -94,12 +91,9 @@ public class WarpHandler {
         cfg.saveCustomConfig(config);
     }
 
-    public Warp getWarp(String name, boolean isTeleportation) {
+    public Warp getWarp(String name) {
         for (Warp warp : warps) {
             if (warp.getName().equalsIgnoreCase(name)) {
-                if (isTeleportation) {
-                    warp.addWarpedTo();
-                }
                 return warp;
             }
         }
@@ -121,9 +115,9 @@ public class WarpHandler {
         FileConfiguration c = cfg.getCustomConfig(config);
         for (Warp warp : warps) {
             c.set(warp.getName() + ".owner", warp.getOwner().toString());
-            c.set(warp.getName() + ".location", plugin.locationToString(warp.getLocation()));
-            for (String flag : warp.getFlags().keySet()) {
-                c.set(warp.getName() + ".flags." + flag, warp.getFlags().get(flag));
+            c.set(warp.getName() + ".location", plugin.locationToString(warp.getLocation(false)));
+            for (Flag flag : Flag.values()) {
+                c.set(warp.getName() + ".flags." + flag.name(), warp.getFlags().get(flag));
             }
             c.set(warp.getName() + ".timeswarpedto", warp.getTimesWarpedTo());
         }
@@ -131,11 +125,23 @@ public class WarpHandler {
     }
 
     public boolean isFlag(String flag) {
-        return (flags.contains(flag.toLowerCase()));
+        try {
+            Flag.valueOf(flag.toUpperCase());
+            return true;
+        } catch (Exception ex){
+            return false;
+        }
     }
 
     public String getFlags() {
-        return (flags.toString().replace("[", "").replace("]", ""));
+        StringBuilder strBuilder = new StringBuilder();
+        for (int i = 0; i < Flag.values().length; i++) {
+            strBuilder.append(Flag.values()[i]);
+            if (i != Flag.values().length - 1){
+                strBuilder.append(", ");
+            }
+        }
+        return strBuilder.toString();
     }
 
     public String getWarpListPages(Player player) {

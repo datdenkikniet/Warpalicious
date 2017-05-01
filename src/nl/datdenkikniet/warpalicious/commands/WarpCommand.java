@@ -36,11 +36,11 @@ public class WarpCommand implements CommandExecutor {
                         "/warpinfo <warp> to see info about a warp");
                 return true;
             } else if (args.length == 1) {
-                Warp warp = handler.getWarp(args[0], true);
+                Warp warp = handler.getWarp(args[0]);
                 if (warp != null) {
                     if (!warp.isPrivate() || str.checkPermission(sender, str.warpToPrivatePerm) || warp.getOwner().equals(player.getUniqueId())) {
                         player.sendMessage(str.warpToWarp.replace("%NAME%", warp.getName()));
-                        player.teleport(warp.getLocation());
+                        player.teleport(warp.getLocation(true));
                         return true;
                     } else {
                         sender.sendMessage(str.warpIsPrivate);

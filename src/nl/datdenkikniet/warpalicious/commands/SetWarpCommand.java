@@ -1,6 +1,7 @@
 package nl.datdenkikniet.warpalicious.commands;
 
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
+import nl.datdenkikniet.warpalicious.handling.Flag;
 import nl.datdenkikniet.warpalicious.handling.Warp;
 import nl.datdenkikniet.warpalicious.handling.WarpHandler;
 import org.bukkit.command.Command;
@@ -45,11 +46,11 @@ public class SetWarpCommand implements CommandExecutor {
                     sender.sendMessage(str.noDots);
                     return true;
                 }
-                if (handler.getWarp(args[0], false) == null) {
+                if (handler.getWarp(args[0]) == null) {
                     Warp warp = new Warp(player.getUniqueId(), player.getLocation(), args[0], handler.getDefaultFlags(), handler, 0);
                     handler.saveWarps();
                     if (args.length > 1 && args[1].equalsIgnoreCase("private") && str.checkPermission(sender, str.setPrivateWarpPerm)){
-                        warp.setFlag("private", true);
+                        warp.setFlag(Flag.PRIVATE, true);
                         sender.sendMessage(str.privateWarpSet.replace("%NAME%", args[0]));
                         return true;
                     }

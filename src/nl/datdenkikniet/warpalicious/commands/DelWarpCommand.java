@@ -23,7 +23,7 @@ public class DelWarpCommand implements CommandExecutor {
 		Player player = (Player) sender;
 		if (str.checkPermission(sender, str.warpDelPerm)){
 			if (args.length == 1){
-				Warp warp = handler.getWarp(args[0], false);
+				Warp warp = handler.getWarp(args[0]);
 				if (warp != null){
 					if (warp.getOwner().equals(player.getUniqueId()) || str.checkPermission(sender, str.delOtherWarpPerm)){
 						handler.delWarp(warp);

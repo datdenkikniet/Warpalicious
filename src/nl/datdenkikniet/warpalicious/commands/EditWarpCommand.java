@@ -1,6 +1,7 @@
 package nl.datdenkikniet.warpalicious.commands;
 
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
+import nl.datdenkikniet.warpalicious.handling.Flag;
 import nl.datdenkikniet.warpalicious.handling.Warp;
 import nl.datdenkikniet.warpalicious.handling.WarpHandler;
 import org.bukkit.command.Command;
@@ -25,7 +26,7 @@ public class EditWarpCommand implements CommandExecutor {
         Player player = (Player) sender;
         if (str.checkPermission(sender, str.warpEditPerm)) {
             if (args.length == 2) {
-                Warp warp = handler.getWarp(args[0], false);
+                Warp warp = handler.getWarp(args[0]);
                 if (warp != null) {
                     if (warp.getOwner().equals(player.getUniqueId()) || str.checkPermission(sender, str.universalPerm)) {
                         boolean value;
@@ -37,7 +38,7 @@ public class EditWarpCommand implements CommandExecutor {
                             sender.sendMessage(str.warpNotFlag.replace("%FLAGS%", handler.getFlags()));
                             return true;
                         }
-                        warp.setFlag("private", value);
+                        warp.setFlag(Flag.PRIVATE, value);
                         if (value) {
                             sender.sendMessage(str.madeWarpPrivate.replace("%WARPNAME%", warp.getName()));
                         } else {
@@ -54,11 +55,11 @@ public class EditWarpCommand implements CommandExecutor {
                 }
             } else if (args.length == 3) {
                 if (handler.isFlag(args[1])) {
-                    Warp warp = handler.getWarp(args[0], false);
+                    Warp warp = handler.getWarp(args[0]);
                     if (warp != null) {
                         if (warp.getOwner().equals(player.getUniqueId()) || str.checkPermission(sender, str.universalPerm)) {
                             boolean value = handler.parseBoolean(args[2]);
-                            warp.setFlag(args[1], value);
+                            warp.setFlag(Flag.valueOf(args[1].toUpperCase()), value);
                             sender.sendMessage(str.warpSetFlag.replace("%WARPNAME%", warp.getName()).replace("%FLAG%", args[1]).replace("%VALUE%", String.valueOf(value)));
                             return true;
                         } else {

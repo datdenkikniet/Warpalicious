@@ -10,11 +10,11 @@ public class Warp {
     private UUID owner;
     private Location loc;
     private String name;
-    private HashMap<String, Boolean> flags;
+    private HashMap<Flag, Boolean> flags;
     private int timesWarpedTo;
 
 
-    public Warp(UUID owner, Location loc, String name, HashMap<String, Boolean> flags, WarpHandler handler, int time) {
+    public Warp(UUID owner, Location loc, String name, HashMap<Flag, Boolean> flags, WarpHandler handler, int time) {
         this.owner = owner;
         this.loc = loc;
         this.name = name;
@@ -24,27 +24,30 @@ public class Warp {
     }
 
     public boolean isPrivate() {
-        return flags.get("private");
+        return flags.get(Flag.PRIVATE);
     }
 
-    public void setFlag(String name, boolean bool) {
-        flags.put(name, bool);
+    public void setFlag(Flag f, boolean bool) {
+        flags.put(f, bool);
+    }
+
+    public boolean getFlag(Flag flag){
+        return flags.get(flag);
     }
 
     public UUID getOwner() {
         return owner;
     }
 
-    public Location getLocation() {
+    public Location getLocation(boolean isWarp) {
+        if (isWarp) {
+            timesWarpedTo++;
+        }
         return loc;
     }
 
     public String getName() {
         return name;
-    }
-
-    void addWarpedTo() {
-        timesWarpedTo++;
     }
 
     public int getTimesWarpedTo() {
@@ -55,7 +58,7 @@ public class Warp {
         name = n;
     }
 
-    HashMap<String, Boolean> getFlags() {
+    HashMap<Flag, Boolean> getFlags() {
         return flags;
     }
 }
