@@ -29,7 +29,7 @@ public class SetWarpCommand implements CommandExecutor {
         if (args.length > 0) {
             int amt = handler.getWarps(player.getUniqueId()).size();
             boolean hasPerm = false;
-            boolean hasEnoughWarps = false;
+            boolean hasEnoughWarps = sender.hasPermission(str.universalPerm);
             int amount = 0;
             for (PermissionAttachmentInfo pai : player.getEffectivePermissions()) {
                 if (pai.getPermission().startsWith(str.setWarpPerm) && pai.getPermission().split(Pattern.quote(".")).length == 3) {
@@ -40,7 +40,7 @@ public class SetWarpCommand implements CommandExecutor {
                     }
                 }
             }
-            if (player.hasPermission(str.setWarpPerm) || (hasPerm && hasEnoughWarps)) {
+            if (str.checkPermission(sender, str.setWarpPerm) || (hasPerm && hasEnoughWarps)) {
                 if (args[0].contains(".")){
                     sender.sendMessage(str.noDots);
                     return true;
@@ -48,7 +48,7 @@ public class SetWarpCommand implements CommandExecutor {
                 if (handler.getWarp(args[0], false) == null) {
                     Warp warp = new Warp(player.getUniqueId(), player.getLocation(), args[0], handler.getDefaultFlags(), handler, 0);
                     handler.saveWarps();
-                    if (args.length > 1 && args[1].equalsIgnoreCase("private") && sender.hasPermission(str.setPrivateWarpPerm)){
+                    if (args.length > 1 && args[1].equalsIgnoreCase("private") && str.checkPermission(sender, str.setPrivateWarpPerm)){
                         warp.setFlag("private", true);
                         sender.sendMessage(str.privateWarpSet.replace("%NAME%", args[0]));
                         return true;

@@ -18,7 +18,7 @@ public class FindWarpCommand implements CommandExecutor {
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (args.length == 1) {
-            if (sender.hasPermission(str.searchWarpPerm)) {
+            if (str.checkPermission(sender, str.searchWarpPerm)) {
                 sender.sendMessage(handler.formatWarps(args[0], 1));
                 return true;
             } else {
@@ -26,7 +26,7 @@ public class FindWarpCommand implements CommandExecutor {
                 return true;
             }
         } else if (args.length == 2) {
-            if (sender.hasPermission(str.searchWarpPerm)) {
+            if (str.checkPermission(sender, str.searchWarpPerm)) {
                 try {
                     sender.sendMessage(handler.formatWarps(args[0], Integer.parseInt(args[1])));
                 } catch (NumberFormatException ex) {

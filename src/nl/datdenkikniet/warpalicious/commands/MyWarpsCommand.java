@@ -18,7 +18,7 @@ public class MyWarpsCommand implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
-        if (args.length == 1 && args[0].equalsIgnoreCase("reloadmessages")) {
+        if (args.length == 1 && args[0].equalsIgnoreCase("reloadmessages") && str.checkPermission(sender, str.universalPerm)) {
             plugin.getStrings().loadMessages();
             sender.sendMessage(str.prefix + " Succesfully reloaded messages!");
         } else {

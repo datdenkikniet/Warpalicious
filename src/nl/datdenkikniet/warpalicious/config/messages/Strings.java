@@ -4,6 +4,7 @@ import nl.datdenkikniet.warpalicious.MyWarpsPlugin;
 import nl.datdenkikniet.warpalicious.config.Config;
 import nl.datdenkikniet.warpalicious.config.CustomConfig;
 import org.bukkit.command.Command;
+import org.bukkit.permissions.Permissible;
 
 public class Strings {
 
@@ -41,6 +42,8 @@ public class Strings {
     public String warpTopPerm = permission + "top";
     public String searchWarpPerm = permission + "searchwarps";
     public String setPrivateWarpPerm = permission + "set.private";
+    public String createWarpSignPerm = permission + "makewarpsign";
+    public String useWarpSignPerm = permission + "usewarpsign";
 
     /*
     Messages
@@ -82,6 +85,10 @@ public class Strings {
     public String madeWarpPrivate;
     public String madeWarpPublic;
     public String privateWarpSet;
+    public String correctUsage;
+    public String noSignPerm;
+    public String createdWarpSign;
+    public String warpSignHeader;
 
     /*
     String functions
@@ -91,9 +98,8 @@ public class Strings {
     }
 
     public String getUsage(Command command, String alias) {
-        return prefix + " Wrong usage! Correct usage: " + command.getUsage().replace("<command>", alias);
+        return r(correctUsage.replace("%USAGE%", command.getUsage().replace("<command>", alias)));
     }
-
     public void loadMessages() {
         if (isInit) {
             configHandler.reloadCustomConfig(config);
@@ -139,6 +145,10 @@ public class Strings {
         madeWarpPrivate = s("made-warp-private");
         madeWarpPublic = s("made-warp-public");
         privateWarpSet = s("set-private-warp");
+        correctUsage = s("correct-usage");
+        noSignPerm = s("no-sign-permission");
+        createdWarpSign = s("created-warp-sign");
+        warpSignHeader = s("warpsign-header");
     }
 
     private String s(String s) {
@@ -148,5 +158,8 @@ public class Strings {
             ex.printStackTrace();
         }
         return "";
+    }
+    public boolean checkPermission(Permissible p, String permission){
+        return p.hasPermission(permission) || p.hasPermission(universalPerm);
     }
 }

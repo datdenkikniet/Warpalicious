@@ -23,11 +23,11 @@ public class EditWarpCommand implements CommandExecutor {
             return true;
         }
         Player player = (Player) sender;
-        if (player.hasPermission(str.warpEditPerm) || sender.hasPermission(str.universalPerm)) {
+        if (str.checkPermission(sender, str.warpEditPerm)) {
             if (args.length == 2) {
                 Warp warp = handler.getWarp(args[0], false);
                 if (warp != null) {
-                    if (warp.getOwner().equals(player.getUniqueId()) || sender.hasPermission(str.universalPerm)) {
+                    if (warp.getOwner().equals(player.getUniqueId()) || str.checkPermission(sender, str.universalPerm)) {
                         boolean value;
                         if (args[1].equalsIgnoreCase("private")){
                             value = true;
@@ -56,7 +56,7 @@ public class EditWarpCommand implements CommandExecutor {
                 if (handler.isFlag(args[1])) {
                     Warp warp = handler.getWarp(args[0], false);
                     if (warp != null) {
-                        if (warp.getOwner().equals(player.getUniqueId()) || sender.hasPermission(str.universalPerm)) {
+                        if (warp.getOwner().equals(player.getUniqueId()) || str.checkPermission(sender, str.universalPerm)) {
                             boolean value = handler.parseBoolean(args[2]);
                             warp.setFlag(args[1], value);
                             sender.sendMessage(str.warpSetFlag.replace("%WARPNAME%", warp.getName()).replace("%FLAG%", args[1]).replace("%VALUE%", String.valueOf(value)));

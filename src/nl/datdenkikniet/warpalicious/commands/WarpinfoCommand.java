@@ -30,7 +30,7 @@ public class WarpinfoCommand implements CommandExecutor {
         }
         Player player = (Player) sender;
         if (args.length == 0) {
-            if (sender.hasPermission(str.warpInfoPerm)) {
+            if (str.checkPermission(sender, str.warpInfoPerm)) {
                 int amount = handler.getWarps().size();
                 int timesWarped = 0;
                 double amountPrivate = 0;
@@ -42,10 +42,11 @@ public class WarpinfoCommand implements CommandExecutor {
                 }
                 double percentage = (amountPrivate / amount) * 100D;
                 DecimalFormat numberFormat = new DecimalFormat("##.##");
+                DecimalFormat formatTwo = new DecimalFormat("###");
                 timesWarped += handler.getDeletedWarpsAmount();
                 sender.sendMessage(str.warpInfoTotalMain);
                 if (amountPrivate != 0) {
-                    sender.sendMessage(str.warpInfoTotalAmount.replace("%AMOUNT%", String.valueOf(amount)).replace("%AMOUNTPRIVATE%", String.valueOf(amountPrivate)).replace("%PERCENTAGE%", numberFormat.format(percentage)));
+                    sender.sendMessage(str.warpInfoTotalAmount.replace("%AMOUNT%", String.valueOf(amount)).replace("%AMOUNTPRIVATE%", String.valueOf(formatTwo.format(amountPrivate))).replace("%PERCENTAGE%", numberFormat.format(percentage)));
                 } else {
                     sender.sendMessage(str.warpInfoTotalAmount.replace("%AMOUNT%", String.valueOf(amount)).replace("%AMOUNTPRIVATE%", String.valueOf(amountPrivate)).replace("%PERCENTAGE%", String.valueOf(0)));
                 }
@@ -80,7 +81,7 @@ public class WarpinfoCommand implements CommandExecutor {
             }
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("-top")) {
-                if (sender.hasPermission(str.warpTopPerm)) {
+                if (str.checkPermission(sender, str.warpTopPerm)) {
                     try {
                         int page = Integer.parseInt(args[1]);
                         sender.sendMessage(handler.sortPage(sender, page, false));
@@ -104,7 +105,7 @@ public class WarpinfoCommand implements CommandExecutor {
             }
         } else if (args.length == 3) {
             if (args[0].equalsIgnoreCase("-top") && args[2].equalsIgnoreCase("-noprivate")) {
-                if (sender.hasPermission(str.warpTopPerm)) {
+                if (str.checkPermission(sender, str.warpTopPerm)) {
                     try {
                         int page = Integer.parseInt(args[1]);
                         sender.sendMessage(handler.sortPage(sender, page, true));
@@ -128,9 +129,9 @@ public class WarpinfoCommand implements CommandExecutor {
     }
 
     private boolean hasPermToViewWarp(Player player, Warp warp) {
-        if (warp.getOwner().equals(player.getUniqueId()) && player.hasPermission(str.warpInfoPerm)) {
+        if (warp.getOwner().equals(player.getUniqueId()) && str.checkPermission(player, str.warpInfoPerm)) {
             return true;
-        } else if (player.hasPermission(str.warpInfoOthersPerm) || player.hasPermission(str.universalPerm)) {
+        } else if (str.checkPermission(player, str.warpInfoOthersPerm)) {
             return true;
         }
         return false;

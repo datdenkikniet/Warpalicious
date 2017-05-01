@@ -10,41 +10,53 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class WarpCommand implements CommandExecutor {
-	private Strings str;
-	private WarpHandler handler;
-	public WarpCommand(Strings instance, WarpHandler hd){
-		str = instance;
-		handler = hd;
-	}
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
-		if (!(sender instanceof Player)){
-			sender.sendMessage("You can't do this as non-player!");
-			return true;
-		}
-		Player player = (Player) sender;
-		if (sender.hasPermission(str.warpToPrivatePerm) || sender.hasPermission(str.warpPerm) || sender.hasPermission(str.universalPerm)){
-			if (args.length == 1){
-				Warp warp = handler.getWarp(args[0], true);
-				if (warp != null){
-					if (!warp.isPrivate() || sender.hasPermission(str.warpToPrivatePerm) || warp.getOwner().equals(player.getUniqueId())){
-						player.sendMessage(str.warpToWarp.replace("%NAME%", warp.getName()));
-						player.teleport(warp.getLocation());
-						return true;
-					} else {
-						sender.sendMessage(str.warpIsPrivate);
-						return true;
-					}
-				} else {
-					sender.sendMessage(str.warpNotExists);
-					return true;
-				}
-			} else {
-				sender.sendMessage(str.getUsage(cmd, label));
-				return true;
-			}
-		} else {
-			sender.sendMessage(str.noperm);
-			return true;
-		}
-	}
+    private Strings str;
+    private WarpHandler handler;
+
+    public WarpCommand(Strings instance, WarpHandler hd) {
+        str = instance;
+        handler = hd;
+    }
+
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (!(sender instanceof Player)) {
+            sender.sendMessage("You can't do this as non-player!");
+            return true;
+        }
+        Player player = (Player) sender;
+        if (str.checkPermission(sender, str.warpToPrivatePerm) || str.checkPermission(sender, str.warpPerm)) {
+            if (args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("-help"))) {
+                sender.sendMessage(str.prefix + " Help menu\n" +
+                        "/warp <name> to teleport to a warp\n" +
+                        "/setwarp <warp> [private] to create a (private) warp\n" +
+                        "/delwarp <warp> to delete a warp\n" +
+                        "/editwarp <warp> <public|private> to make a warp public or private\n" +
+                        "/findwarp <warp> to search for a warp by name\n" +
+                        "/warplist <page|self|username> [page] for your own/someone else's/the warp list\n" +
+                        "/warpinfo <warp> to see info about a warp");
+                return true;
+            } else if (args.length == 1) {
+                Warp warp = handler.getWarp(args[0], true);
+                if (warp != null) {
+                    if (!warp.isPrivate() || str.checkPermission(sender, str.warpToPrivatePerm) || warp.getOwner().equals(player.getUniqueId())) {
+                        player.sendMessage(str.warpToWarp.replace("%NAME%", warp.getName()));
+                        player.teleport(warp.getLocation());
+                        return true;
+                    } else {
+                        sender.sendMessage(str.warpIsPrivate);
+                        return true;
+                    }
+                } else {
+                    sender.sendMessage(str.warpNotExists);
+                    return true;
+                }
+            } else {
+                sender.sendMessage(str.getUsage(cmd, label));
+                return true;
+            }
+        } else {
+            sender.sendMessage(str.noperm);
+            return true;
+        }
+    }
 }

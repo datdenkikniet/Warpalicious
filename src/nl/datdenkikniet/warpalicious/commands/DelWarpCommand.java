@@ -21,11 +21,11 @@ public class DelWarpCommand implements CommandExecutor {
 			return true;
 		}
 		Player player = (Player) sender;
-		if (sender.hasPermission(str.warpDelPerm) || sender.hasPermission(str.universalPerm)){
+		if (str.checkPermission(sender, str.warpDelPerm)){
 			if (args.length == 1){
 				Warp warp = handler.getWarp(args[0], false);
 				if (warp != null){
-					if (warp.getOwner().equals(player.getUniqueId()) || sender.hasPermission(str.universalPerm) || sender.hasPermission(str.delOtherWarpPerm)){
+					if (warp.getOwner().equals(player.getUniqueId()) || str.checkPermission(sender, str.delOtherWarpPerm)){
 						handler.delWarp(warp);
 						sender.sendMessage(str.warpDeleted.replace("%WARPNAME%", warp.getName()));
 						return true;
