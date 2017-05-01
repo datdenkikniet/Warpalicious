@@ -25,12 +25,15 @@ public class EditWarpCommand implements CommandExecutor {
         }
         Player player = (Player) sender;
         if (str.checkPermission(sender, str.warpEditPerm)) {
-            if (args.length == 2) {
+            if (args.length == 1 && args[0].equalsIgnoreCase("listflags")) {
+                sender.sendMessage(str.warpNotFlag.replace("%FLAGS%", handler.getFlags()));
+                return true;
+            } else if (args.length == 2) {
                 Warp warp = handler.getWarp(args[0]);
                 if (warp != null) {
                     if (warp.getOwner().equals(player.getUniqueId()) || str.checkPermission(sender, str.universalPerm)) {
                         boolean value;
-                        if (args[1].equalsIgnoreCase("private")){
+                        if (args[1].equalsIgnoreCase("private")) {
                             value = true;
                         } else if (args[1].equalsIgnoreCase("public")) {
                             value = false;
