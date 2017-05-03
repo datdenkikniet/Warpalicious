@@ -57,7 +57,12 @@ public class WarpHandler {
                     }
                     HashMap<Flag, Boolean> flags = new HashMap<>();
                     for (String k2 : c.getConfigurationSection(key + ".flags").getKeys(false)) {
-                        flags.put(Flag.valueOf(k2), c.getBoolean(key + ".flags." + k2));
+                        flags.put(Flag.valueOf(k2.toUpperCase()), c.getBoolean(key + ".flags." + k2));
+                    }
+                    for (Flag flag : Flag.values()){
+                        if (!flags.containsKey(flag)){
+                            flags.put(flag, getDefaultFlags().get(flag));
+                        }
                     }
                     UUID owner = UUID.fromString(c.getString(key + ".owner"));
                     Location loc = plugin.stringToLoc(c.getString(key + ".location"));

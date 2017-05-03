@@ -54,7 +54,7 @@ public class SignEventListener implements Listener {
             Warp warp = handler.getWarp(sign.getLine(1));
             if (warp != null) {
                 if (str.checkPermission(p, str.useWarpSignPerm)) {
-                    boolean signPrivate = warp.getFlag(Flag.SIGNPRIVATE) & !str.checkPermission(e.getPlayer(), str.warpToPrivatePerm) && !warp.getOwner().equals(e.getPlayer().getUniqueId());
+                    boolean signPrivate = warp.getFlag(Flag.SIGNPRIVATE) && !str.checkPermission(e.getPlayer(), str.warpToPrivatePerm) && !warp.getOwner().equals(e.getPlayer().getUniqueId());
                     if (!signPrivate) {
                         if (sign.getLine(0).equalsIgnoreCase(str.warpSignHeader)) {
                             e.getPlayer().teleport(warp.getLocation(true));
