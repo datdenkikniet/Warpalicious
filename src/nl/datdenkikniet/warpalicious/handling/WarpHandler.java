@@ -235,7 +235,7 @@ public class WarpHandler {
             int min = page * 9;
             int max = (page * 9) + 9;
             ArrayList<Warp> warps2 = new ArrayList<>();
-            warps.stream().filter(warp -> (!warp.isPrivate() || str.checkPermission(player, str.warpListPrivatePerm)) || warp.getOwner().equals(pl.getUniqueId())).forEach(warps2::add);
+            warps.stream().filter(warp -> (!warp.isPrivate() || str.checkPermission(player, str.warpListPrivatePerm)) && warp.getOwner().equals(pl.getUniqueId())).forEach(warps2::add);
             String toRet = str.warpOthersList.replace("%PAGE%", String.valueOf(page + 1)).replace("%MAXPAGE%", String.valueOf(getWarpListPagesAmtOther(player, pl))).replace("%PLAYERNAME%", pl.getName());
             for (int i = min; i < (max > warps2.size() ? warps2.size() : max); i++) {
                 toRet += getWarpListString(warps2.get(i), i);
