@@ -120,7 +120,7 @@ public class WarpHandler {
         FileConfiguration c = cfg.getCustomConfig(config);
         for (Warp warp : warps) {
             c.set(warp.getName() + ".owner", warp.getOwner().toString());
-            c.set(warp.getName() + ".location", plugin.locationToString(warp.getLocation(false)));
+            c.set(warp.getName() + ".location", plugin.locationToString(warp.getLocation()));
             for (Flag flag : Flag.values()) {
                 c.set(warp.getName() + ".flags." + flag.name(), warp.getFlags().get(flag));
             }
