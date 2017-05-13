@@ -1,6 +1,7 @@
 package nl.datdenkikniet.warpalicious.handling;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -39,11 +40,14 @@ public class Warp {
         return owner;
     }
 
-    public Location getLocation(boolean isWarp) {
-        if (isWarp) {
-            timesWarpedTo++;
-        }
+    public Location getLocation() {
         return loc;
+    }
+
+    public void warp(Player player)
+    {
+        player.teleport(loc);
+        timesWarpedTo++;
     }
 
     public String getName() {

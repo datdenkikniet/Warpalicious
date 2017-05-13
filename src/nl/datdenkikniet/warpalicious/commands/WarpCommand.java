@@ -40,7 +40,7 @@ public class WarpCommand implements CommandExecutor {
                 if (warp != null) {
                     if (!warp.isPrivate() || str.checkPermission(sender, str.warpToPrivatePerm) || warp.getOwner().equals(player.getUniqueId())) {
                         player.sendMessage(str.warpToWarp.replace("%NAME%", warp.getName()));
-                        player.teleport(warp.getLocation(true));
+                        warp.warp(player);
                         return true;
                     } else {
                         sender.sendMessage(str.warpIsPrivate);

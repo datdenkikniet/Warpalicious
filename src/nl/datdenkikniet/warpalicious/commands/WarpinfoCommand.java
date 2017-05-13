@@ -64,7 +64,7 @@ public class WarpinfoCommand implements CommandExecutor {
                 if (warp != null) {
                     if (hasPermToViewWarp(player, warp)) {
                         sender.sendMessage(str.warpInfoMain.replace("%WARPNAME%", warp.getName()));
-                        Location loc = warp.getLocation(false);
+                        Location loc = warp.getLocation();
                         sender.sendMessage(str.warpInfoBy.replace("%PLAYERNAME%", Bukkit.getOfflinePlayer(warp.getOwner()).getName()));
                         sender.sendMessage(str.warpInfoLocation.replace("%X%", String.valueOf(Math.round(loc.getX()))).replace("%Y%", String.valueOf(Math.round(loc.getY()))).replace("%Z%", String.valueOf(Math.round(loc.getZ()))).replace("%WORLD%", loc.getWorld().getName()));
                         sender.sendMessage(str.warpInfoAmount.replace("%AMOUNT%", String.valueOf(warp.getTimesWarpedTo())));
