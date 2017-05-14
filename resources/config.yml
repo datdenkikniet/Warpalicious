@@ -1,8 +1,8 @@
 settings:
     survival:
         sign:
-            delay: 10
-            allow-move: false
+            delay: 10 #set the delay for someone warping using a sign in survival
+            allow-move: false #should the player that's warping be allowed to move?
         command:
             delay: 10
             allow-move: false
@@ -16,8 +16,8 @@ settings:
 effects:
     arrival:
         sign:
-            effect: portal
-            count: 50
+            effect: portal #the effect played when a player arrives after warping using a sign
+            count: 50 #the amount of times the effect is played
         command:
             effect: portal
             count: 50
