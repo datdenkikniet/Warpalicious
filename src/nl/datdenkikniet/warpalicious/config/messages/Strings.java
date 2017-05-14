@@ -45,7 +45,7 @@ public class Strings {
     public String createWarpSignPerm = permission + "makewarpsign";
     public String useWarpSignPerm = permission + "usewarpsign";
     public String nodelayperm = permission + "nodelay";
-    public String noParticlePerm = permission + "oparticle";
+    public String noParticlePerm = permission + "noparticle";
 
     /*
     Messages
