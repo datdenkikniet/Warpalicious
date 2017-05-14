@@ -67,7 +67,7 @@ public class WarpHandler {
                     UUID owner = UUID.fromString(c.getString(key + ".owner"));
                     Location loc = plugin.stringToLoc(c.getString(key + ".location"));
                     int times = c.getInt(key + ".timeswarpedto");
-                    new Warp(owner, loc, key, flags, this, times);
+                    new Warp(getPlugin(), owner, loc, key, flags, this, times);
                 }
             } catch (Exception ex) {
                 System.out.println("Error while loading flag " + key);
@@ -310,10 +310,18 @@ public class WarpHandler {
             }
             for (int i = actualPage * 7; i < actualPage * 7 + 7; i++) {
                 if (!(i >= warps.length)) {
-                    if (!warps[i].isPrivate()) {
-                        toRet += str.warpTopSub.replace("%POSITION%", String.valueOf(i + 1)).replace("%WARPNAME%", warps[i].getName()).replace("%WARPAMOUNT%", String.valueOf(warps[i].getTimesWarpedTo())).replace("%OWNERNAME%", Bukkit.getOfflinePlayer(warps[i].getOwner()).getName());
+                    if (Bukkit.getOfflinePlayer(warps[i].getOwner()).hasPlayedBefore()) {
+                        if (!warps[i].isPrivate()) {
+                            toRet += str.warpTopSub.replace("%POSITION%", String.valueOf(i + 1)).replace("%WARPNAME%", warps[i].getName()).replace("%WARPAMOUNT%", String.valueOf(warps[i].getTimesWarpedTo())).replace("%OWNERNAME%", Bukkit.getOfflinePlayer(warps[i].getOwner()).getName());
+                        } else {
+                            toRet += str.warpTopSubPrivate.replace("%POSITION%", String.valueOf(i + 1)).replace("%WARPNAME%", warps[i].getName()).replace("%WARPAMOUNT%", String.valueOf(warps[i].getTimesWarpedTo())).replace("%OWNERNAME%", Bukkit.getOfflinePlayer(warps[i].getOwner()).getName());
+                        }
                     } else {
-                        toRet += str.warpTopSubPrivate.replace("%POSITION%", String.valueOf(i + 1)).replace("%WARPNAME%", warps[i].getName()).replace("%WARPAMOUNT%", String.valueOf(warps[i].getTimesWarpedTo())).replace("%OWNERNAME%", Bukkit.getOfflinePlayer(warps[i].getOwner()).getName());
+                        if (!warps[i].isPrivate()) {
+                            toRet += str.warpTopSub.replace("%POSITION%", String.valueOf(i + 1)).replace("%WARPNAME%", warps[i].getName()).replace("%WARPAMOUNT%", String.valueOf(warps[i].getTimesWarpedTo())).replace("%OWNERNAME%", warps[i].getOwner().toString());
+                        } else {
+                            toRet += str.warpTopSubPrivate.replace("%POSITION%", String.valueOf(i + 1)).replace("%WARPNAME%", warps[i].getName()).replace("%WARPAMOUNT%", String.valueOf(warps[i].getTimesWarpedTo())).replace("%OWNERNAME%", warps[i].getOwner().toString());
+                        }
                     }
                 }
             }

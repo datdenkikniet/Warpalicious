@@ -2,6 +2,7 @@ package nl.datdenkikniet.warpalicious.commands;
 
 
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
+import nl.datdenkikniet.warpalicious.handling.TeleportMode;
 import nl.datdenkikniet.warpalicious.handling.Warp;
 import nl.datdenkikniet.warpalicious.handling.WarpHandler;
 import org.bukkit.command.Command;
@@ -27,7 +28,7 @@ public class WarpCommand implements CommandExecutor {
         if (str.checkPermission(sender, str.warpToPrivatePerm) || str.checkPermission(sender, str.warpPerm)) {
             if (args.length == 0 || (args.length == 1 && args[0].equalsIgnoreCase("-help"))) {
                 sender.sendMessage(str.prefix + " Help menu\n" +
-                        "/warp <name> to teleport to a warp\n" +
+                        "/warp <name> to warp to a warp\n" +
                         "/setwarp <warp> [private] to create a (private) warp\n" +
                         "/delwarp <warp> to delete a warp\n" +
                         "/editwarp <warp> <public|private> to make a warp public or private\n" +
@@ -39,8 +40,7 @@ public class WarpCommand implements CommandExecutor {
                 Warp warp = handler.getWarp(args[0]);
                 if (warp != null) {
                     if (!warp.isPrivate() || str.checkPermission(sender, str.warpToPrivatePerm) || warp.getOwner().equals(player.getUniqueId())) {
-                        player.sendMessage(str.warpToWarp.replace("%NAME%", warp.getName()));
-                        player.teleport(warp.getLocation(true));
+                        warp.warp(player, TeleportMode.COMMAND, str);
                         return true;
                     } else {
                         sender.sendMessage(str.warpIsPrivate);

@@ -44,6 +44,8 @@ public class Strings {
     public String setPrivateWarpPerm = permission + "set.private";
     public String createWarpSignPerm = permission + "makewarpsign";
     public String useWarpSignPerm = permission + "usewarpsign";
+    public String nodelayperm = permission + ".nodelay";
+    public String noParticlePerm = permission + ".noparticle";
 
     /*
     Messages
@@ -85,10 +87,13 @@ public class Strings {
     public String madeWarpPrivate;
     public String madeWarpPublic;
     public String privateWarpSet;
-    public String correctUsage;
+    private String correctUsage;
     public String noSignPerm;
     public String createdWarpSign;
     public String warpSignHeader;
+    public String noMove;
+    public String tpInTime;
+    public String youMoved;
 
     /*
     String functions
@@ -149,6 +154,9 @@ public class Strings {
         noSignPerm = s("no-sign-permission");
         createdWarpSign = s("created-warp-sign");
         warpSignHeader = s("warpsign-header");
+        noMove = s("dont-move");
+        youMoved = s("you-moved");
+        tpInTime = s("warp-in-time");
     }
 
     private String s(String s) {

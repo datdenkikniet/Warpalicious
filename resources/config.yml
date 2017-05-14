@@ -1,0 +1,30 @@
+settings:
+    survival:
+        sign:
+            delay: 10
+            allow-move: false
+        command:
+            delay: 10
+            allow-move: false
+    creative:
+        sign:
+            delay: 0
+            allow-move: true
+        command:
+            delay: 0
+            allow-move: true
+effects:
+    arrival:
+        sign:
+            effect: portal
+            count: 50
+        command:
+            effect: portal
+            count: 50
+    departure:
+        sign:
+            effect: flame
+            count: 500
+        command:
+            effect: flame
+            count: 500

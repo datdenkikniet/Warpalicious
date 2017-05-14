@@ -39,4 +39,7 @@ correct-usage: "%PREFIX% Correct usage: %USAGE%"
 no-sign-permission: "%PREFIX% &cYou don't have permission to create warp signs!"
 created-warp-sign: "%PREFIX% Succesfully created a warp sign for %WARP%"
 warpsign-header: "&e&l[Warp]"
+dont-move: "%PREFIX% You won't be teleported if you move!"
+you-moved: "%PREFIX% You moved! Teleportation cancelled."
+teleport-in-time: "%PREFIX% You will be teleported in %TIME% seconds."
 

@@ -4,6 +4,7 @@ import nl.datdenkikniet.warpalicious.config.messages.Strings;
 import nl.datdenkikniet.warpalicious.handling.Flag;
 import nl.datdenkikniet.warpalicious.handling.Warp;
 import nl.datdenkikniet.warpalicious.handling.WarpHandler;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -33,7 +34,7 @@ public class SetWarpCommand implements CommandExecutor {
             boolean hasEnoughWarps = sender.hasPermission(str.universalPerm);
             int amount = 0;
             for (PermissionAttachmentInfo pai : player.getEffectivePermissions()) {
-                if (pai.getPermission().startsWith(str.setWarpPerm) && pai.getPermission().split(Pattern.quote(".")).length == 3) {
+                if (pai.getPermission().startsWith(str.setWarpPerm) && pai.getPermission().split(Pattern.quote(".")).length == 3 && StringUtils.isNumeric(pai.getPermission().split(Pattern.quote("."))[2])) {
                     hasPerm = true;
                     amount = Integer.valueOf(pai.getPermission().split(Pattern.quote("."))[2]);
                     if (amount > amt) {
@@ -47,7 +48,7 @@ public class SetWarpCommand implements CommandExecutor {
                     return true;
                 }
                 if (handler.getWarp(args[0]) == null) {
-                    Warp warp = new Warp(player.getUniqueId(), player.getLocation(), args[0], handler.getDefaultFlags(), handler, 0);
+                    Warp warp = new Warp(handler.getPlugin(), player.getUniqueId(), player.getLocation(), args[0], handler.getDefaultFlags(), handler, 0);
                     handler.saveWarps();
                     if (args.length > 1 && args[1].equalsIgnoreCase("private") && str.checkPermission(sender, str.setPrivateWarpPerm)){
                         warp.setFlag(Flag.PRIVATE, true);
