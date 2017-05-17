@@ -1,6 +1,6 @@
 package nl.datdenkikniet.warpalicious.commands;
 
-import nl.datdenkikniet.warpalicious.MyWarpsPlugin;
+import nl.datdenkikniet.warpalicious.WarpaliciousPlugin;
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
 import nl.datdenkikniet.warpalicious.handling.WarpHandler;
 import org.bukkit.command.Command;
@@ -11,7 +11,7 @@ public class FindWarpCommand implements CommandExecutor {
     private Strings str;
     private WarpHandler handler;
 
-    public FindWarpCommand(MyWarpsPlugin instance){
+    public FindWarpCommand(WarpaliciousPlugin instance){
         str = instance.getStrings();
         handler = instance.getWarpHandler();
     }

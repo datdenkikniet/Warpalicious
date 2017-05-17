@@ -1,6 +1,6 @@
 package nl.datdenkikniet.warpalicious.config.messages;
 
-import nl.datdenkikniet.warpalicious.MyWarpsPlugin;
+import nl.datdenkikniet.warpalicious.WarpaliciousPlugin;
 import nl.datdenkikniet.warpalicious.config.Config;
 import nl.datdenkikniet.warpalicious.config.CustomConfig;
 import org.bukkit.command.Command;
@@ -14,7 +14,7 @@ public class Strings {
     private String permission = "warpalicious.";
     private MessagesGetter messages;
 
-    public Strings(CustomConfig cu, Config cfg, MyWarpsPlugin plugin) {
+    public Strings(CustomConfig cu, Config cfg, WarpaliciousPlugin plugin) {
         configHandler = cu;
         config = cfg;
         messages = new MessagesGetter(configHandler, config, plugin);
