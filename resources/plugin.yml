@@ -1,6 +1,6 @@
 name: Warpalicious
-main: nl.datdenkikniet.warpalicious.Warpalicious
-authors: [datdenkikniet, TastyBlueberry]
+main: nl.datdenkikniet.warpalicious.WarpaliciousPlugin
+authors: [datdenkikniet, TastyBlueberry, Oskar3123]
 version: 1.6.1
 commands:
     delwarp:
