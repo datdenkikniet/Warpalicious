@@ -13,7 +13,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
-public class WarpaliciousPlugin extends JavaPlugin {
+public class WarpaliciousPlugin extends JavaPlugin
+{
 
     public CustomConfig cfgHandler = new CustomConfig(this);
 
@@ -24,11 +25,15 @@ public class WarpaliciousPlugin extends JavaPlugin {
     private Strings str;
     private WarpHandler handler;
 
-    public void onEnable() {
-        try {
+    public void onEnable()
+    {
+        try
+        {
             Metrics metrics = new Metrics(this);
             metrics.start();
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             getLogger().info("Couldn't enable plugin metrics");
         }
         checkTeleportModes();
@@ -40,16 +45,19 @@ public class WarpaliciousPlugin extends JavaPlugin {
         getLogger().info("Warpalicious version " + getDescription().getVersion() + " has been enabled!");
     }
 
-    public void onDisable() {
+    public void onDisable()
+    {
         handler.saveWarps();
         getLogger().info("Succesfully saved warps");
     }
 
-    public Strings getStrings() {
+    public Strings getStrings()
+    {
         return str;
     }
 
-    public Location stringToLoc(String location) {
+    public Location stringToLoc(String location)
+    {
         String[] stringslist = location.split(",");
         return new Location(getServer().getWorld(stringslist[0]),
                 Double.valueOf(stringslist[1]),
@@ -59,15 +67,18 @@ public class WarpaliciousPlugin extends JavaPlugin {
                 Float.valueOf(stringslist[5]));
     }
 
-    public String locationToString(Location loc) {
+    public String locationToString(Location loc)
+    {
         return String.format("%s,%s,%s,%s,%s,%s", loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
     }
 
-    public WarpHandler getWarpHandler() {
+    public WarpHandler getWarpHandler()
+    {
         return handler;
     }
 
-    private void checkTeleportModes() {
+    private void checkTeleportModes()
+    {
         FileConfiguration cfg = cfgHandler.getCustomConfig(config);
         boolean signSurvMove = cfg.getBoolean("settings.survival.sign.allow-move"),
                 commandSurvMove = cfg.getBoolean("settings.survival.command.allow-move"),
@@ -90,24 +101,36 @@ public class WarpaliciousPlugin extends JavaPlugin {
                 depCommandCount = cfg.getInt("effects.departure.command.count");
 
         Particle arrivSignEff, arrivCommandEff, depSignEff, depCommandEff;
-        try {
+        try
+        {
             arrivSignEff = Particle.valueOf(cfg.getString("effects.arrival.sign.effect").toUpperCase());
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             arrivSignEff = null;
         }
-        try {
+        try
+        {
             arrivCommandEff = Particle.valueOf(cfg.getString("effects.arrival.command.effect").toUpperCase());
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             arrivCommandEff = null;
         }
-        try {
+        try
+        {
             depSignEff = Particle.valueOf(cfg.getString("effects.departure.sign.effect").toUpperCase());
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             depSignEff = null;
         }
-        try {
+        try
+        {
             depCommandEff = Particle.valueOf(cfg.getString("effects.departure.command.effect").toUpperCase());
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             depCommandEff = null;
         }
         TeleportMode.SIGN.setValues(creaSign, survSign, creaSignPerm, survSignPerm, arrivSignEff, depSignEff, arrivSignCount, depSignCount, signCreaMove, signSurvMove);

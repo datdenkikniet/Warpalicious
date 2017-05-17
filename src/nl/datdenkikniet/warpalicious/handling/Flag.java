@@ -1,6 +1,7 @@
 package nl.datdenkikniet.warpalicious.handling;
 
-public enum Flag {
+public enum Flag
+{
     PRIVATE,
     SIGNPRIVATE
 }
