@@ -13,18 +13,20 @@ public enum TeleportMode
     SIGN(0, 0, false, false, null, null, 1, 1, false, false),
     COMMAND(0, 0, false, false, null, null, 1, 1, false, false);
 
-    TeleportMode(int cd, int sd, boolean cp, boolean sp, Particle ae, Particle de, int ac, int dc, boolean cm, boolean sm)
+    TeleportMode(int creativeDelay, int survivalDelay, boolean creativePerm, boolean survivalPerm,
+                 Particle arriveEffect, Particle departEffect, int arriveCount, int departCount,
+                 boolean creativeMove, boolean survivalMove)
     {
-        delayInCrea = cd;
-        delayInSurv = sd;
-        creaPerm = cp;
-        survPerm = sp;
-        arrivEffect = ae;
-        depEffect = de;
-        arrivCount = ac;
-        depCount = dc;
-        creaMove = cm;
-        survMove = sm;
+        delayInCrea = creativeDelay;
+        delayInSurv = survivalDelay;
+        creaPerm = creativePerm;
+        survPerm = survivalPerm;
+        arrivEffect = arriveEffect;
+        depEffect = departEffect;
+        arrivCount = arriveCount;
+        depCount = departCount;
+        creaMove = creativeMove;
+        survMove = survivalMove;
     }
 
     private int delayInCrea, delayInSurv;
@@ -93,18 +95,20 @@ public enum TeleportMode
         }
     }
 
-    public void setValues(int cd, int sd, boolean cp, boolean sp, Particle ae, Particle de, int ac, int dc, boolean cm, boolean sm)
+    public void setValues(int creativeDelay, int survivalDelay, boolean creativePerm, boolean survivalPerm,
+                          Particle arriveEffect, Particle departEffect, int arriveCount, int departCount,
+                          boolean creativeMove, boolean survivalMove)
     {
-        delayInCrea = cd;
-        delayInSurv = sd;
-        creaPerm = cp;
-        survPerm = sp;
-        arrivEffect = ae;
-        depEffect = de;
-        arrivCount = ac;
-        depCount = dc;
-        creaMove = cm;
-        survMove = sm;
+        delayInCrea = creativeDelay;
+        delayInSurv = survivalDelay;
+        creaPerm = creativePerm;
+        survPerm = survivalPerm;
+        arrivEffect = arriveEffect;
+        depEffect = departEffect;
+        arrivCount = arriveCount;
+        depCount = departCount;
+        creaMove = creativeMove;
+        survMove = survivalMove;
     }
 
     public static int getPermissionDelay(Player player, TeleportMode mode)
