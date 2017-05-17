@@ -1,11 +1,13 @@
 package nl.datdenkikniet.warpalicious.listeners;
 
 import net.md_5.bungee.api.ChatColor;
+import nl.datdenkikniet.warpalicious.WarpaliciousPlugin;
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
 import nl.datdenkikniet.warpalicious.handling.Flag;
 import nl.datdenkikniet.warpalicious.handling.TeleportMode;
 import nl.datdenkikniet.warpalicious.handling.Warp;
 import nl.datdenkikniet.warpalicious.handling.WarpHandler;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -18,12 +20,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class SignEventListener implements Listener {
 
+    private WarpaliciousPlugin plugin;
     private Strings str;
     private WarpHandler handler;
 
-    public SignEventListener(Strings instance, WarpHandler hd) {
-        str = instance;
-        handler = hd;
+    public SignEventListener(WarpaliciousPlugin plugin) {
+        this.plugin = plugin;
+        str = plugin.getStrings();
+        handler = plugin.getWarpHandler();
     }
 
     @EventHandler
@@ -35,6 +39,10 @@ public class SignEventListener implements Listener {
             if (evt.getPlayer().hasPermission(str.createWarpSignPerm)) {
                 if (l1 != null && handler.getWarp(l1) != null) {
                     evt.setLine(0, str.warpSignHeader);
+                    plugin.getLogger().info(evt.getPlayer() + " created a signwarp with the warp: " + l1);
+                    Location loc = evt.getBlock().getLocation();
+                    plugin.getLogger().info("It is located at X: " + loc.getBlockX() + ", Y: " + loc.getBlockY()
+                            + " and Z: " + loc.getBlockZ() + " in the world: " + loc.getWorld());
                     p.sendMessage(str.createdWarpSign.replace("%WARP%", l1));
                 } else {
                     evt.setLine(0, "[warp]");
@@ -58,6 +66,7 @@ public class SignEventListener implements Listener {
                     boolean signPrivate = warp.getFlag(Flag.SIGNPRIVATE) && !str.checkPermission(e.getPlayer(), str.warpToPrivatePerm) && !warp.getOwner().equals(e.getPlayer().getUniqueId());
                     if (!signPrivate) {
                         if (sign.getLine(0).equalsIgnoreCase(str.warpSignHeader)) {
+                            plugin.getLogger().info(e.getPlayer().getName() + " used a signwarp with the warp: " + warp.getName());
                             warp.warp(e.getPlayer(), TeleportMode.SIGN, str);
                         }
                     } else {

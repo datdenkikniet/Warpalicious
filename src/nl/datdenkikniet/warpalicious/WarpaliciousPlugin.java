@@ -36,7 +36,7 @@ public class WarpaliciousPlugin extends JavaPlugin {
         str = new Strings(cfgHandler, messages, this);
         handler = new WarpHandler(this, warps);
         handler.load();
-        getServer().getPluginManager().registerEvents(new SignEventListener(str, handler), this);
+        getServer().getPluginManager().registerEvents(new SignEventListener(this), this);
         getCommand("warpalicious").setExecutor(new WarpaliciousCommand(this, str));
         getLogger().info("Warpalicious version " + getDescription().getVersion() + " has been enabled!");
     }
