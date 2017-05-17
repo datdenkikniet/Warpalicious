@@ -7,7 +7,6 @@ import nl.datdenkikniet.warpalicious.config.messages.Strings;
 import nl.datdenkikniet.warpalicious.handling.TeleportMode;
 import nl.datdenkikniet.warpalicious.handling.WarpHandler;
 import nl.datdenkikniet.warpalicious.listeners.SignEventListener;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -60,7 +59,7 @@ public class WarpaliciousPlugin extends JavaPlugin
     public Location stringToLoc(String location)
     {
         String[] stringslist = location.split(",");
-        return new Location(Bukkit.getWorld(stringslist[0]),
+        return new Location(getServer().getWorld(stringslist[0]),
                 Double.valueOf(stringslist[1]),
                 Double.valueOf(stringslist[2]),
                 Double.valueOf(stringslist[3]),

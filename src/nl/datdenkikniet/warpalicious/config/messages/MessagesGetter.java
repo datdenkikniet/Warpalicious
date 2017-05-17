@@ -23,7 +23,7 @@ class MessagesGetter
             handler.saveDefaultConfig(cfg);
         }
         handler.reloadCustomConfig(cfg);
-        System.out.println("loading messages....");
+        plugin.getLogger().info("Loading messages...");
         handler.getCustomConfig(cfg).getKeys(false).forEach(key -> messages.add(new Message(key, handler.getCustomConfig(cfg).getString(key))));
     }
 

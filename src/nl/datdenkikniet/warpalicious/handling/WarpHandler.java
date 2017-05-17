@@ -151,7 +151,6 @@ public class WarpHandler
             {
                 c.set(warp.getName() + ".flags." + flag.name(), warp.getFlags().get(flag));
             }
-            c.set(warp.getName() + ".timeswarpedto", warp.getTimesWarpedTo());
         }
         cfg.saveCustomConfig(config);
     }

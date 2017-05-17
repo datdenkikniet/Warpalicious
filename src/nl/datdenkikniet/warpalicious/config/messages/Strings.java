@@ -165,7 +165,7 @@ public class Strings
         warpSignHeader = s("warpsign-header");
         noMove = s("dont-move");
         youMoved = s("you-moved");
-        tpInTime = s("warp-in-time");
+        tpInTime = s("teleport-in-time");
     }
 
     private String s(String s)
