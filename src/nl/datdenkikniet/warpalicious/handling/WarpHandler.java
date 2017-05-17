@@ -119,12 +119,16 @@ public class WarpHandler {
     public void saveWarps() {
         FileConfiguration c = cfg.getCustomConfig(config);
         for (Warp warp : warps) {
-            c.set(warp.getName() + ".owner", warp.getOwner().toString());
-            c.set(warp.getName() + ".location", plugin.locationToString(warp.getLocation(false)));
-            for (Flag flag : Flag.values()) {
-                c.set(warp.getName() + ".flags." + flag.name(), warp.getFlags().get(flag));
+            try {
+                c.set(warp.getName() + ".owner", warp.getOwner().toString());
+                c.set(warp.getName() + ".location", plugin.locationToString(warp.getLocation(false)));
+                for (Flag flag : Flag.values()) {
+                    c.set(warp.getName() + ".flags." + flag.name(), warp.getFlags().get(flag));
+                }
+                c.set(warp.getName() + ".timeswarpedto", warp.getTimesWarpedTo());
+            } catch (Exception ex){
+                plugin.getLogger().severe("An error occured while saving warp " + warp.getName());
             }
-            c.set(warp.getName() + ".timeswarpedto", warp.getTimesWarpedTo());
         }
         cfg.saveCustomConfig(config);
     }
