@@ -1,6 +1,6 @@
 package nl.datdenkikniet.warpalicious.handling;
 
-import nl.datdenkikniet.warpalicious.MyWarpsPlugin;
+import nl.datdenkikniet.warpalicious.WarpaliciousPlugin;
 import nl.datdenkikniet.warpalicious.commands.*;
 import nl.datdenkikniet.warpalicious.config.Config;
 import nl.datdenkikniet.warpalicious.config.CustomConfig;
@@ -18,14 +18,14 @@ import java.util.UUID;
 
 public class WarpHandler {
 
-    private MyWarpsPlugin plugin;
+    private WarpaliciousPlugin plugin;
     private Config config;
     private CustomConfig cfg;
     private ArrayList<Warp> warps = new ArrayList<>();
     private Strings str;
 
 
-    public WarpHandler(MyWarpsPlugin instance, Config config) {
+    public WarpHandler(WarpaliciousPlugin instance, Config config) {
         plugin = instance;
         this.config = config;
         cfg = plugin.cfgHandler;
@@ -385,7 +385,7 @@ public class WarpHandler {
         }
         return toRet;
     }
-    public MyWarpsPlugin getPlugin(){
+    public WarpaliciousPlugin getPlugin(){
         return plugin;
     }
 }

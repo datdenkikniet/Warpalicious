@@ -1,6 +1,6 @@
 package nl.datdenkikniet.warpalicious.commands;
 
-import nl.datdenkikniet.warpalicious.MyWarpsPlugin;
+import nl.datdenkikniet.warpalicious.WarpaliciousPlugin;
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,10 +9,10 @@ import org.bukkit.command.CommandSender;
 /**
  * Created by Jona on 21/10/2016.
  */
-public class MyWarpsCommand implements CommandExecutor {
-    private MyWarpsPlugin plugin;
+public class WarpaliciousCommand implements CommandExecutor {
+    private WarpaliciousPlugin plugin;
     private Strings str;
-    public MyWarpsCommand(MyWarpsPlugin pl, Strings instance){
+    public WarpaliciousCommand(WarpaliciousPlugin pl, Strings instance){
         str = instance;
         plugin = pl;
     }

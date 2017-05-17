@@ -1,12 +1,12 @@
 package nl.datdenkikniet.warpalicious.config.messages;
 
-import nl.datdenkikniet.warpalicious.MyWarpsPlugin;
+import nl.datdenkikniet.warpalicious.WarpaliciousPlugin;
 
 class MessageNotFoundException extends Exception {
     private String messageName;
-    private MyWarpsPlugin plugin;
+    private WarpaliciousPlugin plugin;
 
-    MessageNotFoundException(String name, MyWarpsPlugin instance) {
+    MessageNotFoundException(String name, WarpaliciousPlugin instance) {
         messageName = name;
         plugin = instance;
     }

@@ -1,6 +1,6 @@
 package nl.datdenkikniet.warpalicious;
 
-import nl.datdenkikniet.warpalicious.commands.MyWarpsCommand;
+import nl.datdenkikniet.warpalicious.commands.WarpaliciousCommand;
 import nl.datdenkikniet.warpalicious.config.Config;
 import nl.datdenkikniet.warpalicious.config.CustomConfig;
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
@@ -14,7 +14,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mcstats.Metrics;
 
-public class MyWarpsPlugin extends JavaPlugin {
+public class WarpaliciousPlugin extends JavaPlugin {
 
     public CustomConfig cfgHandler = new CustomConfig(this);
 
@@ -37,7 +37,7 @@ public class MyWarpsPlugin extends JavaPlugin {
         handler = new WarpHandler(this, warps);
         handler.load();
         getServer().getPluginManager().registerEvents(new SignEventListener(str, handler), this);
-        getCommand("warpalicious").setExecutor(new MyWarpsCommand(this, str));
+        getCommand("warpalicious").setExecutor(new WarpaliciousCommand(this, str));
         getLogger().info("Warpalicious version " + getDescription().getVersion() + " has been enabled!");
     }
 

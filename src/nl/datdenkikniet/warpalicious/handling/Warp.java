@@ -1,6 +1,6 @@
 package nl.datdenkikniet.warpalicious.handling;
 
-import nl.datdenkikniet.warpalicious.MyWarpsPlugin;
+import nl.datdenkikniet.warpalicious.WarpaliciousPlugin;
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -17,10 +17,10 @@ public class Warp {
     private String name;
     private HashMap<Flag, Boolean> flags;
     private int timesWarpedTo;
-    private MyWarpsPlugin plugin;
+    private WarpaliciousPlugin plugin;
 
 
-    public Warp(MyWarpsPlugin instance, UUID owner, Location loc, String name, HashMap<Flag, Boolean> flags, WarpHandler handler, int time) {
+    public Warp(WarpaliciousPlugin instance, UUID owner, Location loc, String name, HashMap<Flag, Boolean> flags, WarpHandler handler, int time) {
         this.owner = owner;
         this.loc = loc;
         this.name = name;
@@ -80,9 +80,7 @@ public class Warp {
                 player.sendMessage(str.noMove);
             }
             final int taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new TeleportRunnable(player, mode, this, str, delay), 0L, 20L);
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                Bukkit.getScheduler().cancelTask(taskId);
-            }, delay * 20 + 10L);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> Bukkit.getScheduler().cancelTask(taskId), delay * 20 + 10L);
         }
     }
 

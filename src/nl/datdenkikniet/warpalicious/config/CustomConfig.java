@@ -3,7 +3,7 @@
  */
 package nl.datdenkikniet.warpalicious.config;
 
-import nl.datdenkikniet.warpalicious.MyWarpsPlugin;
+import nl.datdenkikniet.warpalicious.WarpaliciousPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -13,8 +13,8 @@ import java.io.InputStream;
 import java.util.logging.Level;
 
 public class CustomConfig{
-	MyWarpsPlugin plugin;
-	public CustomConfig(MyWarpsPlugin instance){
+	private WarpaliciousPlugin plugin;
+	public CustomConfig(WarpaliciousPlugin instance){
 		plugin = instance;
 	}
 	public FileConfiguration getCustomConfig(Config config) {
