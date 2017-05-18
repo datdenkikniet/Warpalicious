@@ -80,60 +80,50 @@ public class WarpaliciousPlugin extends JavaPlugin
     private void checkTeleportModes()
     {
         FileConfiguration cfg = cfgHandler.getCustomConfig(config);
-        boolean signSurvMove = cfg.getBoolean("settings.survival.sign.allow-move"),
-                commandSurvMove = cfg.getBoolean("settings.survival.command.allow-move"),
-                signCreaMove = cfg.getBoolean("settings.creative.sign.allow-move"),
-                commandCreaMove = cfg.getBoolean("settings.creative.command.allow-move");
+        
+        boolean allowMoveSignSurv = cfg.getBoolean("settings.survival.sign.allow-move"),
+                allowMoveCommandSurv = cfg.getBoolean("settings.survival.command.allow-move"),
+                allowMoveSignCrea = cfg.getBoolean("settings.creative.sign.allow-move"),
+                allowMoveCommandCrea = cfg.getBoolean("settings.creative.command.allow-move");
 
         boolean survSignPerm = cfg.isString("settings.survival.sign.delay"),
                 survCommandPerm = cfg.isString("settings.survival.command.delay"),
                 creaSignPerm = cfg.isString("settings.creative.sign.delay"),
                 creaCommandPerm = cfg.isString("settings.creative.command.delay");
 
-        int survSign = survSignPerm ? 0 : cfg.getInt("settings.survival.sign.delay"),
-                survCommand = survCommandPerm ? 0 : cfg.getInt("settings.survival.command.delay"),
-                creaSign = creaSignPerm ? 0 : cfg.getInt("settings.creative.sign.delay"),
-                creaCommand = creaCommandPerm ? 0 : cfg.getInt("settings.creative.command.delay");
+        int delaySignSurv = survSignPerm ? 0 : cfg.getInt("settings.survival.sign.delay"),
+                delayCommandSurv = survCommandPerm ? 0 : cfg.getInt("settings.survival.command.delay"),
+                delaySignCrea = creaSignPerm ? 0 : cfg.getInt("settings.creative.sign.delay"),
+                delayCommandCrea = creaCommandPerm ? 0 : cfg.getInt("settings.creative.command.delay");
 
-        int arrivSignCount = cfg.getInt("effects.arrival.sign.count"),
-                arrivCommandCount = cfg.getInt("effects.arrival.command.count"),
-                depSignCount = cfg.getInt("effects.departure.sign.count"),
-                depCommandCount = cfg.getInt("effects.departure.command.count");
+        int arriveSignCount = cfg.getInt("effects.arrival.sign.count"),
+                arriveCommandCount = cfg.getInt("effects.arrival.command.count"),
+                departSignCount = cfg.getInt("effects.departure.sign.count"),
+                departCommandCount = cfg.getInt("effects.departure.command.count");
 
-        Particle arrivSignEff, arrivCommandEff, depSignEff, depCommandEff;
+        Particle arriveSignEffect = null, arriveCommandEffect = null, departSignEffect = null, departCommandEffect = null;
         try
         {
-            arrivSignEff = Particle.valueOf(cfg.getString("effects.arrival.sign.effect").toUpperCase());
+            arriveSignEffect = Particle.valueOf(cfg.getString("effects.arrival.sign.effect").toUpperCase());
         }
-        catch (Exception ex)
-        {
-            arrivSignEff = null;
-        }
+        catch (Exception ignored) { }
         try
         {
-            arrivCommandEff = Particle.valueOf(cfg.getString("effects.arrival.command.effect").toUpperCase());
+            arriveCommandEffect = Particle.valueOf(cfg.getString("effects.arrival.command.effect").toUpperCase());
         }
-        catch (Exception ex)
-        {
-            arrivCommandEff = null;
-        }
+        catch (Exception ignored) { }
         try
         {
-            depSignEff = Particle.valueOf(cfg.getString("effects.departure.sign.effect").toUpperCase());
+            departSignEffect = Particle.valueOf(cfg.getString("effects.departure.sign.effect").toUpperCase());
         }
-        catch (Exception ex)
-        {
-            depSignEff = null;
-        }
+        catch (Exception ignored) { }
         try
         {
-            depCommandEff = Particle.valueOf(cfg.getString("effects.departure.command.effect").toUpperCase());
+            departCommandEffect = Particle.valueOf(cfg.getString("effects.departure.command.effect").toUpperCase());
         }
-        catch (Exception ex)
-        {
-            depCommandEff = null;
-        }
-        TeleportMode.SIGN.setValues(creaSign, survSign, creaSignPerm, survSignPerm, arrivSignEff, depSignEff, arrivSignCount, depSignCount, signCreaMove, signSurvMove);
-        TeleportMode.COMMAND.setValues(creaCommand, survCommand, survCommandPerm, creaCommandPerm, arrivCommandEff, depCommandEff, arrivCommandCount, depCommandCount, commandCreaMove, commandSurvMove);
+        catch (Exception ignored) { }
+
+        TeleportMode.SIGN.setValues(delaySignCrea, delaySignSurv, creaSignPerm, survSignPerm, arriveSignEffect, departSignEffect, arriveSignCount, departSignCount, allowMoveSignCrea, allowMoveSignSurv);
+        TeleportMode.COMMAND.setValues(delayCommandCrea, delayCommandSurv, survCommandPerm, creaCommandPerm, arriveCommandEffect, departCommandEffect, arriveCommandCount, departCommandCount, allowMoveCommandCrea, allowMoveCommandSurv);
     }
 }
