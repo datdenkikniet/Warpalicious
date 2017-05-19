@@ -47,3 +47,4 @@ removed-invited-player: "%PREFIX% Removed player %PLAYERNAME% from the invited l
 added-invited-player: "%PREFIX% Added player %PLAYERNAME% to the invited list for warp %WARPNAME%."
 player-is-not-invited: "%PREFIX% That player has not been invited!"
 player-already-invited: "%PREFIX% That player has already been invited!"
+warp-not-private: "%PREFIX% That warp is not private!"

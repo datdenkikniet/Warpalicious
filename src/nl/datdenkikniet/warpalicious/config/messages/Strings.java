@@ -178,6 +178,7 @@ public class Strings
         addedInvitedPlayer = s("added-invited-player");
         notInvited = s("player-is-not-invited");
         alreadyInvited = s("player-already-invited");
+        notPrivate = s("warp-not-private");
     }
 
     private String s(String s)
