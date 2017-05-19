@@ -7,6 +7,7 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -19,8 +20,9 @@ public class Warp
     private HashMap<Flag, Boolean> flags;
     private int timesWarpedTo;
     private WarpaliciousPlugin plugin;
+    private ArrayList<UUID> invitedPlayers;
 
-    public Warp(WarpaliciousPlugin instance, UUID owner, Location loc, String name, HashMap<Flag, Boolean> flags, WarpHandler handler, int time)
+    public Warp(WarpaliciousPlugin instance, UUID owner, Location loc, String name, HashMap<Flag, Boolean> flags, WarpHandler handler, int time, ArrayList<UUID> invited)
     {
         this.owner = owner;
         this.loc = loc;
@@ -29,6 +31,7 @@ public class Warp
         handler.addWarp(this);
         timesWarpedTo = time;
         plugin = instance;
+        invitedPlayers = invited;
     }
 
     public boolean isPrivate()
@@ -120,5 +123,33 @@ public class Warp
     HashMap<Flag, Boolean> getFlags()
     {
         return flags;
+    }
+
+    public boolean isInvited(UUID u)
+    {
+        return invitedPlayers.contains(u);
+    }
+
+    public void addInvitedPlayer(UUID u)
+    {
+        invitedPlayers.add(u);
+    }
+
+    public void addInvitedPlayer(Player p)
+    {
+        addInvitedPlayer(p.getUniqueId());
+    }
+
+    public void removeInvitedPlayer(UUID u)
+    {
+        invitedPlayers.remove(u);
+    }
+
+    public void removeInvitedPlayer(Player p)
+    {
+        removeInvitedPlayer(p.getUniqueId());
+    }
+    public ArrayList<UUID> getInvitedPlayers(){
+        return invitedPlayers;
     }
 }

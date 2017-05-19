@@ -47,6 +47,7 @@ public class Strings
     public String useWarpSignPerm = permission + "usewarpsign";
     public String nodelayperm = permission + "nodelay";
     public String noParticlePerm = permission + "noparticle";
+    public String invitePlayerPerm = permission + "inviteplayers";
 
     /*
     Messages
@@ -95,6 +96,12 @@ public class Strings
     public String noMove;
     public String tpInTime;
     public String youMoved;
+    public String neverPlayed;
+    public String notPrivate;
+    public String removedInvitedPlayers;
+    public String addedInvitedPlayer;
+    public String notInvited;
+    public String alreadyInvited;
 
     /*
     String functions
@@ -166,6 +173,11 @@ public class Strings
         noMove = s("dont-move");
         youMoved = s("you-moved");
         tpInTime = s("teleport-in-time");
+        neverPlayed = s("never-played");
+        removedInvitedPlayers = s("removed-invited-player");
+        addedInvitedPlayer = s("added-invited-player");
+        notInvited = s("player-is-not-invited");
+        alreadyInvited = s("player-already-invited");
     }
 
     private String s(String s)

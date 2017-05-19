@@ -79,7 +79,9 @@ public class WarpHandler
                     UUID owner = UUID.fromString(c.getString(key + ".owner"));
                     Location loc = plugin.stringToLoc(c.getString(key + ".location"));
                     int times = c.getInt(key + ".timeswarpedto");
-                    new Warp(getPlugin(), owner, loc, key, flags, this, times);
+                    ArrayList<UUID> invitedPlayers = new ArrayList<>();
+                    c.getStringList(key + ".invited").stream().forEach(str -> invitedPlayers.add(UUID.fromString(str)));
+                    new Warp(getPlugin(), owner, loc, key, flags, this, times, invitedPlayers);
                 }
             }
             catch (Exception ex)
@@ -98,6 +100,8 @@ public class WarpHandler
         plugin.getCommand("editwarp").setExecutor(new EditWarpCommand(str, this));
         plugin.getCommand("warpinfo").setExecutor(new WarpinfoCommand(str, this));
         plugin.getCommand("findwarp").setExecutor(new FindWarpCommand(plugin));
+        plugin.getCommand("warpinvite").setExecutor(new WarpInviteCommand(plugin, str));
+        plugin.getCommand("warpuninvite").setExecutor(new WarpInviteCommand(plugin, str));
     }
 
     public void delWarp(Warp warp)
@@ -151,6 +155,9 @@ public class WarpHandler
             {
                 c.set(warp.getName() + ".flags." + flag.name(), warp.getFlags().get(flag));
             }
+            ArrayList<String> invited = new ArrayList<>();
+            warp.getInvitedPlayers().stream().forEach(uuid -> invited.add(uuid.toString()));
+            c.set(warp.getName() + ".invited", invited);
         }
         cfg.saveCustomConfig(config);
     }
@@ -516,5 +523,17 @@ public class WarpHandler
     public WarpaliciousPlugin getPlugin()
     {
         return plugin;
+    }
+
+    public boolean allowedToWarp(Warp warp, Player player, TeleportMode mode)
+    {
+        if (mode == TeleportMode.COMMAND)
+        {
+            return (!warp.isPrivate() || str.checkPermission(player, str.warpToPrivatePerm) || warp.getOwner().equals(player.getUniqueId()) || warp.isInvited(player.getUniqueId()));
+        }
+        else
+        {
+            return (!warp.getFlag(Flag.SIGNPRIVATE) || str.checkPermission(player, str.warpToPrivatePerm) || warp.getOwner().equals(player.getUniqueId()) || warp.isInvited(player.getUniqueId()));
+        }
     }
 }

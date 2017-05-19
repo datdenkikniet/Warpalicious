@@ -48,7 +48,7 @@ public class WarpCommand implements CommandExecutor
                 Warp warp = handler.getWarp(args[0]);
                 if (warp != null)
                 {
-                    if (!warp.isPrivate() || str.checkPermission(sender, str.warpToPrivatePerm) || warp.getOwner().equals(player.getUniqueId()))
+                    if (handler.allowedToWarp(warp, player, TeleportMode.COMMAND))
                     {
                         warp.warp(player, TeleportMode.COMMAND, str);
                         return true;

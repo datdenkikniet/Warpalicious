@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class SetWarpCommand implements CommandExecutor
@@ -60,7 +61,7 @@ public class SetWarpCommand implements CommandExecutor
                 }
                 if (handler.getWarp(args[0]) == null)
                 {
-                    Warp warp = new Warp(handler.getPlugin(), player.getUniqueId(), player.getLocation(), args[0], handler.getDefaultFlags(), handler, 0);
+                    Warp warp = new Warp(handler.getPlugin(), player.getUniqueId(), player.getLocation(), args[0], handler.getDefaultFlags(), handler, 0, new ArrayList<>());
                     handler.saveWarps();
                     if (args.length > 1 && args[1].equalsIgnoreCase("private") && str.checkPermission(sender, str.setPrivateWarpPerm))
                     {

@@ -11,7 +11,6 @@ import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.mcstats.Metrics;
 
 public class WarpaliciousPlugin extends JavaPlugin
 {
@@ -29,8 +28,7 @@ public class WarpaliciousPlugin extends JavaPlugin
     {
         try
         {
-            Metrics metrics = new Metrics(this);
-            metrics.start();
+            new Metrics(this);
         }
         catch (Exception ex)
         {

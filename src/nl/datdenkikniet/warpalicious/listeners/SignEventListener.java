@@ -3,7 +3,6 @@ package nl.datdenkikniet.warpalicious.listeners;
 import net.md_5.bungee.api.ChatColor;
 import nl.datdenkikniet.warpalicious.WarpaliciousPlugin;
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
-import nl.datdenkikniet.warpalicious.handling.Flag;
 import nl.datdenkikniet.warpalicious.handling.TeleportMode;
 import nl.datdenkikniet.warpalicious.handling.Warp;
 import nl.datdenkikniet.warpalicious.handling.WarpHandler;
@@ -77,8 +76,7 @@ public class SignEventListener implements Listener
             {
                 if (str.checkPermission(p, str.useWarpSignPerm))
                 {
-                    boolean signPrivate = warp.getFlag(Flag.SIGNPRIVATE) && !str.checkPermission(e.getPlayer(), str.warpToPrivatePerm) && !warp.getOwner().equals(e.getPlayer().getUniqueId());
-                    if (!signPrivate)
+                    if (handler.allowedToWarp(warp, e.getPlayer(), TeleportMode.SIGN))
                     {
                         if (sign.getLine(0).equalsIgnoreCase(str.warpSignHeader))
                         {

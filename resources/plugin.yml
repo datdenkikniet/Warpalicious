@@ -1,7 +1,7 @@
 name: Warpalicious
 main: nl.datdenkikniet.warpalicious.WarpaliciousPlugin
 authors: [datdenkikniet, TastyBlueberry, oskar3123]
-version: 1.6.2
+version: 1.7.0
 commands:
     delwarp:
         description: delete a warp
@@ -34,3 +34,9 @@ commands:
         description: search for a warp by name
         usage: /<command> <name> [page]
         aliases: [searchwarp]
+    warpinvite:
+        description: allow players to warp to a private warp
+        usage: /<command> <privatewarp> <playername>
+    warpuninvite:
+        description: disallow players to warp to a private warp
+        usage: /<command> <privatewarp> <playername>
