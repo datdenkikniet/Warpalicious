@@ -74,11 +74,11 @@ public class SignEventListener implements Listener
             Warp warp = handler.getWarp(sign.getLine(1));
             if (warp != null)
             {
-                if (str.checkPermission(p, str.useWarpSignPerm))
+                if (sign.getLine(0).equalsIgnoreCase(str.warpSignHeader))
                 {
-                    if (handler.allowedToWarp(warp, e.getPlayer(), TeleportMode.SIGN))
+                    if (str.checkPermission(p, str.useWarpSignPerm))
                     {
-                        if (sign.getLine(0).equalsIgnoreCase(str.warpSignHeader))
+                        if (handler.allowedToWarp(warp, e.getPlayer(), TeleportMode.SIGN))
                         {
                             plugin.getLogger().info(e.getPlayer().getName() + " used a signwarp with the warp: " + warp.getName());
                             warp.warp(e.getPlayer(), TeleportMode.SIGN, str);

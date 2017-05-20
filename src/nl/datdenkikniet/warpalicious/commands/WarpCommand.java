@@ -40,7 +40,9 @@ public class WarpCommand implements CommandExecutor
                         "/editwarp <warp> <public|private> to make a warp public or private\n" +
                         "/findwarp <warp> to search for a warp by name\n" +
                         "/warplist <page|self|username> [page] for your own/someone else's/the warp list\n" +
-                        "/warpinfo <warp> to see info about a warp");
+                        "/warpinfo <warp> to see info about a warp\n" +
+                        "/warpinvite <warp> <playername> to invite someone to your private warp.\n" +
+                        "/warpuninvite <warp> <playername> to uninvite someone from your private warp");
                 return true;
             }
             else if (args.length == 1)
