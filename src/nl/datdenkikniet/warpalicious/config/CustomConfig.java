@@ -10,6 +10,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.logging.Level;
 
 public class CustomConfig
@@ -42,8 +43,7 @@ public class CustomConfig
         InputStream defConfigStream = plugin.getResource(config.name + ".yml");
         if (defConfigStream != null)
         {
-            @SuppressWarnings("deprecation")
-            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream));
             config.fileConfig.setDefaults(defConfig);
         }
     }
