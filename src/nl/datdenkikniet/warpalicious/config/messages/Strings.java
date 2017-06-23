@@ -69,6 +69,7 @@ public class Strings
     public String warpPageNotExists;
     public String warpListSub;
     public String warpListSubPrivate;
+    public String warpListSubInvited;
     public String warpsOwnList;
     public String warpOthersList;
     public String warpInfoMain;
@@ -102,6 +103,8 @@ public class Strings
     public String addedInvitedPlayer;
     public String notInvited;
     public String alreadyInvited;
+    public String warpInvited;
+    public String warpUninvited;
 
     /*
     String functions
@@ -146,6 +149,7 @@ public class Strings
         warpPageNotExists = s("warp-page-not-exists");
         warpListSub = s("warp-list-sub");
         warpListSubPrivate = s("warp-list-sub-private");
+        warpListSubInvited = s("warp-list-sub-invited");
         warpsOwnList = s("warp-list-self");
         warpOthersList = s("warp-list-other");
         warpInfoMain = s("warp-info-header");
@@ -179,6 +183,8 @@ public class Strings
         notInvited = s("player-is-not-invited");
         alreadyInvited = s("player-already-invited");
         notPrivate = s("warp-not-private");
+        warpInvited = s("warp-invited");
+        warpUninvited = s("warp-uninvited");
     }
 
     private String s(String s)

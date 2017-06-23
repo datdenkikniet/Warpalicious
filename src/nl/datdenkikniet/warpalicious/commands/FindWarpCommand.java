@@ -6,6 +6,7 @@ import nl.datdenkikniet.warpalicious.handling.WarpHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 public class FindWarpCommand implements CommandExecutor
 {
@@ -21,11 +22,16 @@ public class FindWarpCommand implements CommandExecutor
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
     {
+        if (!(sender instanceof Player))
+        {
+            return true;
+        }
+        Player player = (Player) sender;
         if (args.length == 1)
         {
             if (str.checkPermission(sender, str.searchWarpPerm))
             {
-                sender.sendMessage(handler.formatWarps(args[0], 1));
+                sender.sendMessage(handler.formatWarps(args[0], 1, player.getUniqueId()));
                 return true;
             }
             else
@@ -40,7 +46,7 @@ public class FindWarpCommand implements CommandExecutor
             {
                 try
                 {
-                    sender.sendMessage(handler.formatWarps(args[0], Integer.parseInt(args[1])));
+                    sender.sendMessage(handler.formatWarps(args[0], Integer.parseInt(args[1]), player.getUniqueId()));
                 }
                 catch (NumberFormatException ex)
                 {

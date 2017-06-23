@@ -10,9 +10,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-/**
- * Created by Jona on 19/05/2017.
- */
 public class WarpInviteCommand implements CommandExecutor
 {
     private WarpaliciousPlugin plugin;
@@ -41,6 +38,7 @@ public class WarpInviteCommand implements CommandExecutor
             Warp warp = plugin.getWarpHandler().getWarp(args[0]);
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
             {
+                @SuppressWarnings("deprecation")
                 OfflinePlayer otherPlayer = Bukkit.getOfflinePlayer(args[1]);
                 if (warp == null){
                     sender.sendMessage(str.warpNotExists);
@@ -61,6 +59,9 @@ public class WarpInviteCommand implements CommandExecutor
                             {
                                 warp.addInvitedPlayer(otherPlayer.getUniqueId());
                                 player.sendMessage(str.addedInvitedPlayer.replace("%PLAYERNAME%", otherPlayer.getName()).replace("%WARPNAME%", warp.getName()));
+                                if (Bukkit.getPlayer(otherPlayer.getUniqueId()) != null){
+                                    Bukkit.getPlayer(otherPlayer.getUniqueId()).sendMessage(str.warpInvited.replace("%PLAYERNAME%", player.getName()).replace("%WARPNAME%", warp.getName()));
+                                }
                             }
                             else
                             {
@@ -87,6 +88,9 @@ public class WarpInviteCommand implements CommandExecutor
                             {
                                 warp.removeInvitedPlayer(otherPlayer.getUniqueId());
                                 player.sendMessage(str.removedInvitedPlayers.replace("%PLAYERNAME%", otherPlayer.getName()).replace("%WARPNAME%", warp.getName()));
+                                if (Bukkit.getPlayer(otherPlayer.getUniqueId()) != null){
+                                    Bukkit.getPlayer(otherPlayer.getUniqueId()).sendMessage(str.warpUninvited.replace("%PLAYERNAME%", player.getName()).replace("%WARPNAME%", warp.getName()));
+                                }
                             }
                             else
                             {

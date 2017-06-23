@@ -127,7 +127,7 @@ public class Warp
 
     public boolean isInvited(UUID u)
     {
-        return invitedPlayers.contains(u);
+        return !u.equals(owner) && invitedPlayers.contains(u);
     }
 
     public void addInvitedPlayer(UUID u)
@@ -149,7 +149,7 @@ public class Warp
     {
         removeInvitedPlayer(p.getUniqueId());
     }
-    public ArrayList<UUID> getInvitedPlayers(){
+    ArrayList<UUID> getInvitedPlayers(){
         return invitedPlayers;
     }
 }

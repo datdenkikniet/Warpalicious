@@ -8,7 +8,6 @@ import nl.datdenkikniet.warpalicious.config.messages.Strings;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -200,7 +199,7 @@ public class WarpHandler
             double amount = 0;
             for (Warp warp : warps)
             {
-                if (!warp.isPrivate())
+                if (!warp.isPrivate() || warp.isInvited(player.getUniqueId()))
                 {
                     amount++;
                 }
@@ -220,7 +219,7 @@ public class WarpHandler
             double amount = 0;
             for (Warp warp : warps)
             {
-                if (!warp.isPrivate())
+                if (!warp.isPrivate() || warp.isInvited(player.getUniqueId()) || warp.getOwner().equals(player.getUniqueId()))
                 {
                     amount++;
                 }
@@ -258,16 +257,16 @@ public class WarpHandler
             {
                 for (int i = min; i < (max > warps.size() ? warps.size() : max); i++)
                 {
-                    toRet += getWarpListString(warps.get(i), i);
+                    toRet += getWarpListString(warps.get(i), i, player.getUniqueId());
                 }
             }
             else
             {
-                ArrayList<Warp> warps2 = new ArrayList<>();
-                warps.stream().filter(warp -> !warp.isPrivate() || warp.getOwner().equals(player.getUniqueId())).forEach(warps2::add);
-                for (int i = min; i < (max > warps2.size() ? warps2.size() : max); i++)
+                ArrayList<Warp> warpsFiltered = new ArrayList<>();
+                warps.stream().filter(warp -> !warp.isPrivate() || warp.getOwner().equals(player.getUniqueId()) || warp.isInvited(player.getUniqueId())).forEach(warpsFiltered::add);
+                for (int i = min; i < (max > warpsFiltered.size() ? warpsFiltered.size() : max); i++)
                 {
-                    toRet += getWarpListString(warps2.get(i), i);
+                    toRet += getWarpListString(warpsFiltered.get(i), i, player.getUniqueId());
                 }
             }
             return toRet;
@@ -290,7 +289,7 @@ public class WarpHandler
             String toRet = str.warpsOwnList.replace("%PAGE%", String.valueOf(page + 1)).replace("%MAXPAGE%", String.valueOf(getWarplistPagesSelfAmt(player)));
             for (int i = min; i < (max > warps2.size() ? warps2.size() : max); i++)
             {
-                toRet += getWarpListString(warps2.get(i), i);
+                toRet += getWarpListString(warps2.get(i), i, player.getUniqueId());
             }
             return toRet;
         }
@@ -308,11 +307,11 @@ public class WarpHandler
             int min = page * 9;
             int max = (page * 9) + 9;
             ArrayList<Warp> warps2 = new ArrayList<>();
-            warps.stream().filter(warp -> (!warp.isPrivate() || str.checkPermission(player, str.warpListPrivatePerm)) && warp.getOwner().equals(pl.getUniqueId())).forEach(warps2::add);
+            warps.stream().filter(warp -> (warp.isInvited(player.getUniqueId()) || !warp.isPrivate() || str.checkPermission(player, str.warpListPrivatePerm)) && warp.getOwner().equals(pl.getUniqueId())).forEach(warps2::add);
             String toRet = str.warpOthersList.replace("%PAGE%", String.valueOf(page + 1)).replace("%MAXPAGE%", String.valueOf(getWarpListPagesAmtOther(player, pl))).replace("%PLAYERNAME%", pl.getName());
             for (int i = min; i < (max > warps2.size() ? warps2.size() : max); i++)
             {
-                toRet += getWarpListString(warps2.get(i), i);
+                toRet += getWarpListString(warps2.get(i), i, player.getUniqueId());
             }
             return toRet;
         }
@@ -323,7 +322,7 @@ public class WarpHandler
         double amount = 0;
         for (Warp warp : warps)
         {
-            if ((!warp.isPrivate() || str.checkPermission(player, str.warpListPrivatePerm)) && warp.getOwner().equals(pl.getUniqueId()))
+            if ((warp.isInvited(player.getUniqueId()) || !warp.isPrivate() || str.checkPermission(player, str.warpListPrivatePerm)) && warp.getOwner().equals(pl.getUniqueId()))
             {
                 amount++;
             }
@@ -344,7 +343,7 @@ public class WarpHandler
         return false;
     }
 
-    public String sortPage(CommandSender player, int page, boolean noPrivate)
+    public String sortPage(Player player, int page, boolean noPrivate)
     {
         String toRet;
         int actualPage = page - 1;
@@ -357,7 +356,7 @@ public class WarpHandler
         {
             for (Warp warp : warps)
             {
-                if (!warp.isPrivate())
+                if (!warp.isPrivate() || warp.isInvited(player.getUniqueId()))
                 {
                     availablePages++;
                 }
@@ -376,7 +375,7 @@ public class WarpHandler
             if (noPrivate)
             {
                 ArrayList<Warp> toRemove = new ArrayList<>();
-                tempWarps.stream().filter(Warp::isPrivate).forEach(toRemove::add);
+                tempWarps.stream().filter(warp -> warp.isPrivate() && !warp.isInvited(player.getUniqueId())).forEach(toRemove::add);
                 tempWarps.removeAll(toRemove);
             }
             Warp currWarp = null;
@@ -387,7 +386,7 @@ public class WarpHandler
                 {
                     if (currWarp == null)
                     {
-                        if (!warp.isPrivate() || str.checkPermission(player, str.warpListPrivatePerm))
+                        if (!warp.isPrivate() || str.checkPermission(player, str.warpListPrivatePerm) || warp.isInvited(player.getUniqueId()))
                         {
                             currWarp = warp;
                         }
@@ -396,7 +395,7 @@ public class WarpHandler
                     {
                         if (currWarp.getTimesWarpedTo() < warp.getTimesWarpedTo())
                         {
-                            if (!warp.isPrivate() || str.checkPermission(player, str.warpListPrivatePerm))
+                            if (!warp.isPrivate() || str.checkPermission(player, str.warpListPrivatePerm) || warp.isInvited(player.getUniqueId()))
                             {
                                 currWarp = warp;
                             }
@@ -413,7 +412,7 @@ public class WarpHandler
                 {
                     if (Bukkit.getOfflinePlayer(warps[i].getOwner()).hasPlayedBefore())
                     {
-                        if (!warps[i].isPrivate())
+                        if (!warps[i].isPrivate() || warps[i].isInvited(player.getUniqueId()))
                         {
                             toRet += str.warpTopSub.replace("%POSITION%", String.valueOf(i + 1)).replace("%WARPNAME%", warps[i].getName()).replace("%WARPAMOUNT%", String.valueOf(warps[i].getTimesWarpedTo())).replace("%OWNERNAME%", Bukkit.getOfflinePlayer(warps[i].getOwner()).getName());
                         }
@@ -424,7 +423,7 @@ public class WarpHandler
                     }
                     else
                     {
-                        if (!warps[i].isPrivate())
+                        if (!warps[i].isPrivate()  || warps[i].isInvited(player.getUniqueId()))
                         {
                             toRet += str.warpTopSub.replace("%POSITION%", String.valueOf(i + 1)).replace("%WARPNAME%", warps[i].getName()).replace("%WARPAMOUNT%", String.valueOf(warps[i].getTimesWarpedTo())).replace("%OWNERNAME%", warps[i].getOwner().toString());
                         }
@@ -465,7 +464,7 @@ public class WarpHandler
         return warps;
     }
 
-    public String formatWarps(String toSearch, int page)
+    public String formatWarps(String toSearch, int page, UUID player)
     {
         ArrayList<Warp> foundWarps = searchWarps(toSearch);
         int total = (int) Math.ceil(((double) foundWarps.size()) / 9);
@@ -485,21 +484,26 @@ public class WarpHandler
             int max = min + 9 < foundWarps.size() ? min + 9 : foundWarps.size();
             for (int i = min; i < max; i++)
             {
-                toRet += getWarpListString(foundWarps.get(i), i);
+                toRet += getWarpListString(foundWarps.get(i), i, player);
             }
             return toRet;
         }
     }
 
-    private String getWarpListString(Warp warp, int i)
+    private String getWarpListString(Warp warp, int i, UUID requester)
     {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(warp.getOwner());
+        boolean invited = warp.isInvited(requester);
         String toRet;
         if (offlinePlayer != null && offlinePlayer.getName() != null)
         {
             if (!warp.isPrivate())
             {
                 toRet = "\n" + str.warpListSub.replace("%NAME%", warp.getName()).replace("%OWNER%", offlinePlayer.getName()).replace("%COUNT%", String.valueOf(i + 1));
+            }
+            else if (invited)
+            {
+                toRet = "\n" + str.warpListSubInvited.replace("%NAME%", warp.getName()).replace("%OWNER%", offlinePlayer.getName()).replace("%COUNT%", String.valueOf(i + 1));
             }
             else
             {
@@ -511,6 +515,10 @@ public class WarpHandler
             if (!warp.isPrivate())
             {
                 toRet = "\n" + str.warpListSub.replace("%NAME%", warp.getName()).replace("%OWNER%", "unknown owner").replace("%COUNT%", String.valueOf(i + 1));
+            }
+            else if (invited)
+            {
+                toRet = "\n" + str.warpListSubInvited.replace("%NAME%", warp.getName()).replace("%OWNER%", "unknown owner").replace("%COUNT%", String.valueOf(i + 1));
             }
             else
             {

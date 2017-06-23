@@ -126,7 +126,7 @@ public class WarpinfoCommand implements CommandExecutor
                     try
                     {
                         int page = Integer.parseInt(args[1]);
-                        sender.sendMessage(handler.sortPage(sender, page, false));
+                        sender.sendMessage(handler.sortPage(player, page, false));
                         return true;
                     }
                     catch (NumberFormatException ex)
@@ -164,7 +164,7 @@ public class WarpinfoCommand implements CommandExecutor
                     try
                     {
                         int page = Integer.parseInt(args[1]);
-                        sender.sendMessage(handler.sortPage(sender, page, true));
+                        sender.sendMessage(handler.sortPage(player, page, true));
                         return true;
                     }
                     catch (NumberFormatException ex)
