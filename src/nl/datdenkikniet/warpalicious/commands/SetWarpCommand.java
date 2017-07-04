@@ -61,7 +61,7 @@ public class SetWarpCommand implements CommandExecutor
                 }
                 if (handler.getWarp(args[0]) == null)
                 {
-                    Warp warp = new Warp(handler.getPlugin(), player.getUniqueId(), player.getLocation(), args[0], handler.getDefaultFlags(), handler, 0, new ArrayList<>());
+                    Warp warp = new Warp(handler.getPlugin(), player.getUniqueId(), player.getLocation(), args[0], handler.getDefaultFlags(), handler, 0, new ArrayList<>(), player.getLocation().getWorld().getName());
                     handler.saveWarps();
                     if (args.length > 1 && args[1].equalsIgnoreCase("private") && str.checkPermission(sender, str.setPrivateWarpPerm))
                     {

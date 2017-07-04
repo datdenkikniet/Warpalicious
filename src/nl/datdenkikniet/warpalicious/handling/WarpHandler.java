@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class WarpHandler
 {
@@ -76,11 +77,12 @@ public class WarpHandler
                         }
                     }
                     UUID owner = UUID.fromString(c.getString(key + ".owner"));
+                    String worldName = c.getString(key + ".location").split(",")[0];
                     Location loc = plugin.stringToLoc(c.getString(key + ".location"));
                     int times = c.getInt(key + ".timeswarpedto");
                     ArrayList<UUID> invitedPlayers = new ArrayList<>();
                     c.getStringList(key + ".invited").stream().forEach(str -> invitedPlayers.add(UUID.fromString(str)));
-                    new Warp(getPlugin(), owner, loc, key, flags, this, times, invitedPlayers);
+                    new Warp(getPlugin(), owner, loc, key, flags, this, times, invitedPlayers, worldName);
                 }
             }
             catch (Exception ex)
@@ -149,7 +151,12 @@ public class WarpHandler
         for (Warp warp : warps)
         {
             c.set(warp.getName() + ".owner", warp.getOwner().toString());
-            c.set(warp.getName() + ".location", plugin.locationToString(warp.getLocation(false)));
+            if (warp.getLocation(false).getWorld() != null)
+            {
+                c.set(warp.getName() + ".location", plugin.locationToString(warp.getLocation(false)));
+            } else {
+                plugin.getLogger().log(Level.WARNING, "Warning: warp \"" + warp.getName() + "\" has an invalid world!");
+            }
             for (Flag flag : Flag.values())
             {
                 c.set(warp.getName() + ".flags." + flag.name(), warp.getFlags().get(flag));

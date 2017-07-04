@@ -105,6 +105,7 @@ public class Strings
     public String alreadyInvited;
     public String warpInvited;
     public String warpUninvited;
+    public String invalidWorld;
 
     /*
     String functions
@@ -185,6 +186,7 @@ public class Strings
         notPrivate = s("warp-not-private");
         warpInvited = s("warp-invited");
         warpUninvited = s("warp-uninvited");
+        invalidWorld = s("warp-has-invalid-world");
     }
 
     private String s(String s)

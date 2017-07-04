@@ -43,15 +43,23 @@ class TeleportRunnable implements Runnable
                 }
                 else
                 {
-                    if (mode.getEffect(Direction.DEPART) != null && !str.checkPermission(player, str.noParticlePerm))
+                    if (warp.getLocation(false) != null && warp.getLocation(false).getWorld() == null)
                     {
-                        player.getLocation().getWorld().spawnParticle(mode.getEffect(Direction.DEPART), player.getLocation(), mode.getEffectCount(Direction.DEPART));
+                        if (mode.getEffect(Direction.DEPART) != null && !str.checkPermission(player, str.noParticlePerm))
+                        {
+                            player.getLocation().getWorld().spawnParticle(mode.getEffect(Direction.DEPART), player.getLocation(), mode.getEffectCount(Direction.DEPART));
+                        }
+                        player.teleport(warp.getLocation(true));
+                        player.sendMessage(str.warpToWarp.replace("%NAME%", warp.getName()).replace("%WORLDNAME%", warp.getWorldName()));
+                        if (mode.getEffect(Direction.ARRIVAL) != null && !str.checkPermission(player, str.noParticlePerm))
+                        {
+                            player.getLocation().getWorld().spawnParticle(mode.getEffect(Direction.ARRIVAL), player.getLocation(), mode.getEffectCount(Direction.ARRIVAL));
+                        }
+
                     }
-                    player.teleport(warp.getLocation(true));
-                    player.sendMessage(str.warpToWarp.replace("%NAME%", warp.getName()));
-                    if (mode.getEffect(Direction.ARRIVAL) != null && !str.checkPermission(player, str.noParticlePerm))
+                    else
                     {
-                        player.getLocation().getWorld().spawnParticle(mode.getEffect(Direction.ARRIVAL), player.getLocation(), mode.getEffectCount(Direction.ARRIVAL));
+                        player.sendMessage(str.invalidWorld.replace("%WARPNAME%", warp.getName()));
                     }
                 }
             }

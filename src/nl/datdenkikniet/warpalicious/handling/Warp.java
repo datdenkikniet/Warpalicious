@@ -21,17 +21,19 @@ public class Warp
     private int timesWarpedTo;
     private WarpaliciousPlugin plugin;
     private ArrayList<UUID> invitedPlayers;
+    private String worldName;
 
-    public Warp(WarpaliciousPlugin instance, UUID owner, Location loc, String name, HashMap<Flag, Boolean> flags, WarpHandler handler, int time, ArrayList<UUID> invited)
+    public Warp(WarpaliciousPlugin instance, UUID owner, Location loc, String name, HashMap<Flag, Boolean> flags, WarpHandler handler, int time, ArrayList<UUID> invited, String worldName)
     {
         this.owner = owner;
         this.loc = loc;
         this.name = name;
         this.flags = flags;
         handler.addWarp(this);
-        timesWarpedTo = time;
-        plugin = instance;
-        invitedPlayers = invited;
+        this.timesWarpedTo = time;
+        this.plugin = instance;
+        this.invitedPlayers = invited;
+        this.worldName = worldName;
     }
 
     public boolean isPrivate()
@@ -83,15 +85,22 @@ public class Warp
 
         if (delay == 0)
         {
-            if (mode.getEffect(Direction.DEPART) != null && !str.checkPermission(player, str.noParticlePerm))
+            if (getLocation(false) != null && getLocation(false).getWorld() != null)
             {
-                loc.getWorld().spawnParticle(mode.getEffect(Direction.DEPART), loc, mode.getEffectCount(Direction.DEPART));
+                if (mode.getEffect(Direction.DEPART) != null && !str.checkPermission(player, str.noParticlePerm))
+                {
+                    loc.getWorld().spawnParticle(mode.getEffect(Direction.DEPART), loc, mode.getEffectCount(Direction.DEPART));
+                }
+                player.teleport(getLocation(true));
+                player.sendMessage(str.warpToWarp.replace("%NAME%", getName()));
+                if (mode.getEffect(Direction.ARRIVAL) != null && !str.checkPermission(player, str.noParticlePerm))
+                {
+                    loc.getWorld().spawnParticle(mode.getEffect(Direction.ARRIVAL), loc, mode.getEffectCount(Direction.ARRIVAL));
+                }
             }
-            player.teleport(getLocation(true));
-            player.sendMessage(str.warpToWarp.replace("%NAME%", getName()));
-            if (mode.getEffect(Direction.ARRIVAL) != null && !str.checkPermission(player, str.noParticlePerm))
+            else
             {
-                loc.getWorld().spawnParticle(mode.getEffect(Direction.ARRIVAL), loc, mode.getEffectCount(Direction.ARRIVAL));
+                player.sendMessage(str.invalidWorld.replace("%WARPNAME%", getName()).replace("%WORLDNAME%", worldName));
             }
         }
         else
@@ -149,7 +158,12 @@ public class Warp
     {
         removeInvitedPlayer(p.getUniqueId());
     }
-    ArrayList<UUID> getInvitedPlayers(){
+
+    ArrayList<UUID> getInvitedPlayers()
+    {
         return invitedPlayers;
+    }
+    protected String getWorldName(){
+        return worldName;
     }
 }
