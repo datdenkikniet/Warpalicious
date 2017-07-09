@@ -29,19 +29,22 @@ class TeleportRunnable implements Runnable
 
     public void run()
     {
-        if (player != null && player.isOnline() && timeLeft != -1)
+        if (timeLeft != -1)
         {
-            if (!mode.allowMove(player.getGameMode()) && !locEquals(player.getLocation()))
+            if (player != null && player.isOnline())
             {
-                player.sendMessage(str.youMoved);
-                timeLeft = -1;
-            }
-            if (timeLeft != 0 && (timeLeft % 5 == 0 || timeLeft < 6))
-            {
-                player.sendMessage(str.tpInTime.replace("%TIME%", String.valueOf(timeLeft)));
-            }
-            else if (timeLeft < 1)
-            {
+                if (!mode.allowMove(player.getGameMode()) && !locEquals(player.getLocation()))
+                {
+                    player.sendMessage(str.youMoved);
+                    timeLeft = -1;
+                    return;
+                }
+                if (timeLeft != 0 && (timeLeft % 5 == 0 || timeLeft < 6))
+                {
+                    player.sendMessage(str.tpInTime.replace("%TIME%", String.valueOf(timeLeft)));
+                }
+                else if (timeLeft < 1 && timeLeft != -1)
+                {
                     if (warp.getLocation(false) != null && warp.getLocation(false).getWorld() != null)
                     {
                         if (mode.getEffect(Direction.DEPART) != null && !str.checkPermission(player, str.noParticlePerm))
@@ -61,11 +64,12 @@ class TeleportRunnable implements Runnable
                         player.sendMessage(str.invalidWorld.replace("%WARPNAME%", warp.getName()).replace("%WORLDNAME%", ""));
                     }
                 }
-            timeLeft--;
-        }
-        else
-        {
-            timeLeft = -1;
+                timeLeft--;
+            }
+            else
+            {
+                timeLeft = -1;
+            }
         }
     }
 

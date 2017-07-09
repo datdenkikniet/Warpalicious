@@ -5,6 +5,7 @@ import nl.datdenkikniet.warpalicious.config.Config;
 import nl.datdenkikniet.warpalicious.config.CustomConfig;
 import org.bukkit.command.Command;
 import org.bukkit.permissions.Permissible;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 public class Strings
 {
@@ -48,6 +49,7 @@ public class Strings
     public String nodelayperm = permission + "nodelay";
     public String noParticlePerm = permission + "noparticle";
     public String invitePlayerPerm = permission + "inviteplayers";
+    public String onlySetPrivate = permission + "onlyprivate";
 
     /*
     Messages
@@ -204,6 +206,16 @@ public class Strings
 
     public boolean checkPermission(Permissible p, String permission)
     {
-        return p.hasPermission(permission) || p.hasPermission(universalPerm);
+        if (!permission.equals(onlySetPrivate))
+        {
+            return p.hasPermission(permission) || p.hasPermission(universalPerm);
+        } else {
+            for (PermissionAttachmentInfo at : p.getEffectivePermissions()){
+                if (at.getPermission().equalsIgnoreCase(permission)){
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

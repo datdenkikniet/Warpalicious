@@ -63,8 +63,9 @@ public class SetWarpCommand implements CommandExecutor
                 {
                     Warp warp = new Warp(handler.getPlugin(), player.getUniqueId(), player.getLocation(), args[0], handler.getDefaultFlags(), handler, 0, new ArrayList<>(), player.getLocation().getWorld().getName());
                     handler.saveWarps();
-                    if (args.length > 1 && args[1].equalsIgnoreCase("private") && str.checkPermission(sender, str.setPrivateWarpPerm))
+                    if ((args.length > 1 && args[1].equalsIgnoreCase("private") && str.checkPermission(sender, str.setPrivateWarpPerm)) || str.checkPermission(sender, str.onlySetPrivate))
                     {
+                        System.out.println(sender.isPermissionSet(str.onlySetPrivate));
                         warp.setFlag(Flag.PRIVATE, true);
                         sender.sendMessage(str.privateWarpSet.replace("%NAME%", args[0]));
                         return true;
