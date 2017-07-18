@@ -210,12 +210,17 @@ public class Strings
         {
             return p.hasPermission(permission) || p.hasPermission(universalPerm);
         } else {
+            boolean hasNegator = false;
+            boolean hasPerm = false;
             for (PermissionAttachmentInfo at : p.getEffectivePermissions()){
                 if (at.getPermission().equalsIgnoreCase(permission)){
-                    return true;
+                    hasPerm = true;
+                }
+                if (at.getPermission().equalsIgnoreCase(permission) && !at.getValue()){
+                    hasNegator = true;
                 }
             }
-            return false;
+            return hasPerm && !hasNegator;
         }
     }
 }

@@ -1,8 +1,8 @@
 name: Warpalicious
 main: nl.datdenkikniet.warpalicious.WarpaliciousPlugin
 authors: [datdenkikniet, TastyBlueberry, oskar3123]
-version: 1.7.5
-softdepend: [Multiverse-Core, MultiWorld]
+version: 1.8.0
+softdepend: [Multiverse-Core, MultiWorld, MyWarp]
 commands:
     delwarp:
         description: delete a warp
@@ -41,3 +41,4 @@ commands:
     warpuninvite:
         description: disallow players to warp to a private warp
         usage: /<command> <privatewarp> <playername>
+

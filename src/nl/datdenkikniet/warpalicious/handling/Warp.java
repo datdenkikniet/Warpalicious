@@ -29,11 +29,11 @@ public class Warp
         this.loc = loc;
         this.name = name;
         this.flags = flags;
-        handler.addWarp(this);
         this.timesWarpedTo = time;
         this.plugin = instance;
         this.invitedPlayers = invited;
         this.worldName = worldName;
+        handler.addWarp(this);
     }
 
     public boolean isPrivate()
