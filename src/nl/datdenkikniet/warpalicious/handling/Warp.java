@@ -159,11 +159,13 @@ public class Warp
         removeInvitedPlayer(p.getUniqueId());
     }
 
-    ArrayList<UUID> getInvitedPlayers()
+    public ArrayList<UUID> getInvitedPlayers()
     {
         return invitedPlayers;
     }
-    protected String getWorldName(){
+
+    private String getWorldName()
+    {
         return worldName;
     }
 }

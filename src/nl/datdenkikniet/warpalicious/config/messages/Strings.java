@@ -108,6 +108,7 @@ public class Strings
     public String warpInvited;
     public String warpUninvited;
     public String invalidWorld;
+    public String warpInvitedList;
 
     /*
     String functions
@@ -189,6 +190,7 @@ public class Strings
         warpInvited = s("warp-invited");
         warpUninvited = s("warp-uninvited");
         invalidWorld = s("warp-has-invalid-world");
+        warpInvitedList = s("warp-invited-list");
     }
 
     private String s(String s)

@@ -28,7 +28,7 @@ public class DelWarpCommand implements CommandExecutor
             return true;
         }
         Player player = (Player) sender;
-        if (str.checkPermission(sender, str.warpDelPerm))
+        if (str.checkPermission(sender, str.warpDelPerm) || str.checkPermission(sender, str.delOtherWarpPerm))
         {
             if (args.length == 1)
             {

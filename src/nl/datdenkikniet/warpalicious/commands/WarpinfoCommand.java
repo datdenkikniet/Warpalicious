@@ -13,6 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
+import java.util.UUID;
 
 public class WarpinfoCommand implements CommandExecutor
 {
@@ -96,6 +97,13 @@ public class WarpinfoCommand implements CommandExecutor
                         }
                         sender.sendMessage(str.warpInfoLocation.replace("%X%", String.valueOf(Math.round(loc.getX()))).replace("%Y%", String.valueOf(Math.round(loc.getY()))).replace("%Z%", String.valueOf(Math.round(loc.getZ()))).replace("%WORLD%", loc.getWorld().getName()));
                         sender.sendMessage(str.warpInfoAmount.replace("%AMOUNT%", String.valueOf(warp.getTimesWarpedTo())));
+                        if (warp.getOwner().equals(((Player) sender).getUniqueId()) || warp.isInvited(((Player) sender).getUniqueId()) && warp.getInvitedPlayers().size() != 0){
+                            String st = "";
+                            for (UUID u : warp.getInvitedPlayers()){
+                                st += Bukkit.getOfflinePlayer(u).getName() + ", ";
+                            }
+                            sender.sendMessage(str.warpInvitedList.replace("%INVITED%", st));
+                        }
                         String fin = ChatColor.YELLOW + "Flags:\n";
                         for (Flag flag : Flag.values())
                         {
