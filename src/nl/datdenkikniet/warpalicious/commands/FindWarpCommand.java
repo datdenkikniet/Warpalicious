@@ -8,60 +8,42 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class FindWarpCommand implements CommandExecutor
-{
+public class FindWarpCommand implements CommandExecutor {
 
     private Strings str;
     private WarpHandler handler;
 
-    public FindWarpCommand(WarpaliciousPlugin instance)
-    {
+    public FindWarpCommand(WarpaliciousPlugin instance){
         str = instance.getStrings();
         handler = instance.getWarpHandler();
     }
 
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
-    {
-        if (!(sender instanceof Player))
-        {
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
+        if (!(sender instanceof Player)){
             return true;
         }
         Player player = (Player) sender;
-        if (args.length == 1)
-        {
-            if (str.checkPermission(sender, str.searchWarpPerm))
-            {
+        if (args.length == 1){
+            if (str.checkPermission(sender, str.searchWarpPerm)){
                 sender.sendMessage(handler.formatWarps(args[0], 1, player.getUniqueId()));
                 return true;
-            }
-            else
-            {
+            } else {
                 sender.sendMessage(str.noperm);
                 return true;
             }
-        }
-        else if (args.length == 2)
-        {
-            if (str.checkPermission(sender, str.searchWarpPerm))
-            {
-                try
-                {
+        } else if (args.length == 2){
+            if (str.checkPermission(sender, str.searchWarpPerm)){
+                try{
                     sender.sendMessage(handler.formatWarps(args[0], Integer.parseInt(args[1]), player.getUniqueId()));
-                }
-                catch (NumberFormatException ex)
-                {
+                } catch (NumberFormatException ex){
                     sender.sendMessage(str.noValidNumber);
                 }
                 return true;
-            }
-            else
-            {
+            } else {
                 sender.sendMessage(str.noperm);
                 return true;
             }
-        }
-        else
-        {
+        } else {
             sender.sendMessage(str.getUsage(cmd, label));
             return true;
         }

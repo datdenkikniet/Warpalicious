@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class Warp
-{
+public class Warp {
 
     private UUID owner;
     private Location loc;
@@ -23,8 +22,7 @@ public class Warp
     private ArrayList<UUID> invitedPlayers;
     private String worldName;
 
-    public Warp(WarpaliciousPlugin instance, UUID owner, Location loc, String name, HashMap<Flag, Boolean> flags, WarpHandler handler, int time, ArrayList<UUID> invited, String worldName)
-    {
+    public Warp(WarpaliciousPlugin instance, UUID owner, Location loc, String name, HashMap<Flag, Boolean> flags, WarpHandler handler, int time, ArrayList<UUID> invited, String worldName){
         this.owner = owner;
         this.loc = loc;
         this.name = name;
@@ -36,77 +34,57 @@ public class Warp
         handler.addWarp(this);
     }
 
-    public boolean isPrivate()
-    {
+    public boolean isPrivate(){
         return flags.get(Flag.PRIVATE);
     }
 
-    public void setFlag(Flag f, boolean bool)
-    {
+    public void setFlag(Flag f, boolean bool){
         flags.put(f, bool);
     }
 
-    public boolean getFlag(Flag flag)
-    {
+    public boolean getFlag(Flag flag){
         return flags.get(flag);
     }
 
-    public UUID getOwner()
-    {
+    public UUID getOwner(){
         return owner;
     }
 
-    public Location getLocation(boolean isWarp)
-    {
-        if (isWarp)
-        {
+    public Location getLocation(boolean isWarp){
+        if (isWarp){
             timesWarpedTo++;
         }
         return loc;
     }
 
-    public void warp(Player player, TeleportMode mode, Strings str)
-    {
+    public void warp(Player player, TeleportMode mode, Strings str){
         int delay = 0;
         GameMode gm = player.getGameMode();
         Location loc = player.getLocation();
 
-        if (!str.checkPermission(player, str.nodelayperm))
-        {
-            if (!mode.getPerm(gm))
-            {
+        if (!str.checkPermission(player, str.nodelayperm)){
+            if (!mode.getPerm(gm)){
                 delay = mode.getDelay(gm);
-            }
-            else
-            {
+            } else {
                 delay = TeleportMode.getPermissionDelay(player, mode);
             }
         }
 
-        if (delay == 0)
-        {
-            if (getLocation(false) != null && getLocation(false).getWorld() != null)
-            {
-                if (mode.getEffect(Direction.DEPART) != null && !str.checkPermission(player, str.noParticlePerm))
-                {
+        if (delay == 0){
+            if (getLocation(false) != null && getLocation(false).getWorld() != null){
+                if (mode.getEffect(Direction.DEPART) != null && !str.checkPermission(player, str.noParticlePerm)){
                     loc.getWorld().spawnParticle(mode.getEffect(Direction.DEPART), loc, mode.getEffectCount(Direction.DEPART));
                 }
                 player.teleport(getLocation(true));
                 player.sendMessage(str.warpToWarp.replace("%NAME%", getName()));
-                if (mode.getEffect(Direction.ARRIVAL) != null && !str.checkPermission(player, str.noParticlePerm))
-                {
+                if (mode.getEffect(Direction.ARRIVAL) != null && !str.checkPermission(player, str.noParticlePerm)){
                     loc.getWorld().spawnParticle(mode.getEffect(Direction.ARRIVAL), loc, mode.getEffectCount(Direction.ARRIVAL));
                 }
-            }
-            else
-            {
+            } else {
                 player.sendMessage(str.invalidWorld.replace("%WARPNAME%", getName()).replace("%WORLDNAME%", worldName));
             }
-        }
-        else
-        {
-            if (!mode.allowMove(gm))
-            {
+        } else {
+            if (!mode.allowMove(gm)){
                 player.sendMessage(str.noMove);
             }
             final int taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new TeleportRunnable(player, mode, this, str, delay), 0L, 20L);
@@ -114,55 +92,46 @@ public class Warp
         }
     }
 
-    public String getName()
-    {
+    public String getName(){
         return name;
     }
 
-    public int getTimesWarpedTo()
-    {
+    public int getTimesWarpedTo(){
         return timesWarpedTo;
     }
 
-    public void setName(String n)
-    {
+    public void setName(String n){
         name = n;
     }
 
-    HashMap<Flag, Boolean> getFlags()
-    {
+    HashMap<Flag, Boolean> getFlags(){
         return flags;
     }
 
-    public boolean isInvited(UUID u)
-    {
+    public boolean isInvited(UUID u){
         return !u.equals(owner) && invitedPlayers.contains(u);
     }
 
-    public void addInvitedPlayer(UUID u)
-    {
+    public void addInvitedPlayer(UUID u){
         invitedPlayers.add(u);
     }
 
-    public void addInvitedPlayer(Player p)
-    {
+    public void addInvitedPlayer(Player p){
         addInvitedPlayer(p.getUniqueId());
     }
 
-    public void removeInvitedPlayer(UUID u)
-    {
+    public void removeInvitedPlayer(UUID u){
         invitedPlayers.remove(u);
     }
 
-    public void removeInvitedPlayer(Player p)
-    {
+    public void removeInvitedPlayer(Player p){
         removeInvitedPlayer(p.getUniqueId());
     }
 
-    ArrayList<UUID> getInvitedPlayers()
-    {
+    ArrayList<UUID> getInvitedPlayers(){
         return invitedPlayers;
     }
+
     protected String getWorldName(){
         return worldName;
     }
