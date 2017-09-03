@@ -64,6 +64,7 @@ public class SignEventListener implements Listener
         }
     }
 
+    @SuppressWarnings("unused")
     @EventHandler (priority = EventPriority.LOWEST)
     public void interact(PlayerInteractEvent e)
     {
