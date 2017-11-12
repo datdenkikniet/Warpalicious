@@ -10,21 +10,17 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class WarpInviteCommand implements CommandExecutor
-{
+public class WarpInviteCommand implements CommandExecutor {
     private WarpaliciousPlugin plugin;
     private Strings str;
 
-    public WarpInviteCommand(WarpaliciousPlugin pl, Strings instance)
-    {
+    public WarpInviteCommand(WarpaliciousPlugin pl, Strings instance){
         str = instance;
         plugin = pl;
     }
 
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
-    {
-        if (!(sender instanceof Player))
-        {
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
+        if (!(sender instanceof Player)){
             sender.sendMessage("Player only");
             return true;
         }
@@ -33,77 +29,52 @@ public class WarpInviteCommand implements CommandExecutor
             sender.sendMessage(str.noperm);
             return true;
         }
-        if (args.length == 2)
-        {
+        if (args.length == 2){
             Warp warp = plugin.getWarpHandler().getWarp(args[0]);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->
-            {
-                @SuppressWarnings("deprecation")
-                OfflinePlayer otherPlayer = Bukkit.getOfflinePlayer(args[1]);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                @SuppressWarnings("deprecation") OfflinePlayer otherPlayer = Bukkit.getOfflinePlayer(args[1]);
                 if (warp == null){
                     sender.sendMessage(str.warpNotExists);
                     return;
                 }
-                if (!otherPlayer.hasPlayedBefore())
-                {
+                if (!otherPlayer.hasPlayedBefore()){
                     sender.sendMessage(str.neverPlayed);
                     return;
                 }
-                if (cmd.getName().equalsIgnoreCase("warpinvite"))
-                {
-                    if (warp.getOwner().equals(player.getUniqueId()))
-                    {
-                        if (warp.isPrivate())
-                        {
-                            if (!warp.isInvited(otherPlayer.getUniqueId()))
-                            {
+                if (cmd.getName().equalsIgnoreCase("warpinvite")){
+                    if (warp.getOwner().equals(player.getUniqueId())){
+                        if (warp.isPrivate()){
+                            if (!warp.isInvited(otherPlayer.getUniqueId())){
                                 warp.addInvitedPlayer(otherPlayer.getUniqueId());
                                 player.sendMessage(str.addedInvitedPlayer.replace("%PLAYERNAME%", otherPlayer.getName()).replace("%WARPNAME%", warp.getName()));
                                 if (Bukkit.getPlayer(otherPlayer.getUniqueId()) != null){
                                     Bukkit.getPlayer(otherPlayer.getUniqueId()).sendMessage(str.warpInvited.replace("%PLAYERNAME%", player.getName()).replace("%WARPNAME%", warp.getName()));
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 player.sendMessage(str.alreadyInvited);
                             }
-                        }
-                        else
-                        {
+                        } else {
                             player.sendMessage(str.notPrivate);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         player.sendMessage(str.warpNotOwned);
                     }
-                }
-                else if (cmd.getName().equalsIgnoreCase("warpuninvite"))
-                {
-                    if (warp.getOwner().equals(player.getUniqueId()))
-                    {
-                        if (warp.isPrivate())
-                        {
-                            if (warp.isInvited(otherPlayer.getUniqueId()))
-                            {
+                } else if (cmd.getName().equalsIgnoreCase("warpuninvite")){
+                    if (warp.getOwner().equals(player.getUniqueId())){
+                        if (warp.isPrivate()){
+                            if (warp.isInvited(otherPlayer.getUniqueId())){
                                 warp.removeInvitedPlayer(otherPlayer.getUniqueId());
                                 player.sendMessage(str.removedInvitedPlayers.replace("%PLAYERNAME%", otherPlayer.getName()).replace("%WARPNAME%", warp.getName()));
                                 if (Bukkit.getPlayer(otherPlayer.getUniqueId()) != null){
                                     Bukkit.getPlayer(otherPlayer.getUniqueId()).sendMessage(str.warpUninvited.replace("%PLAYERNAME%", player.getName()).replace("%WARPNAME%", warp.getName()));
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 player.sendMessage(str.notInvited);
                             }
-                        }
-                        else
-                        {
+                        } else {
                             player.sendMessage(str.notPrivate);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         player.sendMessage(str.warpNotOwned);
                     }
                 }

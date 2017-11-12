@@ -1,7 +1,5 @@
 package nl.datdenkikniet.warpalicious.handling;
 
-enum Direction
-{
-    DEPART,
-    ARRIVAL
+enum Direction {
+    DEPART, ARRIVAL
 }

@@ -7,8 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
-public class Strings
-{
+public class Strings {
 
     private boolean isInit = false;
     private CustomConfig configHandler;
@@ -16,8 +15,7 @@ public class Strings
     private String permission = "warpalicious.";
     private MessagesGetter messages;
 
-    public Strings(CustomConfig cu, Config cfg, WarpaliciousPlugin plugin)
-    {
+    public Strings(CustomConfig cu, Config cfg, WarpaliciousPlugin plugin){
         configHandler = cu;
         config = cfg;
         messages = new MessagesGetter(configHandler, config, plugin);
@@ -113,28 +111,21 @@ public class Strings
     /*
     String functions
      */
-    private String r(String str)
-    {
+    private String r(String str){
         return str.replace("%PREFIX%", prefix);
     }
 
-    public String getUsage(Command command, String alias)
-    {
+    public String getUsage(Command command, String alias){
         return r(correctUsage.replace("%USAGE%", command.getUsage().replace("<command>", alias)));
     }
 
-    public void loadMessages()
-    {
-        if (isInit)
-        {
+    public void loadMessages(){
+        if (isInit){
             configHandler.reloadCustomConfig(config);
         }
-        try
-        {
+        try{
             prefix = messages.getMessage("prefix");
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex){
             ex.printStackTrace();
         }
         noperm = s("no-permission");
@@ -193,23 +184,17 @@ public class Strings
         warpInvitedList = s("warp-invited-list");
     }
 
-    private String s(String s)
-    {
-        try
-        {
+    private String s(String s){
+        try{
             return r(messages.getMessage(s));
-        }
-        catch (Exception ex)
-        {
+        } catch (Exception ex){
             ex.printStackTrace();
         }
         return "";
     }
 
-    public boolean checkPermission(Permissible p, String permission)
-    {
-        if (!permission.equals(onlySetPrivate))
-        {
+    public boolean checkPermission(Permissible p, String permission){
+        if (!permission.equals(onlySetPrivate)){
             return p.hasPermission(permission) || p.hasPermission(universalPerm);
         } else {
             boolean hasNegator = false;
