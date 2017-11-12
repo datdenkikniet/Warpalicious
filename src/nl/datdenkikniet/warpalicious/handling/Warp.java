@@ -164,7 +164,7 @@ public class Warp
         return invitedPlayers;
     }
 
-    private String getWorldName()
+    String getWorldName()
     {
         return worldName;
     }

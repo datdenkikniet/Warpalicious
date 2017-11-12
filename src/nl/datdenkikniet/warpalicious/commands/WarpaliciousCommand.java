@@ -1,5 +1,7 @@
 package nl.datdenkikniet.warpalicious.commands;
 
+import me.odium.warptastic.DBConnection;
+import me.odium.warptastic.warptastic;
 import me.taylorkelly.mywarp.MyWarp;
 import me.taylorkelly.mywarp.bukkit.MyWarpPlugin;
 import me.taylorkelly.mywarp.warp.EventfulPopulatableWarpManager;
@@ -17,6 +19,9 @@ import org.bukkit.command.CommandSender;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
@@ -167,6 +172,30 @@ public class WarpaliciousCommand implements CommandExecutor
                     else
                     {
                         sender.sendMessage(str.noperm);
+                        return true;
+                    }
+                }
+                else if (args[1].equalsIgnoreCase("warptastic")){
+                    try
+                    {
+                        warptastic wp = (warptastic) plugin.getServer().getPluginManager().getPlugin("warptastic");
+                        Field serviceField = wp.getClass().getDeclaredField("service");
+                        serviceField.setAccessible(true);
+                        DBConnection service = (DBConnection) serviceField.get(wp);
+
+                        Connection stmt = service.getConnection();
+                        Statement rs = stmt.createStatement();
+                        ResultSet target = rs.executeQuery("PRAGMA table_info(W_Warps);");
+
+                        while(target.next())
+                        {
+                            System.out.println(target.toString());
+                        }
+                        target.close();
+                        rs.close();
+                        return true;
+                    } catch (Exception ex){
+                        ex.printStackTrace();
                         return true;
                     }
                 }
