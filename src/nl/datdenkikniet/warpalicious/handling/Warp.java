@@ -21,9 +21,8 @@ public class Warp
     private int timesWarpedTo;
     private WarpaliciousPlugin plugin;
     private ArrayList<UUID> invitedPlayers;
-    private String worldName;
 
-    public Warp(WarpaliciousPlugin instance, UUID owner, Location loc, String name, HashMap<Flag, Boolean> flags, WarpHandler handler, int time, ArrayList<UUID> invited, String worldName)
+    public Warp(WarpaliciousPlugin instance, UUID owner, Location loc, String name, HashMap<Flag, Boolean> flags, int time, ArrayList<UUID> invited)
     {
         this.owner = owner;
         this.loc = loc;
@@ -32,8 +31,7 @@ public class Warp
         this.timesWarpedTo = time;
         this.plugin = instance;
         this.invitedPlayers = invited;
-        this.worldName = worldName;
-        handler.addWarp(this);
+        plugin.getWarpHandler().addWarp(this);
     }
 
     public boolean isPrivate()
@@ -100,7 +98,7 @@ public class Warp
             }
             else
             {
-                player.sendMessage(str.invalidWorld.replace("%WARPNAME%", getName()).replace("%WORLDNAME%", worldName));
+                player.sendMessage(str.invalidWorld.replace("%WARPNAME%", getName()).replace("%WORLDNAME%", loc.getWorld().getName()));
             }
         }
         else
@@ -144,19 +142,9 @@ public class Warp
         invitedPlayers.add(u);
     }
 
-    public void addInvitedPlayer(Player p)
-    {
-        addInvitedPlayer(p.getUniqueId());
-    }
-
     public void removeInvitedPlayer(UUID u)
     {
         invitedPlayers.remove(u);
-    }
-
-    public void removeInvitedPlayer(Player p)
-    {
-        removeInvitedPlayer(p.getUniqueId());
     }
 
     public ArrayList<UUID> getInvitedPlayers()
@@ -164,8 +152,4 @@ public class Warp
         return invitedPlayers;
     }
 
-    String getWorldName()
-    {
-        return worldName;
-    }
 }

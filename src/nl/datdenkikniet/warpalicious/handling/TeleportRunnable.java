@@ -41,7 +41,7 @@ class TeleportRunnable implements Runnable {
                             player.getLocation().getWorld().spawnParticle(mode.getEffect(Direction.DEPART), player.getLocation(), mode.getEffectCount(Direction.DEPART));
                         }
                         player.teleport(warp.getLocation(true));
-                        player.sendMessage(str.warpToWarp.replace("%NAME%", warp.getName()).replace("%WORLDNAME%", warp.getWorldName()));
+                        player.sendMessage(str.warpToWarp.replace("%NAME%", warp.getName()).replace("%WORLDNAME%", warp.getLocation(false).getWorld().getName()));
                         if (mode.getEffect(Direction.ARRIVAL) != null && !str.checkPermission(player, str.noParticlePerm)){
                             player.getLocation().getWorld().spawnParticle(mode.getEffect(Direction.ARRIVAL), player.getLocation(), mode.getEffectCount(Direction.ARRIVAL));
                         }

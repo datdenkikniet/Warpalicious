@@ -64,12 +64,11 @@ public class WarpHandler {
                         }
                     }
                     UUID owner = UUID.fromString(c.getString(key + ".owner"));
-                    String worldName = c.getString(key + ".location").split(",")[0];
                     Location loc = plugin.stringToLoc(c.getString(key + ".location"));
                     int times = c.getInt(key + ".timeswarpedto");
                     ArrayList<UUID> invitedPlayers = new ArrayList<>();
                     c.getStringList(key + ".invited").stream().forEach(str -> invitedPlayers.add(UUID.fromString(str)));
-                    new Warp(getPlugin(), owner, loc, key, flags, this, times, invitedPlayers, worldName);
+                    new Warp(getPlugin(), owner, loc, key, flags, times, invitedPlayers);
                 }
             } catch (Exception ex){
                 System.out.println("Error while loading flag " + key);
