@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public enum TeleportMode {
     SIGN(0, 0, false, false, null, null, 1, 1, false, false), COMMAND(0, 0, false, false, null, null, 1, 1, false, false);
 
-    TeleportMode(int creativeDelay, int survivalDelay, boolean creativePerm, boolean survivalPerm, Particle arriveEffect, Particle departEffect, int arriveCount, int departCount, boolean creativeMove, boolean survivalMove){
+    TeleportMode(int creativeDelay, int survivalDelay, boolean creativePerm, boolean survivalPerm, Particle arriveEffect, Particle departEffect, int arriveCount, int departCount, boolean creativeMove, boolean survivalMove) {
         delayInCrea = creativeDelay;
         delayInSurv = survivalDelay;
         creaPerm = creativePerm;
@@ -30,47 +30,47 @@ public enum TeleportMode {
     private Particle depEffect;
     private int arrivCount, depCount;
 
-    public boolean allowMove(GameMode mode){
-        if (mode == GameMode.SURVIVAL || mode == GameMode.ADVENTURE){
+    public boolean allowMove(GameMode mode) {
+        if (mode == GameMode.SURVIVAL || mode == GameMode.ADVENTURE) {
             return survMove;
         } else {
             return creaMove;
         }
     }
 
-    public int getDelay(GameMode mode){
-        if (mode == GameMode.SURVIVAL || mode == GameMode.ADVENTURE){
+    public int getDelay(GameMode mode) {
+        if (mode == GameMode.SURVIVAL || mode == GameMode.ADVENTURE) {
             return delayInSurv;
         } else {
             return delayInCrea;
         }
     }
 
-    public boolean getPerm(GameMode mode){
-        if (mode == GameMode.SURVIVAL || mode == GameMode.ADVENTURE){
+    public boolean getPerm(GameMode mode) {
+        if (mode == GameMode.SURVIVAL || mode == GameMode.ADVENTURE) {
             return survPerm;
         } else {
             return creaPerm;
         }
     }
 
-    public Particle getEffect(Direction dir){
-        if (dir == Direction.ARRIVAL){
+    public Particle getEffect(Direction dir) {
+        if (dir == Direction.ARRIVAL) {
             return arrivEffect;
         } else {
             return depEffect;
         }
     }
 
-    public int getEffectCount(Direction dir){
-        if (dir == Direction.ARRIVAL){
+    public int getEffectCount(Direction dir) {
+        if (dir == Direction.ARRIVAL) {
             return arrivCount;
         } else {
             return depCount;
         }
     }
 
-    public void setValues(int creativeDelay, int survivalDelay, boolean creativePerm, boolean survivalPerm, Particle arriveEffect, Particle departEffect, int arriveCount, int departCount, boolean creativeMove, boolean survivalMove){
+    public void setValues(int creativeDelay, int survivalDelay, boolean creativePerm, boolean survivalPerm, Particle arriveEffect, Particle departEffect, int arriveCount, int departCount, boolean creativeMove, boolean survivalMove) {
         delayInCrea = creativeDelay;
         delayInSurv = survivalDelay;
         creaPerm = creativePerm;
@@ -83,24 +83,24 @@ public enum TeleportMode {
         survMove = survivalMove;
     }
 
-    public static int getPermissionDelay(Player player, TeleportMode mode){
+    public static int getPermissionDelay(Player player, TeleportMode mode) {
         int delay = 0;
         String permStart = "warpalicious.delay." + mode.name().toLowerCase() + "." + player.getGameMode().name().toLowerCase() + ".";
         ArrayList<Integer> numbers = new ArrayList<>();
-        for (PermissionAttachmentInfo atch : player.getEffectivePermissions()){
-            if (atch.getPermission().startsWith(permStart)){
+        for (PermissionAttachmentInfo atch : player.getEffectivePermissions()) {
+            if (atch.getPermission().startsWith(permStart)) {
                 String permDelay = atch.getPermission().split("\\.")[4];
-                if (StringUtils.isNumeric(permDelay)){
+                if (StringUtils.isNumeric(permDelay)) {
                     int currentDelay = Integer.valueOf(atch.getPermission().split("\\.")[4]);
-                    if (currentDelay > delay){
+                    if (currentDelay > delay) {
                         delay = currentDelay;
                     }
                     numbers.add(currentDelay);
                 }
             }
         }
-        for (Integer i : numbers){
-            if (delay > i){
+        for (Integer i : numbers) {
+            if (delay > i) {
                 delay = i;
             }
         }

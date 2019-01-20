@@ -1,66 +1,66 @@
 package nl.datdenkikniet.warpalicious;
 
-import nl.datdenkikniet.warpalicious.commands.WarpaliciousCommand;
-import nl.datdenkikniet.warpalicious.config.Config;
+import nl.datdenkikniet.warpalicious.commands.*;
 import nl.datdenkikniet.warpalicious.config.CustomConfig;
+import nl.datdenkikniet.warpalicious.config.CustomConfigHandler;
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
+import nl.datdenkikniet.warpalicious.handling.IO.IOHandler;
+import nl.datdenkikniet.warpalicious.handling.IO.YAMLIOHandler;
+import nl.datdenkikniet.warpalicious.handling.MessageGenerator;
 import nl.datdenkikniet.warpalicious.handling.TeleportMode;
 import nl.datdenkikniet.warpalicious.handling.WarpHandler;
 import nl.datdenkikniet.warpalicious.listeners.SignEventListener;
-import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class WarpaliciousPlugin extends JavaPlugin {
 
-    public CustomConfig cfgHandler = new CustomConfig(this);
+    private static WarpaliciousPlugin instance;
 
-    private Config messages = new Config("messages", cfgHandler);
-    private Config warps = new Config("warps", cfgHandler);
-    private Config config = new Config("config", cfgHandler);
+    private CustomConfigHandler cfgHandler = new CustomConfigHandler(this);
+
+    private CustomConfig messages = new CustomConfig("messages", cfgHandler);
+    private CustomConfig warps = new CustomConfig("warps", cfgHandler);
+    private CustomConfig config = new CustomConfig("config", cfgHandler);
 
     private Strings str;
     private WarpHandler handler;
+    private IOHandler ioHandler;
+    private MessageGenerator messageGenerator;
 
-    public void onEnable(){
-        try{
+    public void onEnable() {
+        instance = this;
+        try {
             new Metrics(this);
-        } catch (Exception ex){
+        } catch (Exception ex) {
             getLogger().info("Couldn't enable plugin metrics");
         }
         checkTeleportModes();
+
         str = new Strings(cfgHandler, messages, this);
-        handler = new WarpHandler(this, warps);
-        handler.load();
-        getServer().getPluginManager().registerEvents(new SignEventListener(this), this);
+
+        ioHandler = new YAMLIOHandler(cfgHandler, warps);
+
+        handler = new WarpHandler(ioHandler);
+        handler.loadWarps();
+
+        messageGenerator = new MessageGenerator(handler, str);
+
+        getServer().getPluginManager().registerEvents(new SignEventListener(this, str, handler), this);
         getCommand("warpalicious").setExecutor(new WarpaliciousCommand(this, str));
+
+        loadCommands();
+
         getLogger().info("Warpalicious version " + getDescription().getVersion() + " has been enabled!");
     }
 
-    public void onDisable(){
+    public void onDisable() {
         handler.saveWarps();
         getLogger().info("Succesfully saved warps");
     }
 
-    public Strings getStrings(){
-        return str;
-    }
-
-    public Location stringToLoc(String location){
-        String[] stringslist = location.split(",");
-        return new Location(getServer().getWorld(stringslist[0]), Double.valueOf(stringslist[1]), Double.valueOf(stringslist[2]), Double.valueOf(stringslist[3]), Float.valueOf(stringslist[4]), Float.valueOf(stringslist[5]));
-    }
-
-    public String locationToString(Location loc){
-        return String.format("%s,%s,%s,%s,%s,%s", loc.getWorld().getName(), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
-    }
-
-    public WarpHandler getWarpHandler(){
-        return handler;
-    }
-
-    private void checkTeleportModes(){
+    private void checkTeleportModes() {
         FileConfiguration cfg = cfgHandler.getCustomConfig(config);
 
         boolean allowMoveSignSurv = cfg.getBoolean("settings.survival.sign.allow-move"), allowMoveCommandSurv = cfg.getBoolean("settings.survival.command.allow-move"), allowMoveSignCrea = cfg.getBoolean("settings.creative.sign.allow-move"), allowMoveCommandCrea = cfg.getBoolean("settings.creative.command.allow-move");
@@ -72,24 +72,44 @@ public class WarpaliciousPlugin extends JavaPlugin {
         int arriveSignCount = cfg.getInt("effects.arrival.sign.count"), arriveCommandCount = cfg.getInt("effects.arrival.command.count"), departSignCount = cfg.getInt("effects.departure.sign.count"), departCommandCount = cfg.getInt("effects.departure.command.count");
 
         Particle arriveSignEffect = null, arriveCommandEffect = null, departSignEffect = null, departCommandEffect = null;
-        try{
+        try {
             arriveSignEffect = Particle.valueOf(cfg.getString("effects.arrival.sign.effect").toUpperCase());
-        } catch (Exception ignored){
+        } catch (Exception ignored) {
         }
-        try{
+        try {
             arriveCommandEffect = Particle.valueOf(cfg.getString("effects.arrival.command.effect").toUpperCase());
-        } catch (Exception ignored){
+        } catch (Exception ignored) {
         }
-        try{
+        try {
             departSignEffect = Particle.valueOf(cfg.getString("effects.departure.sign.effect").toUpperCase());
-        } catch (Exception ignored){
+        } catch (Exception ignored) {
         }
-        try{
+        try {
             departCommandEffect = Particle.valueOf(cfg.getString("effects.departure.command.effect").toUpperCase());
-        } catch (Exception ignored){
+        } catch (Exception ignored) {
         }
 
         TeleportMode.SIGN.setValues(delaySignCrea, delaySignSurv, creaSignPerm, survSignPerm, arriveSignEffect, departSignEffect, arriveSignCount, departSignCount, allowMoveSignCrea, allowMoveSignSurv);
         TeleportMode.COMMAND.setValues(delayCommandCrea, delayCommandSurv, survCommandPerm, creaCommandPerm, arriveCommandEffect, departCommandEffect, arriveCommandCount, departCommandCount, allowMoveCommandCrea, allowMoveCommandSurv);
+    }
+
+    private void loadCommands() {
+        getCommand("warp").setExecutor(new WarpCommand(str, handler));
+        getCommand("setwarp").setExecutor(new SetWarpCommand(str, handler));
+        getCommand("delwarp").setExecutor(new DelWarpCommand(str, handler));
+        getCommand("warplist").setExecutor(new WarplistCommand(str, messageGenerator));
+        getCommand("editwarp").setExecutor(new EditWarpCommand(str, handler));
+        getCommand("warpinfo").setExecutor(new WarpinfoCommand(handler, str, messageGenerator));
+        getCommand("findwarp").setExecutor(new FindWarpCommand(str, messageGenerator));
+        getCommand("warpinvite").setExecutor(new WarpInviteCommand(handler, str));
+        getCommand("warpuninvite").setExecutor(new WarpInviteCommand(handler, str));
+    }
+
+    public void reloadStrings() {
+        str.loadMessages();
+    }
+
+    public static WarpaliciousPlugin getInstance() {
+        return instance;
     }
 }

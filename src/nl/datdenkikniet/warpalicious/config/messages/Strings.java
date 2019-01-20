@@ -1,53 +1,26 @@
 package nl.datdenkikniet.warpalicious.config.messages;
 
 import nl.datdenkikniet.warpalicious.WarpaliciousPlugin;
-import nl.datdenkikniet.warpalicious.config.Config;
 import nl.datdenkikniet.warpalicious.config.CustomConfig;
+import nl.datdenkikniet.warpalicious.config.CustomConfigHandler;
 import org.bukkit.command.Command;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 
 public class Strings {
 
-    private boolean isInit = false;
-    private CustomConfig configHandler;
-    private Config config;
-    private String permission = "warpalicious.";
+    private boolean isInit;
+    private CustomConfigHandler configHandler;
+    private CustomConfig config;
     private MessagesGetter messages;
 
-    public Strings(CustomConfig cu, Config cfg, WarpaliciousPlugin plugin){
+    public Strings(CustomConfigHandler cu, CustomConfig cfg, WarpaliciousPlugin plugin) {
         configHandler = cu;
         config = cfg;
         messages = new MessagesGetter(configHandler, config, plugin);
         loadMessages();
         isInit = true;
     }
-
-    /*
-    Permissions
-     */
-    public String universalPerm = permission + "*";
-    public String warpDelPerm = permission + "delete";
-    public String warpEditPerm = permission + "edit";
-    public String setWarpPerm = permission + "set";
-    public String warpToPrivatePerm = permission + "bypassprivate";
-    public String warpPerm = permission + "warp";
-    public String warpListPerm = permission + "list";
-    public String warpListPrivatePerm = permission + "list.private";
-    public String warpListOthersPerm = permission + "list.other";
-    public String warpListSelfPerm = permission + "list.self";
-    public String delOtherWarpPerm = permission + "delete.other";
-    public String warpInfoOthersPerm = permission + "warpinfo.other";
-    public String warpInfoPerm = permission + "warpinfo";
-    public String warpTopPerm = permission + "top";
-    public String searchWarpPerm = permission + "searchwarps";
-    public String setPrivateWarpPerm = permission + "set.private";
-    public String createWarpSignPerm = permission + "makewarpsign";
-    public String useWarpSignPerm = permission + "usewarpsign";
-    public String nodelayperm = permission + "nodelay";
-    public String noParticlePerm = permission + "noparticle";
-    public String invitePlayerPerm = permission + "inviteplayers";
-    public String onlySetPrivate = permission + "onlyprivate";
 
     /*
     Messages
@@ -65,13 +38,6 @@ public class Strings {
     public String warpIsPrivate;
     public String warpToWarp;
     public String warpListHelp;
-    public String warpList;
-    public String warpPageNotExists;
-    public String warpListSub;
-    public String warpListSubPrivate;
-    public String warpListSubInvited;
-    public String warpsOwnList;
-    public String warpOthersList;
     public String warpInfoMain;
     public String warpInfoLocation;
     public String warpInfoAmount;
@@ -80,13 +46,7 @@ public class Strings {
     public String warpInfoTotalAmount;
     public String warpInfoTotalWarped;
     public String noValidNumber;
-    public String noValidPage;
-    public String warpTopHeader;
-    public String warpTopSub;
-    public String warpTopSubPrivate;
     public String noDots;
-    public String warpSearchHeader;
-    public String noWarpsFoundForQuery;
     public String madeWarpPrivate;
     public String madeWarpPublic;
     public String privateWarpSet;
@@ -109,23 +69,51 @@ public class Strings {
     public String warpInvitedList;
 
     /*
+    Warp list strings
+     */
+    public String warpList;
+    public String warpPageNotExists;
+    public String warpListSub;
+    public String warpListSubPrivate;
+    public String warpListSubInvited;
+    public String warpsOwnList;
+    public String warpOthersList;
+
+    public String noValidPage;
+    public String warpTopHeader;
+    public String warpTopSub;
+    public String warpTopSubPrivate;
+
+    public String warpSearchHeader;
+    public String noWarpsFoundForQuery;
+
+    /*
     String functions
      */
-    private String r(String str){
+    private String r(String str) {
         return str.replace("%PREFIX%", prefix);
     }
 
-    public String getUsage(Command command, String alias){
+    private String s(String m) {
+        try {
+            return r(messages.getMessage(m));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return "";
+    }
+
+    public String getUsage(Command command, String alias) {
         return r(correctUsage.replace("%USAGE%", command.getUsage().replace("<command>", alias)));
     }
 
-    public void loadMessages(){
-        if (isInit){
+    public void loadMessages() {
+        if (isInit) {
             configHandler.reloadCustomConfig(config);
         }
-        try{
+        try {
             prefix = messages.getMessage("prefix");
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         noperm = s("no-permission");
@@ -184,30 +172,4 @@ public class Strings {
         warpInvitedList = s("warp-invited-list");
     }
 
-    private String s(String s){
-        try{
-            return r(messages.getMessage(s));
-        } catch (Exception ex){
-            ex.printStackTrace();
-        }
-        return "";
-    }
-
-    public boolean checkPermission(Permissible p, String permission){
-        if (!permission.equals(onlySetPrivate)){
-            return p.hasPermission(permission) || p.hasPermission(universalPerm);
-        } else {
-            boolean hasNegator = false;
-            boolean hasPerm = false;
-            for (PermissionAttachmentInfo at : p.getEffectivePermissions()){
-                if (at.getPermission().equalsIgnoreCase(permission)){
-                    hasPerm = true;
-                }
-                if (at.getPermission().equalsIgnoreCase(permission) && !at.getValue()){
-                    hasNegator = true;
-                }
-            }
-            return hasPerm && !hasNegator;
-        }
-    }
 }

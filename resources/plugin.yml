@@ -1,8 +1,8 @@
 name: Warpalicious
 main: nl.datdenkikniet.warpalicious.WarpaliciousPlugin
 authors: [datdenkikniet, TastyBlueberry, oskar3123]
-version: 1.8.2
-softdepend: [Multiverse-Core, MultiWorld, MyWarp, warptastic]
+version: 1.9.0
+softdepend: [Multiverse-Core, MultiWorld]
 commands:
     delwarp:
         description: delete a warp

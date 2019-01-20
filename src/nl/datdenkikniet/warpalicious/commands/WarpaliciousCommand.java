@@ -1,54 +1,35 @@
 package nl.datdenkikniet.warpalicious.commands;
 
-import me.odium.warptastic.DBConnection;
-import me.odium.warptastic.warptastic;
-import me.taylorkelly.mywarp.MyWarp;
-import me.taylorkelly.mywarp.bukkit.MyWarpPlugin;
-import me.taylorkelly.mywarp.warp.EventfulPopulatableWarpManager;
-import me.taylorkelly.mywarp.warp.MemoryPopulatableWarpManager;
-import me.taylorkelly.mywarp.warp.PopulatableWarpManager;
-import me.taylorkelly.mywarp.warp.Warp;
+import nl.datdenkikniet.warpalicious.PermissionStorage;
 import nl.datdenkikniet.warpalicious.WarpaliciousPlugin;
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
-import nl.datdenkikniet.warpalicious.handling.Flag;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 
 public class WarpaliciousCommand implements CommandExecutor {
 
     private WarpaliciousPlugin plugin;
     private Strings str;
 
-    public WarpaliciousCommand(WarpaliciousPlugin pl, Strings instance) {
-        str = instance;
-        plugin = pl;
+    public WarpaliciousCommand(WarpaliciousPlugin instance, Strings str) {
+        this.str = str;
+        this.plugin = instance;
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (args.length == 1) {
-            if (args[0].equalsIgnoreCase("reloadmessages") && str.checkPermission(sender, str.universalPerm)) {
-                plugin.getStrings().loadMessages();
+            if (args[0].equalsIgnoreCase("reloadmessages") && PermissionStorage.hasPermission(sender, false, PermissionStorage.UNIVERSAL)) {
+                plugin.reloadStrings();
                 sender.sendMessage(str.prefix + " Succesfully reloaded messages!");
                 return true;
             } else {
                 sender.sendMessage(str.getUsage(cmd, label));
                 return true;
             }
-        } else if (args.length == 2) {
+        /*} else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("import")) {
-                if (str.checkPermission(sender, str.universalPerm)) {
+                if (PermissionStorage.hasPermission(sender, false, PermissionStorage.UNIVERSAL)) {
                     if (args[1].equalsIgnoreCase("mywarp")) {
                         MyWarpPlugin mwp = (MyWarpPlugin) plugin.getServer().getPluginManager().getPlugin("MyWarp");
                         if (mwp == null) {
@@ -209,7 +190,7 @@ public class WarpaliciousCommand implements CommandExecutor {
                 sender.sendMessage(str.getUsage(cmd, label));
                 return true;
             }
-
+        */
         } else {
             sender.sendMessage(str.prefix + " This server is running Warpalicious version " + plugin.getDescription().getVersion() + " by datdenkikniet.");
             return true;
