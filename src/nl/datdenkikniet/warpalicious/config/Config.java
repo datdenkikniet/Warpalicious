@@ -9,14 +9,14 @@ import java.io.File;
 
 public class Config {
 
-    public String name;
-    public File file;
-    public FileConfiguration fileConfig;
+  public String name;
+  public File file;
+  public FileConfiguration fileConfig;
 
-    public Config(String name, CustomConfig handler){
-        this.name = name;
-        if (this.file == null || this.fileConfig == null){
-            handler.saveDefaultConfig(this);
-        }
+  public Config(String name, CustomConfig handler) {
+    this.name = name;
+    if (this.file == null || this.fileConfig == null) {
+      handler.saveDefaultConfig(this);
     }
+  }
 }

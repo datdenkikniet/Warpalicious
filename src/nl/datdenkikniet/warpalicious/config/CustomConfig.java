@@ -15,49 +15,50 @@ import java.util.logging.Level;
 
 public class CustomConfig {
 
-    private WarpaliciousPlugin plugin;
+  private WarpaliciousPlugin plugin;
 
-    public CustomConfig(WarpaliciousPlugin instance){
-        plugin = instance;
+  public CustomConfig(WarpaliciousPlugin instance) {
+    plugin = instance;
+  }
+
+  public FileConfiguration getCustomConfig(Config config) {
+    if (config.fileConfig == null) {
+      reloadCustomConfig(config);
     }
+    return config.fileConfig;
+  }
 
-    public FileConfiguration getCustomConfig(Config config){
-        if (config.fileConfig == null){
-            reloadCustomConfig(config);
-        }
-        return config.fileConfig;
+  public void reloadCustomConfig(Config config) {
+    if (config.fileConfig == null) {
+      config.file = new File(plugin.getDataFolder(), config.name + ".yml");
     }
+    config.fileConfig = YamlConfiguration.loadConfiguration(config.file);
 
-    public void reloadCustomConfig(Config config){
-        if (config.fileConfig == null){
-            config.file = new File(plugin.getDataFolder(), config.name + ".yml");
-        }
-        config.fileConfig = YamlConfiguration.loadConfiguration(config.file);
-
-        InputStream defConfigStream = plugin.getResource(config.name + ".yml");
-        if (defConfigStream != null){
-            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream));
-            config.fileConfig.setDefaults(defConfig);
-        }
+    InputStream defConfigStream = plugin.getResource(config.name + ".yml");
+    if (defConfigStream != null) {
+      YamlConfiguration defConfig = YamlConfiguration
+          .loadConfiguration(new InputStreamReader(defConfigStream));
+      config.fileConfig.setDefaults(defConfig);
     }
+  }
 
-    public void saveCustomConfig(Config config){
-        if (config.fileConfig == null || config.file == null){
-            return;
-        }
-        try{
-            getCustomConfig(config).save(config.file);
-        } catch (IOException ex){
-            plugin.getLogger().log(Level.SEVERE, "Could not save config to " + config.file, ex);
-        }
+  public void saveCustomConfig(Config config) {
+    if (config.fileConfig == null || config.file == null) {
+      return;
     }
+    try {
+      getCustomConfig(config).save(config.file);
+    } catch (IOException ex) {
+      plugin.getLogger().log(Level.SEVERE, "Could not save config to " + config.file, ex);
+    }
+  }
 
-    public void saveDefaultConfig(Config config){
-        if (config.file == null){
-            config.file = new File(plugin.getDataFolder(), config.name + ".yml");
-        }
-        if (!config.file.exists()){
-            plugin.saveResource(config.name + ".yml", false);
-        }
+  public void saveDefaultConfig(Config config) {
+    if (config.file == null) {
+      config.file = new File(plugin.getDataFolder(), config.name + ".yml");
     }
+    if (!config.file.exists()) {
+      plugin.saveResource(config.name + ".yml", false);
+    }
+  }
 }
