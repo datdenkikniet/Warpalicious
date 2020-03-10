@@ -123,20 +123,23 @@ public class WarpHandler {
 
   public void saveWarps() {
     FileConfiguration c = cfg.getCustomConfig(config);
+
     for (Warp warp : warps) {
-      c.set(warp.getName() + ".owner", warp.getOwner().toString());
+      String key = warp.getName();
+      c.set(key + ".owner", warp.getOwner().toString());
       if (warp.getLocation(false).getWorld() != null) {
-        c.set(warp.getName() + ".location", plugin.locationToString(warp.getLocation(false)));
+        c.set(key + ".location", plugin.locationToString(warp.getLocation(false)));
       } else {
         plugin.getLogger()
-            .log(Level.WARNING, "Warning: warp \"" + warp.getName() + "\" has an invalid world!");
+            .log(Level.WARNING, "Warning: warp \"" + key + "\" has an invalid world!");
       }
       for (Flag flag : Flag.values()) {
-        c.set(warp.getName() + ".flags." + flag.name(), warp.getFlags().get(flag));
+        c.set(key + ".flags." + flag.name(), warp.getFlags().get(flag));
       }
       ArrayList<String> invited = new ArrayList<>();
-      warp.getInvitedPlayers().stream().forEach(uuid -> invited.add(uuid.toString()));
-      c.set(warp.getName() + ".invited", invited);
+      warp.getInvitedPlayers().forEach(uuid -> invited.add(uuid.toString()));
+      c.set(key + ".invited", invited);
+      c.set(key + ".timeswarpedto", warp.getTimesWarpedTo());
     }
     cfg.saveCustomConfig(config);
   }

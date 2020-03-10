@@ -15,8 +15,6 @@ public class Config {
 
   public Config(String name, CustomConfig handler) {
     this.name = name;
-    if (this.file == null || this.fileConfig == null) {
-      handler.saveDefaultConfig(this);
-    }
+    handler.saveDefaultConfig(this);
   }
 }
