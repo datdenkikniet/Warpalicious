@@ -70,7 +70,7 @@ public class Strings {
   public String warpListSub;
   public String warpListSubPrivate;
   public String warpListSubInvited;
-  public String warpsOwnList;
+  public String warpListSelf;
   public String warpOthersList;
   public String warpInfoMain;
   public String warpInfoLocation;
@@ -145,7 +145,7 @@ public class Strings {
     warpListSub = s("warp-list-sub");
     warpListSubPrivate = s("warp-list-sub-private");
     warpListSubInvited = s("warp-list-sub-invited");
-    warpsOwnList = s("warp-list-self");
+    warpListSelf = s("warp-list-self");
     warpOthersList = s("warp-list-other");
     warpInfoMain = s("warp-info-header");
     warpInfoLocation = s("warp-info-location");

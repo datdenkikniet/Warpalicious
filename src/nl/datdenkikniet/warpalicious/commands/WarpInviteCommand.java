@@ -32,21 +32,21 @@ public class WarpInviteCommand implements CommandExecutor {
     }
     if (args.length == 2) {
       Warp warp = plugin.getWarpHandler().getWarp(args[0]);
-      Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
         @SuppressWarnings("deprecation") OfflinePlayer otherPlayer = Bukkit
             .getOfflinePlayer(args[1]);
         if (warp == null) {
           sender.sendMessage(str.warpNotExists);
-          return;
+          return true;
         }
         if (!otherPlayer.hasPlayedBefore()) {
           sender.sendMessage(str.neverPlayed);
-          return;
+          return true;
         }
         if (cmd.getName().equalsIgnoreCase("warpinvite")) {
           if (warp.getOwner().equals(player.getUniqueId())) {
             if (warp.isPrivate()) {
-              if (!warp.isInvited(otherPlayer.getUniqueId())) {
+              if (!warp.isInvited(otherPlayer.getUniqueId()) && !warp.getOwner()
+                  .equals(player.getUniqueId())) {
                 warp.addInvitedPlayer(otherPlayer.getUniqueId());
                 player.sendMessage(
                     str.addedInvitedPlayer.replace("%PLAYERNAME%", otherPlayer.getName())
@@ -88,7 +88,6 @@ public class WarpInviteCommand implements CommandExecutor {
             player.sendMessage(str.warpNotOwned);
           }
         }
-      });
       return true;
     } else {
       sender.sendMessage(str.getUsage(cmd, label));

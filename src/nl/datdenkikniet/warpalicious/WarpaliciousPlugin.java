@@ -7,6 +7,8 @@ import nl.datdenkikniet.warpalicious.config.messages.Strings;
 import nl.datdenkikniet.warpalicious.handling.TeleportMode;
 import nl.datdenkikniet.warpalicious.handling.WarpHandler;
 import nl.datdenkikniet.warpalicious.listeners.SignEventListener;
+import nl.datdenkikniet.warpalicious.listeners.tabcomplete.TabCompleteListener;
+import nl.datdenkikniet.warpalicious.listeners.tabcomplete.WarpTabCompleteListener;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -34,6 +36,7 @@ public class WarpaliciousPlugin extends JavaPlugin {
     handler = new WarpHandler(this, warps);
     handler.load();
     getServer().getPluginManager().registerEvents(new SignEventListener(this), this);
+    getServer().getPluginManager().registerEvents(new WarpTabCompleteListener(this), this);
     getCommand("warpalicious").setExecutor(new WarpaliciousCommand(this, str));
     getLogger()
         .info("Warpalicious version " + getDescription().getVersion() + " has been enabled!");
@@ -50,9 +53,9 @@ public class WarpaliciousPlugin extends JavaPlugin {
 
   public Location stringToLoc(String location) {
     String[] stringslist = location.split(",");
-    return new Location(getServer().getWorld(stringslist[0]), Double.valueOf(stringslist[1]),
-        Double.valueOf(stringslist[2]), Double.valueOf(stringslist[3]),
-        Float.valueOf(stringslist[4]), Float.valueOf(stringslist[5]));
+    return new Location(getServer().getWorld(stringslist[0]), Double.parseDouble(stringslist[1]),
+        Double.parseDouble(stringslist[2]), Double.parseDouble(stringslist[3]),
+        Float.parseFloat(stringslist[4]), Float.parseFloat(stringslist[5]));
   }
 
   public String locationToString(Location loc) {

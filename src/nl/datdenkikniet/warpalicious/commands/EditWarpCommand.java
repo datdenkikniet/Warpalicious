@@ -1,6 +1,7 @@
 package nl.datdenkikniet.warpalicious.commands;
 
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
+import nl.datdenkikniet.warpalicious.config.messages.StringUtils;
 import nl.datdenkikniet.warpalicious.handling.Flag;
 import nl.datdenkikniet.warpalicious.handling.Warp;
 import nl.datdenkikniet.warpalicious.handling.WarpHandler;
@@ -64,7 +65,7 @@ public class EditWarpCommand implements CommandExecutor {
           if (warp != null) {
             if (warp.getOwner().equals(player.getUniqueId()) || str
                 .checkPermission(sender, str.universalPerm)) {
-              boolean value = handler.parseBoolean(args[2]);
+              boolean value = StringUtils.parseBoolean(args[2]);
               warp.setFlag(Flag.valueOf(args[1].toUpperCase()), value);
               sender.sendMessage(
                   str.warpSetFlag.replace("%WARPNAME%", warp.getName()).replace("%FLAG%", args[1])

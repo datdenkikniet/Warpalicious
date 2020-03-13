@@ -1,6 +1,8 @@
 package nl.datdenkikniet.warpalicious.commands;
 
+import java.util.List;
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
+import nl.datdenkikniet.warpalicious.config.messages.StringUtils;
 import nl.datdenkikniet.warpalicious.handling.Flag;
 import nl.datdenkikniet.warpalicious.handling.Warp;
 import nl.datdenkikniet.warpalicious.handling.WarpHandler;
@@ -89,17 +91,18 @@ public class WarpinfoCommand implements CommandExecutor {
             if (warp.getOwner().equals(((Player) sender).getUniqueId())
                 || warp.isInvited(((Player) sender).getUniqueId())
                 && warp.getInvitedPlayers().size() != 0) {
-              String st = "";
+              StringBuilder st = new StringBuilder();
               for (UUID u : warp.getInvitedPlayers()) {
-                st += Bukkit.getOfflinePlayer(u).getName() + ", ";
+                st.append(Bukkit.getOfflinePlayer(u).getName()).append(", ");
               }
-              sender.sendMessage(str.warpInvitedList.replace("%INVITED%", st));
+              sender.sendMessage(str.warpInvitedList.replace("%INVITED%", st.toString()));
             }
-            String fin = ChatColor.YELLOW + "Flags:\n";
+            StringBuilder fin = new StringBuilder(ChatColor.YELLOW + "Flags:\n");
             for (Flag flag : Flag.values()) {
-              fin += ChatColor.YELLOW + flag.name() + ": " + warp.getFlag(flag) + "\n";
+              fin.append(ChatColor.YELLOW).append(flag.name()).append(": ")
+                  .append(warp.getFlag(flag)).append("\n");
             }
-            sender.sendMessage(fin);
+            sender.sendMessage(fin.toString());
             return true;
           } else {
             sender.sendMessage(str.noperm);
@@ -115,7 +118,7 @@ public class WarpinfoCommand implements CommandExecutor {
         if (str.checkPermission(sender, str.warpTopPerm)) {
           try {
             int page = Integer.parseInt(args[1]);
-            sender.sendMessage(handler.sortPage(player, page, false));
+            sender.sendMessage(getWarpListSortedPage(player, page, true));
             return true;
           } catch (NumberFormatException ex) {
             if (args[1].equalsIgnoreCase("-noprivate")) {
@@ -139,7 +142,7 @@ public class WarpinfoCommand implements CommandExecutor {
         if (str.checkPermission(sender, str.warpTopPerm)) {
           try {
             int page = Integer.parseInt(args[1]);
-            sender.sendMessage(handler.sortPage(player, page, true));
+            sender.sendMessage(getWarpListSortedPage(player, page, false));
             return true;
           } catch (NumberFormatException ex) {
             sender.sendMessage(str.noValidNumber);
@@ -163,9 +166,15 @@ public class WarpinfoCommand implements CommandExecutor {
     if (warp.getOwner().equals(player.getUniqueId()) && str
         .checkPermission(player, str.warpInfoPerm)) {
       return true;
-    } else if (str.checkPermission(player, str.warpInfoOthersPerm)) {
-      return true;
+    } else {
+      return str.checkPermission(player, str.warpInfoOthersPerm);
     }
-    return false;
+  }
+
+  private String getWarpListSortedPage(Player player, int page, boolean includePrivate) {
+    List<Warp> warps = handler.getWarpListSortedPage(player, page, includePrivate);
+    String title = str.warpTopHeader;
+    return StringUtils.toWarpListPageString(str, player, title, page,
+        handler.getWarpListSortedPagesCount(player, includePrivate), warps);
   }
 }

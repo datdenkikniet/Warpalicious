@@ -35,7 +35,7 @@ class TeleportRunnable implements Runnable {
         }
         if (timeLeft != 0 && (timeLeft % 5 == 0 || timeLeft < 6)) {
           player.sendMessage(str.tpInTime.replace("%TIME%", String.valueOf(timeLeft)));
-        } else if (timeLeft < 1 && timeLeft != -1) {
+        } else if (timeLeft < 1) {
           if (warp.getLocation(false) != null && warp.getLocation(false).getWorld() != null) {
             if (mode.getEffect(Direction.DEPART) != null && !str
                 .checkPermission(player, str.noParticlePerm)) {

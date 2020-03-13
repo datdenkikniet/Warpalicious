@@ -1,5 +1,6 @@
 package nl.datdenkikniet.warpalicious.handling;
 
+import java.util.Set;
 import nl.datdenkikniet.warpalicious.WarpaliciousPlugin;
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
 import org.bukkit.Bukkit;
@@ -19,10 +20,10 @@ public class Warp {
   private HashMap<Flag, Boolean> flags;
   private int timesWarpedTo;
   private WarpaliciousPlugin plugin;
-  private ArrayList<UUID> invitedPlayers;
+  private Set<UUID> invitedPlayers;
 
   public Warp(WarpaliciousPlugin instance, UUID owner, Location loc, String name,
-      HashMap<Flag, Boolean> flags, int time, ArrayList<UUID> invited) {
+      HashMap<Flag, Boolean> flags, int time, Set<UUID> invited) {
     this.owner = owner;
     this.loc = loc;
     this.name = name;
@@ -116,7 +117,7 @@ public class Warp {
   }
 
   public boolean isInvited(UUID u) {
-    return u.equals(owner) || invitedPlayers.contains(u);
+    return invitedPlayers.contains(u);
   }
 
   public void addInvitedPlayer(UUID u) {
@@ -127,7 +128,7 @@ public class Warp {
     invitedPlayers.remove(u);
   }
 
-  public ArrayList<UUID> getInvitedPlayers() {
+  public Set<UUID> getInvitedPlayers() {
     return invitedPlayers;
   }
 

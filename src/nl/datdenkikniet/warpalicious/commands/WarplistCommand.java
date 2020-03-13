@@ -1,6 +1,9 @@
 package nl.datdenkikniet.warpalicious.commands;
 
+import java.util.List;
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
+import nl.datdenkikniet.warpalicious.config.messages.StringUtils;
+import nl.datdenkikniet.warpalicious.handling.Warp;
 import nl.datdenkikniet.warpalicious.handling.WarpHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -32,11 +35,11 @@ public class WarplistCommand implements CommandExecutor {
         .checkPermission(sen, str.warpListSelfPerm) || str
         .checkPermission(sen, str.universalPerm)) {
       if (args.length == 0) {
-        sen.sendMessage(handler.getWarpListPage(player, 1));
+        sen.sendMessage(getWarpListPage(player, 1));
         return true;
       } else if (args.length == 1) {
         if (isNumeric(args[0])) {
-          sen.sendMessage(handler.getWarpListPage(player, Integer.valueOf(args[0])));
+          sen.sendMessage(getWarpListPage(player, Integer.parseInt(args[0])));
           return true;
         } else if (args[0].equalsIgnoreCase("-help")) {
           sen.sendMessage(str.getUsage(cmd, label));
@@ -44,7 +47,7 @@ public class WarplistCommand implements CommandExecutor {
         } else {
           if (args[0].equalsIgnoreCase("self")) {
             if (str.checkPermission(sen, str.warpListSelfPerm)) {
-              sen.sendMessage(handler.getWarpListPageSelf(player, 1));
+              sen.sendMessage(getWarpListPageSelf(player, 1));
               return true;
             } else {
               sen.sendMessage(str.noperm);
@@ -53,21 +56,23 @@ public class WarplistCommand implements CommandExecutor {
           } else if (Bukkit.getOfflinePlayer(args[0]).hasPlayedBefore()) {
             if (str.checkPermission(sen, str.warpListOthersPerm)) {
               OfflinePlayer pl = Bukkit.getOfflinePlayer(args[0]);
-              sen.sendMessage(handler.getWarpListPageOther(player, pl, 1));
+              sen.sendMessage(getWarpListPageOther(player, pl, 1));
               return true;
             } else {
               sen.sendMessage(str.noperm);
               return true;
             }
           } else {
-            sen.sendMessage(str.warpListHelp.replace("%PAGES%", handler.getWarpListPages(player)));
+            sen.sendMessage(
+                str.warpListHelp
+                    .replace("%PAGES%", String.valueOf(handler.getWarpListPagesCount(player))));
             return true;
           }
         }
       } else if (args.length == 2) {
         if (args[0].equalsIgnoreCase("self") && isNumeric(args[1])) {
           if (str.checkPermission(sen, str.warpListSelfPerm)) {
-            sen.sendMessage(handler.getWarpListPageSelf(player, Integer.valueOf(args[1])));
+            sen.sendMessage(getWarpListPageSelf(player, Integer.parseInt(args[1])));
             return true;
           } else {
             sen.sendMessage(str.noperm);
@@ -76,7 +81,7 @@ public class WarplistCommand implements CommandExecutor {
         } else if (Bukkit.getOfflinePlayer(args[0]).hasPlayedBefore() && isNumeric(args[1])) {
           if (str.checkPermission(sen, str.warpListOthersPerm)) {
             OfflinePlayer pl = Bukkit.getOfflinePlayer(args[0]);
-            sen.sendMessage(handler.getWarpListPageOther(player, pl, Integer.valueOf(args[1])));
+            sen.sendMessage(getWarpListPageOther(player, pl, Integer.parseInt(args[1])));
             return true;
           } else {
             sen.sendMessage(str.noperm);
@@ -103,5 +108,34 @@ public class WarplistCommand implements CommandExecutor {
     } catch (NumberFormatException ex) {
       return false;
     }
+  }
+
+  private String getWarpListPage(Player player, int page) {
+    List<Warp> warps = handler.getWarpListPage(player, page);
+    String title = str.warpList;
+    return StringUtils
+        .toWarpListPageString(str, player, title, page, handler.getWarpListPagesCount(player),
+            warps);
+  }
+
+  private String getWarpListPageSelf(Player player, int page) {
+    List<Warp> warps = handler.getWarpListPageSelf(player, page);
+    String title = str.warpListSelf;
+    return StringUtils
+        .toWarpListPageString(str, player, title, page, handler.getWarplistPagesSelfCount(player),
+            warps);
+  }
+
+  private String getWarpListPageOther(Player player, OfflinePlayer pl, int page) {
+    List<Warp> warps = handler.getWarpListPageOther(player, pl, page);
+    String title;
+    if (pl != null && pl.getName() != null) {
+      title = str.warpOthersList.replace("%PLAYERNAME%", pl.getName());
+    } else {
+      title = str.warpOthersList.replace("%PLAYERNAME%", "unknown player");
+    }
+    return StringUtils.toWarpListPageString(str, player, title, page,
+        handler.getWarpListPagesOtherCount(player, pl),
+        warps);
   }
 }

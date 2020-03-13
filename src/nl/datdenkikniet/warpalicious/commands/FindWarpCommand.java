@@ -1,7 +1,10 @@
 package nl.datdenkikniet.warpalicious.commands;
 
+import java.util.List;
 import nl.datdenkikniet.warpalicious.WarpaliciousPlugin;
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
+import nl.datdenkikniet.warpalicious.config.messages.StringUtils;
+import nl.datdenkikniet.warpalicious.handling.Warp;
 import nl.datdenkikniet.warpalicious.handling.WarpHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,7 +28,7 @@ public class FindWarpCommand implements CommandExecutor {
     Player player = (Player) sender;
     if (args.length == 1) {
       if (str.checkPermission(sender, str.searchWarpPerm)) {
-        sender.sendMessage(handler.formatWarps(args[0], 1, player.getUniqueId()));
+        sender.sendMessage(searchWarpsPage(args[0], 1, player));
         return true;
       } else {
         sender.sendMessage(str.noperm);
@@ -35,7 +38,7 @@ public class FindWarpCommand implements CommandExecutor {
       if (str.checkPermission(sender, str.searchWarpPerm)) {
         try {
           sender.sendMessage(
-              handler.formatWarps(args[0], Integer.parseInt(args[1]), player.getUniqueId()));
+              searchWarpsPage(args[0], Integer.parseInt(args[1]), player));
         } catch (NumberFormatException ex) {
           sender.sendMessage(str.noValidNumber);
         }
@@ -47,6 +50,17 @@ public class FindWarpCommand implements CommandExecutor {
     } else {
       sender.sendMessage(str.getUsage(cmd, label));
       return true;
+    }
+  }
+
+  private String searchWarpsPage(String toFind, int page, Player player) {
+    List<Warp> foundWarps = handler.searchWarpsPage(toFind, page, player);
+    if (foundWarps != null && foundWarps.size() == 0) {
+      return str.noWarpsFoundForQuery.replace("%QUERY%", toFind);
+    } else {
+      String title = str.warpSearchHeader;
+      return StringUtils.toWarpListPageString(str, player, title, page,
+          handler.searchWarpsPagesCount(toFind, player), foundWarps);
     }
   }
 }

@@ -1,11 +1,14 @@
 package nl.datdenkikniet.warpalicious.handling;
 
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import nl.datdenkikniet.warpalicious.WarpaliciousPlugin;
 import nl.datdenkikniet.warpalicious.commands.*;
 import nl.datdenkikniet.warpalicious.config.Config;
 import nl.datdenkikniet.warpalicious.config.CustomConfig;
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,10 +21,12 @@ import java.util.logging.Level;
 
 public class WarpHandler {
 
+  public static final int WARPLIST_PAGE_SIZE = 7;
+
   private WarpaliciousPlugin plugin;
   private Config config;
   private CustomConfig cfg;
-  private ArrayList<Warp> warps = new ArrayList<>();
+  private List<Warp> warps = new ArrayList<>();
   private Strings str;
 
   public WarpHandler(WarpaliciousPlugin instance, Config config) {
@@ -31,7 +36,28 @@ public class WarpHandler {
     str = plugin.getStrings();
   }
 
-  public ArrayList<Warp> getWarps() {
+  public WarpaliciousPlugin getPlugin() {
+    return plugin;
+  }
+
+  private void loadCommands() {
+    plugin.getCommand("warp").setExecutor(new WarpCommand(str, this));
+    plugin.getCommand("setwarp").setExecutor(new SetWarpCommand(str, this));
+    plugin.getCommand("delwarp").setExecutor(new DelWarpCommand(str, this));
+    plugin.getCommand("warplist").setExecutor(new WarplistCommand(str, this));
+    plugin.getCommand("editwarp").setExecutor(new EditWarpCommand(str, this));
+    plugin.getCommand("warpinfo").setExecutor(new WarpinfoCommand(str, this));
+    plugin.getCommand("findwarp").setExecutor(new FindWarpCommand(plugin));
+    plugin.getCommand("warpinvite").setExecutor(new WarpInviteCommand(plugin, str));
+    plugin.getCommand("warpuninvite").setExecutor(new WarpInviteCommand(plugin, str));
+  }
+
+  public void load() {
+    loadWarps();
+    loadCommands();
+  }
+
+  public List<Warp> getWarps() {
     return warps;
   }
 
@@ -39,7 +65,7 @@ public class WarpHandler {
     warps.add(warp);
   }
 
-  public HashMap<Flag, Boolean> getDefaultFlags() {
+  public static HashMap<Flag, Boolean> getDefaultFlags() {
     HashMap<Flag, Boolean> toRet = new HashMap<>();
     toRet.put(Flag.PRIVATE, false);
     toRet.put(Flag.SIGNPRIVATE, true);
@@ -66,7 +92,7 @@ public class WarpHandler {
           UUID owner = UUID.fromString(c.getString(key + ".owner"));
           Location loc = plugin.stringToLoc(c.getString(key + ".location"));
           int times = c.getInt(key + ".timeswarpedto");
-          ArrayList<UUID> invitedPlayers = new ArrayList<>();
+          Set<UUID> invitedPlayers = new HashSet<>();
           c.getStringList(key + ".invited").stream()
               .forEach(str -> invitedPlayers.add(UUID.fromString(str)));
           new Warp(getPlugin(), owner, loc, key, flags, times, invitedPlayers);
@@ -75,50 +101,6 @@ public class WarpHandler {
         System.out.println("Error while loading flag " + key);
       }
     }
-  }
-
-  private void loadCommands() {
-    plugin.getCommand("warp").setExecutor(new WarpCommand(str, this));
-    plugin.getCommand("setwarp").setExecutor(new SetWarpCommand(str, this));
-    plugin.getCommand("delwarp").setExecutor(new DelWarpCommand(str, this));
-    plugin.getCommand("warplist").setExecutor(new WarplistCommand(str, this));
-    plugin.getCommand("editwarp").setExecutor(new EditWarpCommand(str, this));
-    plugin.getCommand("warpinfo").setExecutor(new WarpinfoCommand(str, this));
-    plugin.getCommand("findwarp").setExecutor(new FindWarpCommand(plugin));
-    plugin.getCommand("warpinvite").setExecutor(new WarpInviteCommand(plugin, str));
-    plugin.getCommand("warpuninvite").setExecutor(new WarpInviteCommand(plugin, str));
-  }
-
-  public void delWarp(Warp warp) {
-    warps.remove(warp);
-    if (cfg.getCustomConfig(config).isSet("total")) {
-      cfg.getCustomConfig(config)
-          .set("total", cfg.getCustomConfig(config).getInt("total") + warp.getTimesWarpedTo());
-    } else {
-      cfg.getCustomConfig(config).set("total", warp.getTimesWarpedTo());
-    }
-    cfg.getCustomConfig(config).set(warp.getName(), null);
-    cfg.saveCustomConfig(config);
-  }
-
-  public Warp getWarp(String name) {
-    for (Warp warp : warps) {
-      if (warp.getName().equalsIgnoreCase(name)) {
-        return warp;
-      }
-    }
-    return null;
-  }
-
-  public void load() {
-    loadWarps();
-    loadCommands();
-  }
-
-  public ArrayList<Warp> getWarps(UUID player) {
-    ArrayList<Warp> toRet = new ArrayList<>();
-    warps.stream().filter(w -> w.getOwner().equals(player)).forEach(toRet::add);
-    return toRet;
   }
 
   public void saveWarps() {
@@ -144,6 +126,147 @@ public class WarpHandler {
     cfg.saveCustomConfig(config);
   }
 
+  public void delWarp(Warp warp) {
+    warps.remove(warp);
+    if (cfg.getCustomConfig(config).isSet("total")) {
+      cfg.getCustomConfig(config)
+          .set("total", cfg.getCustomConfig(config).getInt("total") + warp.getTimesWarpedTo());
+    } else {
+      cfg.getCustomConfig(config).set("total", warp.getTimesWarpedTo());
+    }
+    cfg.getCustomConfig(config).set(warp.getName(), null);
+    cfg.saveCustomConfig(config);
+  }
+
+  public Warp getWarp(String name) {
+    for (Warp warp : warps) {
+      if (warp.getName().equalsIgnoreCase(name)) {
+        return warp;
+      }
+    }
+    return null;
+  }
+
+  public List<Warp> getWarps(UUID player) {
+    ArrayList<Warp> toRet = new ArrayList<>();
+    warps.stream().filter(w -> w.getOwner().equals(player)).forEach(toRet::add);
+    return toRet;
+  }
+
+  public List<Warp> getWarpListPage(int page, int maxPage, List<Warp> allWarps) {
+    if (page > maxPage || page < 1) {
+      return null;
+    } else {
+      page = page - 1;
+      int min = page * WARPLIST_PAGE_SIZE;
+      int max = (page * WARPLIST_PAGE_SIZE) + WARPLIST_PAGE_SIZE;
+      List<Warp> warpsPage = new ArrayList<>();
+      for (int i = min; i < (Math.min(max, allWarps.size())); i++) {
+        warpsPage.add(allWarps.get(i));
+      }
+      return warpsPage;
+    }
+  }
+
+  private int toPageCount(int warpCount) {
+    return (int) Math.ceil(((double) warpCount) / WARPLIST_PAGE_SIZE);
+  }
+
+  public int getWarplistPagesSelfCount(Player player) {
+    return toPageCount(getWarps(player.getUniqueId()).size());
+  }
+
+  public List<Warp> getWarpListPageSelf(Player player, int page) {
+    return getWarpListPage(page, getWarplistPagesSelfCount(player), getWarps(player.getUniqueId()));
+  }
+
+  public List<Warp> getWarpList(Player player) {
+    if (str.checkPermission(player, str.warpListPrivatePerm)) {
+      return warps;
+    } else {
+      List<Warp> visibleWarps = new ArrayList<>();
+      for (Warp warp : warps) {
+        if (!warp.isPrivate() || warp.isInvited(player.getUniqueId()) || warp.getOwner()
+            .equals(player.getUniqueId())) {
+          visibleWarps.add(warp);
+        }
+      }
+      return visibleWarps;
+    }
+  }
+
+  public int getWarpListPagesCount(Player player) {
+    return toPageCount(getWarpList(player).size());
+  }
+
+  public List<Warp> getWarpListPage(Player player, int page) {
+    return getWarpListPage(page, getWarpListPagesCount(player), getWarpList(player));
+  }
+
+  public List<Warp> getWarpListOther(Player player, OfflinePlayer pl) {
+    ArrayList<Warp> otherWarps = new ArrayList<>();
+    warps.stream().filter(warp -> (warp.isInvited(player.getUniqueId()) || !warp.isPrivate() || str
+        .checkPermission(player, str.warpListPrivatePerm)) && warp.getOwner()
+        .equals(pl.getUniqueId())).forEach(otherWarps::add);
+    return otherWarps;
+  }
+
+  public int getWarpListPagesOtherCount(Player player, OfflinePlayer pl) {
+    return toPageCount(getWarpListOther(player, pl).size());
+  }
+
+  public List<Warp> getWarpListPageOther(Player player, OfflinePlayer pl, int page) {
+    return getWarpListPage(page, getWarpListPagesOtherCount(player, pl),
+        getWarpListOther(player, pl));
+  }
+
+  public List<Warp> getWarpListSorted(Player player, boolean includePrivate) {
+    List<Warp> warpList = new ArrayList<>();
+    getWarpList(player).stream().filter((warp) -> includePrivate || !warp.isPrivate())
+        .forEach(warpList::add);
+    warpList.sort(Comparator.comparingInt(Warp::getTimesWarpedTo));
+    return warpList;
+  }
+
+  public int getWarpListSortedPagesCount(Player player, boolean includePrivate) {
+    return toPageCount(getWarpListSorted(player, includePrivate).size());
+  }
+
+  public List<Warp> getWarpListSortedPage(Player player, int page, boolean includePrivate) {
+    List<Warp> warpList = getWarpListSorted(player, includePrivate);
+    int availablePages = toPageCount(warpList.size());
+    return getWarpListPage(page, availablePages, warpList);
+  }
+
+  public int getDeletedWarpsAmount() {
+    if (cfg.getCustomConfig(config).isSet("total")) {
+      return cfg.getCustomConfig(config).getInt("total");
+    } else {
+      return 0;
+    }
+  }
+
+  public int searchWarpsPagesCount(String toFind, Player player){
+    return toPageCount(searchWarps(toFind, player).size());
+  }
+
+  public List<Warp> searchWarps(String toFind, Player player) {
+    toFind = toFind.toLowerCase();
+    ArrayList<Warp> warps = new ArrayList<>();
+    for (Warp warp : getWarpList(player)) {
+      if (warp.getName().toLowerCase().contains(toFind)) {
+        warps.add(warp);
+      }
+    }
+    return warps;
+  }
+
+  public List<Warp> searchWarpsPage(String toFind, int page, Player player) {
+    List<Warp> foundWarps = searchWarps(toFind, player);
+    int totalPages = toPageCount(foundWarps.size());
+    return getWarpListPage(page, totalPages, foundWarps);
+  }
+
   public boolean isFlag(String flag) {
     try {
       Flag.valueOf(flag.toUpperCase());
@@ -164,290 +287,6 @@ public class WarpHandler {
     return strBuilder.toString();
   }
 
-  public String getWarpListPages(Player player) {
-    if (str.checkPermission(player, str.warpListPrivatePerm)) {
-      return String.valueOf((int) Math.ceil(((double) warps.size()) / 9));
-    } else {
-      double amount = 0;
-      for (Warp warp : warps) {
-        if (!warp.isPrivate() || warp.isInvited(player.getUniqueId())) {
-          amount++;
-        }
-      }
-      return String.valueOf((int) Math.ceil(amount / 9));
-    }
-  }
-
-  private int getWarpListPagesAmt(Player player) {
-    if (str.checkPermission(player, str.warpListPrivatePerm)) {
-      return (int) Math.ceil(((double) warps.size()) / 9);
-    } else {
-      double amount = 0;
-      for (Warp warp : warps) {
-        if (!warp.isPrivate() || warp.isInvited(player.getUniqueId()) || warp.getOwner()
-            .equals(player.getUniqueId())) {
-          amount++;
-        }
-      }
-      return (int) Math.ceil(amount / 9);
-    }
-  }
-
-  private int getWarplistPagesSelfAmt(Player player) {
-    double amount = 0;
-    for (Warp warp : warps) {
-      if (warp.getOwner().equals(player.getUniqueId())) {
-        amount++;
-      }
-    }
-    return (int) Math.ceil(amount / 9);
-  }
-
-  public String getWarpListPage(Player player, int page) {
-    if (page > getWarpListPagesAmt(player) || page < 1) {
-      return str.warpPageNotExists;
-    } else {
-      page = page - 1;
-      String toRet = str.warpList.replace("%PAGE%", String.valueOf(page + 1))
-          .replace("%MAXPAGE%", String.valueOf(getWarpListPagesAmt(player)));
-      int min = page * 9;
-      int max = (page * 9) + 9;
-      if (str.checkPermission(player, str.warpListPrivatePerm)) {
-        for (int i = min; i < (max > warps.size() ? warps.size() : max); i++) {
-          toRet += getWarpListString(warps.get(i), i, player.getUniqueId());
-        }
-      } else {
-        ArrayList<Warp> warpsFiltered = new ArrayList<>();
-        warps.stream().filter(
-            warp -> !warp.isPrivate() || warp.getOwner().equals(player.getUniqueId()) || warp
-                .isInvited(player.getUniqueId())).forEach(warpsFiltered::add);
-        for (int i = min; i < (max > warpsFiltered.size() ? warpsFiltered.size() : max); i++) {
-          toRet += getWarpListString(warpsFiltered.get(i), i, player.getUniqueId());
-        }
-      }
-      return toRet;
-    }
-  }
-
-  public String getWarpListPageSelf(Player player, int page) {
-    if (page > getWarplistPagesSelfAmt(player) || page < 1) {
-      return str.warpPageNotExists;
-    } else {
-      page = page - 1;
-      int min = page * 9;
-      int max = (page * 9) + 9;
-      ArrayList<Warp> warps2 = new ArrayList<>();
-      warps.stream().filter(warp -> warp.getOwner().equals(player.getUniqueId()))
-          .forEach(warps2::add);
-      String toRet = str.warpsOwnList.replace("%PAGE%", String.valueOf(page + 1))
-          .replace("%MAXPAGE%", String.valueOf(getWarplistPagesSelfAmt(player)));
-      for (int i = min; i < (max > warps2.size() ? warps2.size() : max); i++) {
-        toRet += getWarpListString(warps2.get(i), i, player.getUniqueId());
-      }
-      return toRet;
-    }
-  }
-
-  public String getWarpListPageOther(Player player, OfflinePlayer pl, Integer page) {
-    if (page > getWarpListPagesAmtOther(player, pl) || page < 1) {
-      return str.warpPageNotExists;
-    } else {
-      page = page - 1;
-      int min = page * 9;
-      int max = (page * 9) + 9;
-      ArrayList<Warp> warps2 = new ArrayList<>();
-      warps.stream().filter(warp ->
-          (warp.isInvited(player.getUniqueId()) || !warp.isPrivate() || str
-              .checkPermission(player, str.warpListPrivatePerm)) && warp.getOwner()
-              .equals(pl.getUniqueId())).forEach(warps2::add);
-      String toRet = str.warpOthersList.replace("%PAGE%", String.valueOf(page + 1))
-          .replace("%MAXPAGE%", String.valueOf(getWarpListPagesAmtOther(player, pl)))
-          .replace("%PLAYERNAME%", pl.getName());
-      for (int i = min; i < (max > warps2.size() ? warps2.size() : max); i++) {
-        toRet += getWarpListString(warps2.get(i), i, player.getUniqueId());
-      }
-      return toRet;
-    }
-  }
-
-  private int getWarpListPagesAmtOther(Player player, OfflinePlayer pl) {
-    double amount = 0;
-    for (Warp warp : warps) {
-      if ((warp.isInvited(player.getUniqueId()) || !warp.isPrivate() || str
-          .checkPermission(player, str.warpListPrivatePerm)) && warp.getOwner()
-          .equals(pl.getUniqueId())) {
-        amount++;
-      }
-    }
-    return (int) Math.ceil(amount / 9);
-  }
-
-  public boolean parseBoolean(String bool) {
-    if (bool.equalsIgnoreCase("yes") || bool.equalsIgnoreCase("y") || bool.equalsIgnoreCase("true")
-        || bool.equalsIgnoreCase("allow")) {
-      return true;
-    } else if (bool.equalsIgnoreCase("no") || bool.equalsIgnoreCase("n") || bool
-        .equalsIgnoreCase("false") || bool.equalsIgnoreCase("deny")) {
-      return false;
-    }
-    return false;
-  }
-
-  public String sortPage(Player player, int page, boolean noPrivate) {
-    String toRet;
-    int actualPage = page - 1;
-    int availablePages = 0;
-    if (str.checkPermission(player, str.warpListPrivatePerm) && !noPrivate) {
-      availablePages = getWarps().size() / 7;
-    } else {
-      for (Warp warp : warps) {
-        if (!warp.isPrivate() || warp.isInvited(player.getUniqueId())) {
-          availablePages++;
-        }
-      }
-      availablePages = availablePages / 7;
-    }
-    if (actualPage > availablePages || actualPage < 0) {
-      return str.noValidPage.replace("%PAGES%", String.valueOf(availablePages + 1));
-    } else {
-      toRet = str.warpTopHeader.replace("%PAGE%", String.valueOf(page))
-          .replace("%MAXPAGE%", String.valueOf(availablePages + 1));
-      @SuppressWarnings("unchecked") ArrayList<Warp> tempWarps = (ArrayList<Warp>) getWarps()
-          .clone();
-      if (noPrivate) {
-        ArrayList<Warp> toRemove = new ArrayList<>();
-        tempWarps.stream().filter(warp -> warp.isPrivate() && !warp.isInvited(player.getUniqueId()))
-            .forEach(toRemove::add);
-        tempWarps.removeAll(toRemove);
-      }
-      Warp currWarp = null;
-      Warp[] warps = new Warp[tempWarps.size()];
-      for (int i = 0; i < warps.length; i++) {
-        for (Warp warp : tempWarps) {
-          if (currWarp == null) {
-            if (!warp.isPrivate() || str.checkPermission(player, str.warpListPrivatePerm) || warp
-                .isInvited(player.getUniqueId())) {
-              currWarp = warp;
-            }
-          } else {
-            if (currWarp.getTimesWarpedTo() < warp.getTimesWarpedTo()) {
-              if (!warp.isPrivate() || str.checkPermission(player, str.warpListPrivatePerm) || warp
-                  .isInvited(player.getUniqueId())) {
-                currWarp = warp;
-              }
-            }
-          }
-        }
-        warps[i] = currWarp;
-        tempWarps.remove(currWarp);
-        currWarp = null;
-      }
-      for (int i = actualPage * 7; i < actualPage * 7 + 7; i++) {
-        if (!(i >= warps.length)) {
-          if (Bukkit.getOfflinePlayer(warps[i].getOwner()).hasPlayedBefore()) {
-            if (!warps[i].isPrivate() || warps[i].isInvited(player.getUniqueId())) {
-              toRet += str.warpTopSub.replace("%POSITION%", String.valueOf(i + 1))
-                  .replace("%WARPNAME%", warps[i].getName())
-                  .replace("%WARPAMOUNT%", String.valueOf(warps[i].getTimesWarpedTo()))
-                  .replace("%OWNERNAME%", Bukkit.getOfflinePlayer(warps[i].getOwner()).getName());
-            } else {
-              toRet += str.warpTopSubPrivate.replace("%POSITION%", String.valueOf(i + 1))
-                  .replace("%WARPNAME%", warps[i].getName())
-                  .replace("%WARPAMOUNT%", String.valueOf(warps[i].getTimesWarpedTo()))
-                  .replace("%OWNERNAME%", Bukkit.getOfflinePlayer(warps[i].getOwner()).getName());
-            }
-          } else {
-            if (!warps[i].isPrivate() || warps[i].isInvited(player.getUniqueId())) {
-              toRet += str.warpTopSub.replace("%POSITION%", String.valueOf(i + 1))
-                  .replace("%WARPNAME%", warps[i].getName())
-                  .replace("%WARPAMOUNT%", String.valueOf(warps[i].getTimesWarpedTo()))
-                  .replace("%OWNERNAME%", warps[i].getOwner().toString());
-            } else {
-              toRet += str.warpTopSubPrivate.replace("%POSITION%", String.valueOf(i + 1))
-                  .replace("%WARPNAME%", warps[i].getName())
-                  .replace("%WARPAMOUNT%", String.valueOf(warps[i].getTimesWarpedTo()))
-                  .replace("%OWNERNAME%", warps[i].getOwner().toString());
-            }
-          }
-        }
-      }
-      return toRet;
-    }
-  }
-
-  public int getDeletedWarpsAmount() {
-    if (cfg.getCustomConfig(config).isSet("total")) {
-      return cfg.getCustomConfig(config).getInt("total");
-    } else {
-      return 0;
-    }
-  }
-
-  private ArrayList<Warp> searchWarps(String toFind) {
-    toFind = toFind.toLowerCase();
-    ArrayList<Warp> warps = new ArrayList<>();
-    for (Warp warp : getWarps()) {
-      if (warp.getName().toLowerCase().contains(toFind)) {
-        warps.add(warp);
-      }
-    }
-    return warps;
-  }
-
-  public String formatWarps(String toSearch, int page, UUID player) {
-    ArrayList<Warp> foundWarps = searchWarps(toSearch);
-    int total = (int) Math.ceil(((double) foundWarps.size()) / 9);
-    String toRet = str.warpSearchHeader.replace("%PAGE%", String.valueOf(page))
-        .replace("%MAXPAGE%", String.valueOf(total));
-    page = page - 1;
-    if (page > foundWarps.size() / 9 || page < 0) {
-      return str.noValidPage.replace("%MAXPAGE%", String.valueOf(total));
-    } else if (foundWarps.size() == 0) {
-      return str.noWarpsFoundForQuery.replace("%QUERY%", toSearch);
-    } else {
-      int min = page * 9;
-      int max = min + 9 < foundWarps.size() ? min + 9 : foundWarps.size();
-      for (int i = min; i < max; i++) {
-        toRet += getWarpListString(foundWarps.get(i), i, player);
-      }
-      return toRet;
-    }
-  }
-
-  private String getWarpListString(Warp warp, int i, UUID requester) {
-    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(warp.getOwner());
-    boolean invited = warp.isInvited(requester);
-    String toRet;
-    if (offlinePlayer != null && offlinePlayer.getName() != null) {
-      if (!warp.isPrivate()) {
-        toRet = "\n" + str.warpListSub.replace("%NAME%", warp.getName())
-            .replace("%OWNER%", offlinePlayer.getName()).replace("%COUNT%", String.valueOf(i + 1));
-      } else if (invited) {
-        toRet = "\n" + str.warpListSubInvited.replace("%NAME%", warp.getName())
-            .replace("%OWNER%", offlinePlayer.getName()).replace("%COUNT%", String.valueOf(i + 1));
-      } else {
-        toRet = "\n" + str.warpListSubPrivate.replace("%NAME%", warp.getName())
-            .replace("%OWNER%", offlinePlayer.getName()).replace("%COUNT%", String.valueOf(i + 1));
-      }
-    } else {
-      if (!warp.isPrivate()) {
-        toRet = "\n" + str.warpListSub.replace("%NAME%", warp.getName())
-            .replace("%OWNER%", "unknown owner").replace("%COUNT%", String.valueOf(i + 1));
-      } else if (invited) {
-        toRet = "\n" + str.warpListSubInvited.replace("%NAME%", warp.getName())
-            .replace("%OWNER%", "unknown owner").replace("%COUNT%", String.valueOf(i + 1));
-      } else {
-        toRet = "\n" + str.warpListSubPrivate.replace("%NAME%", warp.getName())
-            .replace("%OWNER%", "unknown owner").replace("%COUNT%", String.valueOf(i + 1));
-      }
-    }
-    return toRet;
-  }
-
-  public WarpaliciousPlugin getPlugin() {
-    return plugin;
-  }
-
   public boolean allowedToWarp(Warp warp, Player player, TeleportMode mode) {
     if (mode == TeleportMode.COMMAND) {
       return (!warp.isPrivate() || str.checkPermission(player, str.warpToPrivatePerm) || warp
@@ -457,4 +296,6 @@ public class WarpHandler {
           || warp.getOwner().equals(player.getUniqueId()) || warp.isInvited(player.getUniqueId()));
     }
   }
+
+
 }
