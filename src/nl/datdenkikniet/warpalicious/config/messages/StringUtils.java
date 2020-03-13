@@ -40,12 +40,12 @@ public class StringUtils {
     return result;
   }
 
-  public static String toWarpListPageString(Strings str, Player requester, String title, int page, int maxPage,
-      List<Warp> warps) {
+  public static String toWarpListPageString(Strings str, Player requester, String title, int page,
+      int maxPage, List<Warp> warps) {
     if (warps == null) {
       return str.warpPageNotExists;
     } else {
-      StringBuilder res = new StringBuilder(title.replace("%PAGE% ", String.valueOf(page))
+      StringBuilder res = new StringBuilder(title.replace("%PAGE%", String.valueOf(page))
           .replace("%MAXPAGE%", String.valueOf(maxPage)));
       int startWarp = (page - 1) * WarpHandler.WARPLIST_PAGE_SIZE + 1;
       for (int i = 0; i < warps.size(); i++) {

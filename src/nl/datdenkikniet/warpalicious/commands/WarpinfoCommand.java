@@ -172,9 +172,38 @@ public class WarpinfoCommand implements CommandExecutor {
   }
 
   private String getWarpListSortedPage(Player player, int page, boolean includePrivate) {
-    List<Warp> warps = handler.getWarpListSortedPage(player, page, includePrivate);
-    String title = str.warpTopHeader;
-    return StringUtils.toWarpListPageString(str, player, title, page,
-        handler.getWarpListSortedPagesCount(player, includePrivate), warps);
+    List<Warp> warps = handler.getWarpListSorted(player, includePrivate);
+    int total = handler.toPageCount(warps.size());
+    StringBuilder result = new StringBuilder(
+        str.warpTopHeader.replace("%PAGE%", String.valueOf(page))
+            .replace("%MAXPAGE%", String.valueOf(total)));
+    List<Warp> pageWarps = handler.getWarpListPage(page, total, warps);
+    if (pageWarps == null || warps.size() == 0){
+      return str.warpPageNotExists;
+    }
+    for (int i = 0; i < pageWarps.size(); i++) {
+      Warp currentWarp = pageWarps.get(i);
+      String res;
+      if (Bukkit.getOfflinePlayer(currentWarp.getOwner()).hasPlayedBefore()) {
+        if (!currentWarp.isPrivate() || currentWarp.isInvited(player.getUniqueId())) {
+          res = str.warpTopSub
+              .replace("%OWNERNAME%", Bukkit.getOfflinePlayer(currentWarp.getOwner()).getName());
+        } else {
+          res = str.warpTopSubPrivate
+              .replace("%OWNERNAME%", Bukkit.getOfflinePlayer(currentWarp.getOwner()).getName());
+        }
+      } else {
+        if (!currentWarp.isPrivate() || currentWarp.isInvited(player.getUniqueId())) {
+          res = str.warpTopSub.replace("%OWNERNAME%", "unknown owner");
+        } else {
+          res = str.warpTopSubPrivate.replace("%OWNERNAME%", "unknown owner");
+        }
+      }
+      res = res.replace("%POSITION%", String.valueOf(i + 1 + ((page - 1) * WarpHandler.WARPLIST_PAGE_SIZE)))
+          .replace("%WARPNAME%", currentWarp.getName())
+          .replace("%WARPAMOUNT%", String.valueOf(currentWarp.getTimesWarpedTo()));
+      result.append('\n').append(res);
+    }
+    return result.toString();
   }
 }

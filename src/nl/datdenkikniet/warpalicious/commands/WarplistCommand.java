@@ -112,7 +112,7 @@ public class WarplistCommand implements CommandExecutor {
 
   private String getWarpListPage(Player player, int page) {
     List<Warp> warps = handler.getWarpListPage(player, page);
-    String title = str.warpList;
+    String title = str.warpListHeader;
     return StringUtils
         .toWarpListPageString(str, player, title, page, handler.getWarpListPagesCount(player),
             warps);
@@ -120,7 +120,7 @@ public class WarplistCommand implements CommandExecutor {
 
   private String getWarpListPageSelf(Player player, int page) {
     List<Warp> warps = handler.getWarpListPageSelf(player, page);
-    String title = str.warpListSelf;
+    String title = str.warpListSelfHeader;
     return StringUtils
         .toWarpListPageString(str, player, title, page, handler.getWarplistPagesSelfCount(player),
             warps);

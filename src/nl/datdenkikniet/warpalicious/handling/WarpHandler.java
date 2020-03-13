@@ -168,7 +168,7 @@ public class WarpHandler {
     }
   }
 
-  private int toPageCount(int warpCount) {
+  public int toPageCount(int warpCount) {
     return (int) Math.ceil(((double) warpCount) / WARPLIST_PAGE_SIZE);
   }
 
@@ -224,18 +224,8 @@ public class WarpHandler {
     List<Warp> warpList = new ArrayList<>();
     getWarpList(player).stream().filter((warp) -> includePrivate || !warp.isPrivate())
         .forEach(warpList::add);
-    warpList.sort(Comparator.comparingInt(Warp::getTimesWarpedTo));
+    warpList.sort((w1, w2) -> w2.getTimesWarpedTo() - w1.getTimesWarpedTo());
     return warpList;
-  }
-
-  public int getWarpListSortedPagesCount(Player player, boolean includePrivate) {
-    return toPageCount(getWarpListSorted(player, includePrivate).size());
-  }
-
-  public List<Warp> getWarpListSortedPage(Player player, int page, boolean includePrivate) {
-    List<Warp> warpList = getWarpListSorted(player, includePrivate);
-    int availablePages = toPageCount(warpList.size());
-    return getWarpListPage(page, availablePages, warpList);
   }
 
   public int getDeletedWarpsAmount() {
