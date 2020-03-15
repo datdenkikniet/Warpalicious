@@ -40,23 +40,6 @@ public class WarpHandler {
     return plugin;
   }
 
-  private void loadCommands() {
-    plugin.getCommand("warp").setExecutor(new WarpCommand(str, this));
-    plugin.getCommand("setwarp").setExecutor(new SetWarpCommand(str, this));
-    plugin.getCommand("delwarp").setExecutor(new DelWarpCommand(str, this));
-    plugin.getCommand("warplist").setExecutor(new WarplistCommand(str, this));
-    plugin.getCommand("editwarp").setExecutor(new EditWarpCommand(str, this));
-    plugin.getCommand("warpinfo").setExecutor(new WarpinfoCommand(str, this));
-    plugin.getCommand("findwarp").setExecutor(new FindWarpCommand(plugin));
-    plugin.getCommand("warpinvite").setExecutor(new WarpInviteCommand(plugin, str));
-    plugin.getCommand("warpuninvite").setExecutor(new WarpInviteCommand(plugin, str));
-  }
-
-  public void load() {
-    loadWarps();
-    loadCommands();
-  }
-
   public List<Warp> getWarps() {
     return warps;
   }
@@ -72,7 +55,7 @@ public class WarpHandler {
     return toRet;
   }
 
-  private void loadWarps() {
+  public void loadWarps() {
     FileConfiguration c = cfg.getCustomConfig(config);
     for (String key : c.getKeys(false)) {
       try {

@@ -1,8 +1,8 @@
 package nl.datdenkikniet.warpalicious.commands;
 
-import nl.datdenkikniet.warpalicious.WarpaliciousPlugin;
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
 import nl.datdenkikniet.warpalicious.handling.Warp;
+import nl.datdenkikniet.warpalicious.handling.WarpHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -12,12 +12,12 @@ import org.bukkit.entity.Player;
 
 public class WarpInviteCommand implements CommandExecutor {
 
-  private WarpaliciousPlugin plugin;
+  private WarpHandler handler;
   private Strings str;
 
-  public WarpInviteCommand(WarpaliciousPlugin pl, Strings instance) {
+  public WarpInviteCommand(Strings instance, WarpHandler handler) {
     str = instance;
-    plugin = pl;
+    this.handler = handler;
   }
 
   public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -31,7 +31,7 @@ public class WarpInviteCommand implements CommandExecutor {
       return true;
     }
     if (args.length == 2) {
-      Warp warp = plugin.getWarpHandler().getWarp(args[0]);
+      Warp warp = handler.getWarp(args[0]);
         @SuppressWarnings("deprecation") OfflinePlayer otherPlayer = Bukkit
             .getOfflinePlayer(args[1]);
         if (warp == null) {
