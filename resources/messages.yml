@@ -53,3 +53,6 @@ warp-invited: "%PREFIX% %PLAYERNAME% invited you to their private warp %WARPNAME
 warp-uninvited: "%PREFIX% %PLAYERNAME% removed you from their invited list to warp %WARPNAME%."
 warp-has-invalid-world: "%PREFIX% &c%WARPNAME% has an invalid world! (%WORLDNAME%)"
 warp-invited-list: "&eInvited players: %INVITED%"
+no-warps-available: "&cNo warps found"
+unknown-usage: "&cUnknown usage"
+

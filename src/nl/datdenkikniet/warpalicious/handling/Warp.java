@@ -93,8 +93,7 @@ public class Warp {
         player.sendMessage(str.noMove);
       }
       final int taskId = Bukkit.getScheduler()
-          .scheduleSyncRepeatingTask(plugin, new TeleportRunnable(player, mode, this, str, delay),
-              0L, 20L);
+          .scheduleSyncRepeatingTask(plugin, new TeleportRunnable(player, mode, this, str, delay),              0L, 20L);
       Bukkit.getScheduler()
           .runTaskLater(plugin, () -> Bukkit.getScheduler().cancelTask(taskId), delay * 20 + 10L);
     }

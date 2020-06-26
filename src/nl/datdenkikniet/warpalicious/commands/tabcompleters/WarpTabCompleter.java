@@ -2,6 +2,7 @@ package nl.datdenkikniet.warpalicious.commands.tabcompleters;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import nl.datdenkikniet.warpalicious.config.messages.Strings;
 import nl.datdenkikniet.warpalicious.handling.Warp;
 import nl.datdenkikniet.warpalicious.handling.WarpHandler;
@@ -22,14 +23,19 @@ public class WarpTabCompleter extends WarpaliciousTabCompleter {
     if (sender instanceof Player) {
       Player player = (Player) sender;
       List<Warp> warps = handler.getWarpList(player);
-      final List<Warp> filteredWarps = new ArrayList<>();
       if (args.length == 0) {
         completions.add("[warp]");
       } else if (args.length == 1) {
-        warps.stream()
+        final List<Warp> filteredWarps = warps.stream()
             .filter(warp -> warp.getName().toLowerCase().startsWith(args[0].toLowerCase()))
-            .forEach(filteredWarps::add);
-        filteredWarps.forEach((warp) -> completions.add(warp.getName()));
+            .collect(Collectors.toList());
+        if (filteredWarps.size() == 0) {
+          completions.add(str.noWarpsAvailable);
+        } else {
+          filteredWarps.forEach((warp) -> completions.add(warp.getName()));
+        }
+      } else {
+        completions.add(str.unknownUsage);
       }
     }
     return completions;

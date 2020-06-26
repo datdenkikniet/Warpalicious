@@ -107,6 +107,8 @@ public class Strings {
   public String warpUninvited;
   public String invalidWorld;
   public String warpInvitedList;
+  public String noWarpsAvailable;
+  public String unknownUsage;
 
   /*
   String functions
@@ -182,6 +184,8 @@ public class Strings {
     warpUninvited = s("warp-uninvited");
     invalidWorld = s("warp-has-invalid-world");
     warpInvitedList = s("warp-invited-list");
+    noWarpsAvailable = s("no-warps-available");
+    unknownUsage = s("unknown-usage");
   }
 
   private String s(String s) {

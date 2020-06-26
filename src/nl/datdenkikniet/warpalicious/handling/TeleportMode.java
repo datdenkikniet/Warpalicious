@@ -8,8 +8,8 @@ import org.bukkit.permissions.PermissionAttachmentInfo;
 import java.util.ArrayList;
 
 public enum TeleportMode {
-  SIGN(0, 0, false, false, null, null, 1, 1, false, false), COMMAND(0, 0, false, false, null, null,
-      1, 1, false, false);
+  SIGN(0, 0, false, false, null, null, 1, 1, false, false),
+  COMMAND(0, 0, false, false, null, null, 1, 1, false, false);
 
   TeleportMode(int creativeDelay, int survivalDelay, boolean creativePerm, boolean survivalPerm,
       Particle arriveEffect, Particle departEffect, int arriveCount, int departCount,

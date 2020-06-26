@@ -50,11 +50,10 @@ public class EditWarpCommand implements CommandExecutor {
             } else {
               sender.sendMessage(str.madeWarpPublic.replace("%WARPNAME%", warp.getName()));
             }
-            return true;
           } else {
             sender.sendMessage(str.warpNotOwned);
-            return true;
           }
+          return true;
         } else {
           sender.sendMessage(str.warpNotExists);
           return true;

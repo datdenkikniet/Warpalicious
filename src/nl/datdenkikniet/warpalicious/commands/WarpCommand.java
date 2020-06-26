@@ -43,15 +43,13 @@ public class WarpCommand implements CommandExecutor {
         if (warp != null) {
           if (handler.allowedToWarp(warp, player, TeleportMode.COMMAND)) {
             warp.warp(player, TeleportMode.COMMAND, str);
-            return true;
           } else {
             sender.sendMessage(str.warpIsPrivate);
-            return true;
           }
         } else {
           sender.sendMessage(str.warpNotExists);
-          return true;
         }
+        return true;
       } else {
         sender.sendMessage(str.getUsage(cmd, label));
         return true;

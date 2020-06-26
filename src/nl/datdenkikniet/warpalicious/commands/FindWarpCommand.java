@@ -29,11 +29,10 @@ public class FindWarpCommand implements CommandExecutor {
     if (args.length == 1) {
       if (str.checkPermission(sender, str.searchWarpPerm)) {
         sender.sendMessage(searchWarpsPage(args[0], 1, player));
-        return true;
       } else {
         sender.sendMessage(str.noperm);
-        return true;
       }
+      return true;
     } else if (args.length == 2) {
       if (str.checkPermission(sender, str.searchWarpPerm)) {
         try {
@@ -42,11 +41,10 @@ public class FindWarpCommand implements CommandExecutor {
         } catch (NumberFormatException ex) {
           sender.sendMessage(str.noValidNumber);
         }
-        return true;
       } else {
         sender.sendMessage(str.noperm);
-        return true;
       }
+      return true;
     } else {
       sender.sendMessage(str.getUsage(cmd, label));
       return true;

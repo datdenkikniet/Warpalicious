@@ -27,9 +27,9 @@ public class WarpaliciousPlugin extends JavaPlugin {
 
   public CustomConfig cfgHandler = new CustomConfig(this);
 
-  private Config messages = new Config("messages", cfgHandler);
-  private Config warps = new Config("warps", cfgHandler);
-  private Config config = new Config("config", cfgHandler);
+  private final Config messages = new Config("messages", cfgHandler);
+  private final Config warps = new Config("warps", cfgHandler);
+  private final Config config = new Config("config", cfgHandler);
 
   private Strings str;
   private WarpHandler handler;

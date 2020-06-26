@@ -169,7 +169,7 @@ public class WarpaliciousCommand implements CommandExecutor {
                             target.close();
                             rs.close();
                             plugin.getWarpHandler().saveWarps();
-                            sender.sendMessage("Ateempted to import " + totalWarps + " warps...");
+                            sender.sendMessage("Atempted to import " + totalWarps + " warps...");
                             sender.sendMessage("Imported " + addedWarps + " warps from warptastic.");
                             sender.sendMessage("Failed to add " + failedWarps + " warps (check the console for more information).");
                             return true;
