@@ -9,7 +9,7 @@ import nl.datdenkikniet.warpalicious.commands.WarpInviteCommand;
 import nl.datdenkikniet.warpalicious.commands.WarpaliciousCommand;
 import nl.datdenkikniet.warpalicious.commands.WarpinfoCommand;
 import nl.datdenkikniet.warpalicious.commands.WarplistCommand;
-import nl.datdenkikniet.warpalicious.commands.tabcompleters.SetWarpTabCompleter;
+import nl.datdenkikniet.warpalicious.commands.tabcompleters.EmptyTabCompleter;
 import nl.datdenkikniet.warpalicious.commands.tabcompleters.WarpTabCompleter;
 import nl.datdenkikniet.warpalicious.config.Config;
 import nl.datdenkikniet.warpalicious.config.CustomConfig;
@@ -57,19 +57,41 @@ public class WarpaliciousPlugin extends JavaPlugin {
     warp.setExecutor(new WarpCommand(str, this.handler));
     warp.setTabCompleter(new WarpTabCompleter(str, this.handler));
 
+    EmptyTabCompleter emptyTabCompleter = new EmptyTabCompleter(str, this.handler);
+
     PluginCommand setWarpCommand = getCommand("setwarp");
     setWarpCommand.setExecutor(new SetWarpCommand(str, this.handler));
-    setWarpCommand.setTabCompleter(new SetWarpTabCompleter(str, this.handler));
+    setWarpCommand.setTabCompleter(emptyTabCompleter);
 
-    getCommand("delwarp").setExecutor(new DelWarpCommand(str, this.handler));
+    PluginCommand delWarpCommand = getCommand("delwarp");
+    delWarpCommand.setExecutor(new DelWarpCommand(str, this.handler));
+    delWarpCommand.setTabCompleter(emptyTabCompleter);
 
-    getCommand("warplist").setExecutor(new WarplistCommand(str, this.handler));
-    getCommand("editwarp").setExecutor(new EditWarpCommand(str, this.handler));
-    getCommand("warpinfo").setExecutor(new WarpinfoCommand(str, this.handler));
-    getCommand("findwarp").setExecutor(new FindWarpCommand(this));
+    PluginCommand warpListCommand = getCommand("warplist");
+    warpListCommand.setExecutor(new WarplistCommand(str, this.handler));
+    warpListCommand.setTabCompleter(emptyTabCompleter);
+
+    PluginCommand editWarpCommand = getCommand("editwarp");
+    editWarpCommand.setExecutor(new EditWarpCommand(str, this.handler));
+    editWarpCommand.setTabCompleter(emptyTabCompleter);
+
+    PluginCommand warpInfoCommand = getCommand("warpinfo");
+    warpInfoCommand.setExecutor(new WarpinfoCommand(str, this.handler));
+    warpInfoCommand.setTabCompleter(emptyTabCompleter);
+
+    PluginCommand findWarpCommand = getCommand("findwarp");
+    findWarpCommand.setExecutor(new FindWarpCommand(this));
+    findWarpCommand.setTabCompleter(emptyTabCompleter);
+
     WarpInviteCommand warpInv = new WarpInviteCommand(str, this.handler);
-    getCommand("warpinvite").setExecutor(warpInv);
-    getCommand("warpuninvite").setExecutor(warpInv);
+
+    PluginCommand warpInviteCommand = getCommand("warpinvite");
+    warpInviteCommand.setExecutor(warpInv);
+    warpInviteCommand.setTabCompleter(emptyTabCompleter);
+
+    PluginCommand warpUninviteCommand = getCommand("warpuninvite");
+    warpUninviteCommand.setExecutor(warpInv);
+    warpUninviteCommand.setTabCompleter(emptyTabCompleter);
   }
 
   public void onDisable() {

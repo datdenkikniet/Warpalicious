@@ -23,19 +23,13 @@ public class WarpTabCompleter extends WarpaliciousTabCompleter {
     if (sender instanceof Player) {
       Player player = (Player) sender;
       List<Warp> warps = handler.getWarpList(player);
-      if (args.length == 0) {
-        completions.add("[warp]");
-      } else if (args.length == 1) {
+      if (args.length == 1) {
         final List<Warp> filteredWarps = warps.stream()
             .filter(warp -> warp.getName().toLowerCase().startsWith(args[0].toLowerCase()))
             .collect(Collectors.toList());
-        if (filteredWarps.size() == 0) {
-          completions.add(str.noWarpsAvailable);
-        } else {
+        if (filteredWarps.size() != 0) {
           filteredWarps.forEach((warp) -> completions.add(warp.getName()));
         }
-      } else {
-        completions.add(str.unknownUsage);
       }
     }
     return completions;
