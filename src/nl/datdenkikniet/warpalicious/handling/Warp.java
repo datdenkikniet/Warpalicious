@@ -54,7 +54,7 @@ public class Warp {
     if (isWarp) {
       timesWarpedTo++;
     }
-    return loc;
+    return loc.clone();
   }
 
   public void warp(Player player, TeleportMode mode, Strings str) {
