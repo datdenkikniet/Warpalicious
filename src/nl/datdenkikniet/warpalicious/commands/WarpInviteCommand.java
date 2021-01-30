@@ -38,20 +38,21 @@ public class WarpInviteCommand implements CommandExecutor {
           sender.sendMessage(str.warpNotExists);
           return true;
         }
-        if (!otherPlayer.hasPlayedBefore()) {
+        if (!otherPlayer.hasPlayedBefore() && !otherPlayer.isOnline()) {
           sender.sendMessage(str.neverPlayed);
           return true;
         }
         if (cmd.getName().equalsIgnoreCase("warpinvite")) {
           if (warp.getOwner().equals(player.getUniqueId())) {
             if (warp.isPrivate()) {
+              System.out.println(warp.isInvited(otherPlayer.getUniqueId()) + ", " + warp.getOwner().equals(player.getUniqueId()));
               if (!warp.isInvited(otherPlayer.getUniqueId()) && !warp.getOwner()
-                  .equals(player.getUniqueId())) {
+                  .equals(otherPlayer.getUniqueId())) {
                 warp.addInvitedPlayer(otherPlayer.getUniqueId());
                 player.sendMessage(
                     str.addedInvitedPlayer.replace("%PLAYERNAME%", otherPlayer.getName())
                         .replace("%WARPNAME%", warp.getName()));
-                if (Bukkit.getPlayer(otherPlayer.getUniqueId()) != null) {
+                if (otherPlayer.isOnline()) {
                   Bukkit.getPlayer(otherPlayer.getUniqueId()).sendMessage(
                       str.warpInvited.replace("%PLAYERNAME%", player.getName())
                           .replace("%WARPNAME%", warp.getName()));
