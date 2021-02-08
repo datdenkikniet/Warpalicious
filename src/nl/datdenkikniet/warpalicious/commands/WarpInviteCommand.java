@@ -45,7 +45,6 @@ public class WarpInviteCommand implements CommandExecutor {
         if (cmd.getName().equalsIgnoreCase("warpinvite")) {
           if (warp.getOwner().equals(player.getUniqueId())) {
             if (warp.isPrivate()) {
-              System.out.println(warp.isInvited(otherPlayer.getUniqueId()) + ", " + warp.getOwner().equals(player.getUniqueId()));
               if (!warp.isInvited(otherPlayer.getUniqueId()) && !warp.getOwner()
                   .equals(otherPlayer.getUniqueId())) {
                 warp.addInvitedPlayer(otherPlayer.getUniqueId());
