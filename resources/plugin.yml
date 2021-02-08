@@ -1,7 +1,7 @@
 name: Warpalicious
 main: nl.datdenkikniet.warpalicious.WarpaliciousPlugin
 authors: [datdenkikniet, TastyBlueberry, oskar3123]
-version: 1.11.2
+version: 1.11.3
 api-version: "1.13"
 softdepend: [Multiverse-Core, MultiWorld]
 commands:
@@ -27,7 +27,7 @@ commands:
         aliases: [wlist]
     warpalicious:
         description: main command
-        usage: /<command> [reloadmessages]
+        usage: /<command> [reloadmessages|prune-invalid]
     warpinfo:
         description: see info on a warp
         usage: /<command> <name> OR /<command> <-top> [page|-noprivate] [-noprivate]
