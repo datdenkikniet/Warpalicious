@@ -28,12 +28,15 @@ public class WarpaliciousCommand implements CommandExecutor {
       } else if (args[0].equalsIgnoreCase("prune-invalid")) {
         WarpHandler handler = plugin.getWarpHandler();
         int removed = 0;
-        for (Warp next : handler.getWarps()) {
+        Iterator<Warp> iterator = handler.getWarps().iterator();
+        while (iterator.hasNext()) {
+          Warp next = iterator.next();
           if (next.getLocation(false).getWorld() == null) {
-            handler.delWarp(next);
+            iterator.remove();
             removed++;
           }
         }
+        handler.saveWarps();
         sender.sendMessage("Successfully pruned " + removed + " warps with invalid/inaccessible worlds.");
       } else {
         sender.sendMessage(str.getUsage(cmd, label));
